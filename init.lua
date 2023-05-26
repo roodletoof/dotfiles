@@ -11,6 +11,12 @@ local keymap = {
     show_references                         = 'gr',
     hovering_documentation                  = 'K',
 
+    autocomplete_scroll_down                = '<C-b>',
+    autocomplete_scroll_up                  = '<C-f>',
+    autocomplete_complete                   = '<C-o>',
+    autocomplete_abort                      = '<C-e>',
+    autocomplete_confirm                    = '<CR>',
+
     toggle_file_explorer                    ='<c-n>',
 
     leader_key                              = ';',
@@ -45,17 +51,21 @@ local function packer_startup(use)
     use 'wbthomason/packer.nvim'
     use 'lervag/vimtex'                     -- Latex
         vim.g.vimtex_view_method = 'zathura'
+
     use 'ellisonleao/gruvbox.nvim'          -- Theme
         vim.o.termguicolors = true
         vim.cmd [[ colorscheme gruvbox ]]
+
     use 'nvim-tree/nvim-tree.lua'           -- File explorer
         vim.g.loaded_netrw = 1
         vim.g.loaded_netrwPlugin = 1
         require('nvim-tree').setup()
         vim.keymap.set('n', keymap.toggle_file_explorer, ':NvimTreeFindFileToggle<CR>')
+
     use 'nvim-tree/nvim-web-devicons'       -- Icons for file explorer and info bar
     use 'nvim-lualine/lualine.nvim'         -- Lower info-bar
         require('lualine').setup {options = {icons_enabled = true, theme = 'gruvbox'}}
+
     use 'nvim-treesitter/nvim-treesitter'   -- Syntax highlighting
         require('nvim-treesitter.configs').setup {
             ensure_installed = 'all',
@@ -66,6 +76,33 @@ local function packer_startup(use)
                 additional_vim_regex_highlighting = false,
             }
         }
+
+    use 'hrsh7th/nvim-cmp'                  -- Autocompletion
+    use 'hrsh7th/cmp-nvim-lsp'
+    use 'L3MON4D3/LuaSnip'
+        local cmp = require('cmp')
+        cmp.setup{
+            mapping = cmp.mapping.preset.insert {
+                [keymap.autocomplete_scroll_down]   = cmp.mapping.scroll_docs(-4),
+                [keymap.autocomplete_scroll_up]     = cmp.mapping.scroll_docs( 4),
+                [keymap.autocomplete_complete]      = cmp.mapping.complete(),
+                [keymap.autocomplete_abort]         = cmp.mapping.abort(),
+                [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
+            },
+            snippet = {
+                expand = function(args)
+                    require('luasnip').lsp_expand(args.body)
+                end,
+            },
+            sources = cmp.config.sources(
+                {
+                    { name = 'nvim_lsp' },
+                    { name = 'luasnip' },
+                },
+                {{ name = 'buffer' }}
+            )
+        }
+
     use {                                   -- LSP
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
@@ -77,9 +114,12 @@ local function packer_startup(use)
                 'ltex', 'lua_ls', 'marksman', 'pyright', 'zls', 'rust_analyzer'
             }
         }
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
         require("mason-lspconfig").setup_handlers {
             function (server_name)
-                require("lspconfig")[server_name].setup {}
+                require("lspconfig")[server_name].setup {
+                    capabilities = capabilities
+                }
             end,
         }
         vim.keymap.set('n', keymap.rename_symbol, vim.lsp.buf.rename, {})
