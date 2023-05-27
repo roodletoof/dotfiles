@@ -1,7 +1,7 @@
 local keymap = {
     search_for_files_in_working_directory   = '<c-p>',
     search_for_previously_opened_files      = '<Space><Space>',
-    search_within_open_file                 = '<Space>fg',
+    live_grep                               = '<Space>fg',
     search_help_pages                       = '<Space>fh',
 
     rename_symbol                           = '<leader>rn',
@@ -31,7 +31,6 @@ vim.opt.nu = true       -- Shows current line number
 vim.opt.wrap = false    -- Don't wrap the line. Let it go offscreen.
 vim.opt.shiftround = true
 vim.opt.expandtab = true
-
 
 -- Will only run the first time nvim launches to install packer
     local ensure_packer = function()
@@ -140,7 +139,7 @@ local function packer_startup(use)
     };  local builtin = require('telescope.builtin')
         vim.keymap.set('n', keymap.search_for_files_in_working_directory, builtin.find_files, {})
         vim.keymap.set('n', keymap.search_for_previously_opened_files, builtin.oldfiles, {})
-        vim.keymap.set('n', keymap.search_within_open_file, builtin.live_grep, {})
+        vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
         vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
 
     if packer_bootstrap then -- Must be last instruction.
