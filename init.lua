@@ -22,6 +22,8 @@ local keymap = {
     leader_key                              = ';',
 }
 
+local theme_with_real_colors = false
+
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
 vim.opt.tabstop = 4     -- Character width of a tab
@@ -33,101 +35,35 @@ vim.opt.shiftround = true
 vim.opt.expandtab = true
 
 -- Will only run the first time nvim launches to install packer
-    local ensure_packer = function()
-        local fn = vim.fn
-        local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-        if fn.empty(fn.glob(install_path)) > 0 then
-            fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-            vim.cmd [[packadd packer.nvim]]
-            return true
-        end
-        return false
+local ensure_packer = function()
+    local fn = vim.fn
+    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+        vim.cmd [[packadd packer.nvim]]
+        return true
     end
-    local packer_bootstrap = ensure_packer()
+    return false
+end
+local packer_bootstrap = ensure_packer()
 
 -- Packages
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
     use 'lervag/vimtex'                     -- Latex
-        vim.g.vimtex_view_method = 'zathura'
-
     use 'ellisonleao/gruvbox.nvim'          -- Theme
-        vim.o.termguicolors = true
-        vim.cmd [[ colorscheme gruvbox ]]
-
     use 'nvim-tree/nvim-tree.lua'           -- File explorer
-        vim.g.loaded_netrw = 1
-        vim.g.loaded_netrwPlugin = 1
-        require('nvim-tree').setup()
-        vim.keymap.set('n', keymap.toggle_file_explorer, ':NvimTreeFindFileToggle<CR>')
-
     use 'nvim-tree/nvim-web-devicons'       -- Icons for file explorer and info bar
     use 'nvim-lualine/lualine.nvim'         -- Lower info-bar
-        require('lualine').setup {options = {icons_enabled = true, theme = 'gruvbox'}}
-
     use 'nvim-treesitter/nvim-treesitter'   -- Syntax highlighting
-        require('nvim-treesitter.configs').setup {
-            ensure_installed = 'all',
-            sync_install = false,
-            auto_install = true,
-            highlight = {
-                enable = true,
-                additional_vim_regex_highlighting = false,
-            }
-        }
-
     use 'hrsh7th/nvim-cmp'                  -- Autocompletion
     use 'hrsh7th/cmp-nvim-lsp'
     use 'L3MON4D3/LuaSnip'
-        local cmp = require('cmp')
-        cmp.setup{
-            mapping = cmp.mapping.preset.insert {
-                [keymap.autocomplete_scroll_down]   = cmp.mapping.scroll_docs(-4),
-                [keymap.autocomplete_scroll_up]     = cmp.mapping.scroll_docs( 4),
-                [keymap.autocomplete_complete]      = cmp.mapping.complete(),
-                [keymap.autocomplete_abort]         = cmp.mapping.abort(),
-                [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
-            },
-            snippet = {
-                expand = function(args)
-                    require('luasnip').lsp_expand(args.body)
-                end,
-            },
-            sources = cmp.config.sources(
-                {
-                    { name = 'nvim_lsp' },
-                    { name = 'luasnip' },
-                },
-                {{ name = 'buffer' }}
-            )
-        }
-
     use {                                   -- LSP
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
         'neovim/nvim-lspconfig',
-    }   require('mason').setup()
-        require('mason-lspconfig').setup{
-            ensure_installed = {
-                'clangd', 'golangci_lint_ls', 'kotlin_language_server',
-                'ltex', 'lua_ls', 'marksman', 'pyright', 'zls', 'rust_analyzer'
-            }
-        }
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
-        require("mason-lspconfig").setup_handlers {
-            function (server_name)
-                require("lspconfig")[server_name].setup {
-                    capabilities = capabilities
-                }
-            end,
-        }
-        vim.keymap.set('n', keymap.rename_symbol, vim.lsp.buf.rename, {})
-        vim.keymap.set('n', keymap.code_action, vim.lsp.buf.code_action, {})
-        vim.keymap.set('n', keymap.go_to_definition, vim.lsp.buf.definition, {})
-        vim.keymap.set('n', keymap.go_to_implementation, vim.lsp.buf.implementation, {})
-        vim.keymap.set('n', keymap.show_references, require('telescope.builtin').lsp_references, {})
-        vim.keymap.set('n', keymap.hovering_documentation, vim.lsp.buf.hover, {})
-
+    }   
     use { 'nvim-telescope/telescope.nvim',  -- FuzzyFind
         tag = '0.1.1',
         requires = {
@@ -136,15 +72,88 @@ local function packer_startup(use)
             -- ripgrep might not actually
             -- be a nvim package
         }
-    };  local builtin = require('telescope.builtin')
-        vim.keymap.set('n', keymap.search_for_files_in_working_directory, builtin.find_files, {})
-        vim.keymap.set('n', keymap.search_for_previously_opened_files, builtin.oldfiles, {})
-        vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
-        vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
+    }  
 
-    if packer_bootstrap then -- Must be last instruction.
+    if packer_bootstrap then --Comes after packages
         require('packer').sync()
     end
+
+    vim.g.vimtex_view_method = 'zathura'
+
+    if theme_with_real_colors then
+        vim.o.termguicolors = true
+        vim.o.background = "dark"
+        vim.cmd [[ colorscheme gruvbox ]]
+    end
+
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
+    require('nvim-tree').setup()
+    vim.keymap.set('n', keymap.toggle_file_explorer, ':NvimTreeFindFileToggle<CR>')
+
+    require('lualine').setup {options = {icons_enabled = true, theme = 'gruvbox'}}
+
+    require('nvim-treesitter.configs').setup {
+        ensure_installed = 'all',
+        sync_install = false,
+        auto_install = true,
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = false,
+        }
+    }
+
+    local cmp = require('cmp')
+    cmp.setup{
+        mapping = cmp.mapping.preset.insert {
+            [keymap.autocomplete_scroll_down]   = cmp.mapping.scroll_docs(-4),
+            [keymap.autocomplete_scroll_up]     = cmp.mapping.scroll_docs( 4),
+            [keymap.autocomplete_complete]      = cmp.mapping.complete(),
+            [keymap.autocomplete_abort]         = cmp.mapping.abort(),
+            [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
+        },
+        snippet = {
+            expand = function(args)
+                require('luasnip').lsp_expand(args.body)
+            end,
+        },
+        sources = cmp.config.sources(
+            {
+                { name = 'nvim_lsp' },
+                { name = 'luasnip' },
+            },
+            {{ name = 'buffer' }}
+        )
+    }
+
+    require('mason').setup()
+    require('mason-lspconfig').setup{
+        ensure_installed = {
+            'clangd', 'golangci_lint_ls', 'kotlin_language_server',
+            'ltex', 'lua_ls', 'marksman', 'pyright', 'zls', 'rust_analyzer'
+        }
+    }
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+    require("mason-lspconfig").setup_handlers {
+        function (server_name)
+            require("lspconfig")[server_name].setup {
+                capabilities = capabilities
+            }
+        end,
+    }
+    vim.keymap.set('n', keymap.rename_symbol, vim.lsp.buf.rename, {})
+    vim.keymap.set('n', keymap.code_action, vim.lsp.buf.code_action, {})
+    vim.keymap.set('n', keymap.go_to_definition, vim.lsp.buf.definition, {})
+    vim.keymap.set('n', keymap.go_to_implementation, vim.lsp.buf.implementation, {})
+    vim.keymap.set('n', keymap.show_references, require('telescope.builtin').lsp_references, {})
+    vim.keymap.set('n', keymap.hovering_documentation, vim.lsp.buf.hover, {})
+
+    local builtin = require('telescope.builtin')
+    vim.keymap.set('n', keymap.search_for_files_in_working_directory, builtin.find_files, {})
+    vim.keymap.set('n', keymap.search_for_previously_opened_files, builtin.oldfiles, {})
+    vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
+    vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
+
 end
 
 return require('packer').startup(packer_startup)
