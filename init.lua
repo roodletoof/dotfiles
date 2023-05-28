@@ -11,8 +11,8 @@ local keymap = {
     show_references                         = 'gr',
     hovering_documentation                  = 'K',
 
-    autocomplete_scroll_down                = '<C-b>',
-    autocomplete_scroll_up                  = '<C-f>',
+    autocomplete_scroll_down_docs           = '<C-d>',
+    autocomplete_scroll_up_docs             = '<C-f>',
     autocomplete_complete                   = '<C-o>',
     autocomplete_abort                      = '<C-e>',
     autocomplete_confirm                    = '<CR>',
@@ -123,8 +123,8 @@ local function packer_startup(use)
     require('luasnip.loaders.from_vscode').lazy_load()
     cmp.setup{
         mapping = cmp.mapping.preset.insert {
-            [keymap.autocomplete_scroll_down]   = cmp.mapping.scroll_docs(-4),
-            [keymap.autocomplete_scroll_up]     = cmp.mapping.scroll_docs( 4),
+            [keymap.autocomplete_scroll_down_docs]   = cmp.mapping.scroll_docs(-4),
+            [keymap.autocomplete_scroll_up_docs]     = cmp.mapping.scroll_docs( 4),
             [keymap.autocomplete_complete]      = cmp.mapping.complete(),
             [keymap.autocomplete_abort]         = cmp.mapping.abort(),
             [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
