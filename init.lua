@@ -27,7 +27,7 @@ local keymap = {
     move_to_panel_right                     = '<c-l>',
 }
 
-local theme_with_real_colors = false
+local theme_with_real_colors = true
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -88,6 +88,7 @@ local function packer_startup(use)
     end
 
     vim.g.vimtex_view_method = 'zathura'
+    vim.g.vimtex_syntax_enabled = false
 
     if theme_with_real_colors then
         vim.o.termguicolors = true
