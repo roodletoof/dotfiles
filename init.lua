@@ -13,11 +13,10 @@ local keymap = {
 
     autocomplete_scroll_down_docs           = '<C-d>',
     autocomplete_scroll_up_docs             = '<C-f>',
-    autocomplete_complete                   = '<C-o>',
     autocomplete_abort                      = '<C-e>',
     autocomplete_confirm                    = '<CR>',
-    jump_forward_in_snippet                 = '<Tab>',
-    jump_backward_in_snippet                = '<S-Tab>',
+    jump_forward_in_snippet                 = '<C-n>',
+    jump_backward_in_snippet                = '<C-a>',
 
     toggle_file_explorer                    ='<c-n>',
 
@@ -125,7 +124,6 @@ local function packer_startup(use)
         mapping = cmp.mapping.preset.insert {
             [keymap.autocomplete_scroll_down_docs]   = cmp.mapping.scroll_docs(-4),
             [keymap.autocomplete_scroll_up_docs]     = cmp.mapping.scroll_docs( 4),
-            [keymap.autocomplete_complete]      = cmp.mapping.complete(),
             [keymap.autocomplete_abort]         = cmp.mapping.abort(),
             [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
             [keymap.jump_forward_in_snippet] = cmp.mapping(function(fallback)
