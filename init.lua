@@ -16,6 +16,8 @@ local keymap = {
     autocomplete_complete                   = '<C-o>',
     autocomplete_abort                      = '<C-e>',
     autocomplete_confirm                    = '<CR>',
+    jump_forward_in_snippet                 = '<Tab>',
+    jump_backward_in_snippet                = '<S-Tab>',
 
     toggle_file_explorer                    ='<c-n>',
 
@@ -27,7 +29,7 @@ local keymap = {
     move_to_panel_right                     = '<c-l>',
 }
 
-local theme_with_real_colors = true
+local theme_with_real_colors = false
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -38,6 +40,7 @@ vim.opt.nu = true       -- Shows current line number
 vim.opt.wrap = false    -- Don't wrap the line. Let it go offscreen.
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+vim.api.nvim_set_option("clipboard", "unnamed")
 vim.keymap.set('n', keymap.move_to_panel_left, '<c-w>h', {})
 vim.keymap.set('n', keymap.move_to_panel_down, '<c-w>j', {})
 vim.keymap.set('n', keymap.move_to_panel_up, '<c-w>k', {})
@@ -68,6 +71,8 @@ local function packer_startup(use)
     use 'hrsh7th/nvim-cmp'                  -- Autocompletion
     use 'hrsh7th/cmp-nvim-lsp'
     use 'L3MON4D3/LuaSnip'
+    use 'saadparwaiz1/cmp_luasnip'
+    use 'rafamadriz/friendly-snippets'
     use {                                   -- LSP
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
@@ -113,7 +118,9 @@ local function packer_startup(use)
         }
     }
 
+    local luasnip = require('luasnip')
     local cmp = require('cmp')
+    require('luasnip.loaders.from_vscode').lazy_load()
     cmp.setup{
         mapping = cmp.mapping.preset.insert {
             [keymap.autocomplete_scroll_down]   = cmp.mapping.scroll_docs(-4),
@@ -121,6 +128,20 @@ local function packer_startup(use)
             [keymap.autocomplete_complete]      = cmp.mapping.complete(),
             [keymap.autocomplete_abort]         = cmp.mapping.abort(),
             [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
+            [keymap.jump_forward_in_snippet] = cmp.mapping(function(fallback)
+                if luasnip.jumpable(1) then
+                    luasnip.jump(1)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
+            [keymap.jump_backward_in_snippet] = cmp.mapping(function(fallback)
+                if luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
         },
         snippet = {
             expand = function(args)
