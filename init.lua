@@ -20,6 +20,11 @@ local keymap = {
     toggle_file_explorer                    ='<c-n>',
 
     leader_key                              = ';',
+
+    move_to_panel_left                      = '<c-h>',
+    move_to_panel_down                      = '<c-j>',
+    move_to_panel_up                        = '<c-k>',
+    move_to_panel_right                     = '<c-l>',
 }
 
 local theme_with_real_colors = false
@@ -33,6 +38,10 @@ vim.opt.nu = true       -- Shows current line number
 vim.opt.wrap = false    -- Don't wrap the line. Let it go offscreen.
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+vim.keymap.set('n', keymap.move_to_panel_left, '<c-w>h', {})
+vim.keymap.set('n', keymap.move_to_panel_down, '<c-w>j', {})
+vim.keymap.set('n', keymap.move_to_panel_up, '<c-w>k', {})
+vim.keymap.set('n', keymap.move_to_panel_right, '<c-w>l', {})
 
 -- Will only run the first time nvim launches to install packer
 local ensure_packer = function()
@@ -63,7 +72,7 @@ local function packer_startup(use)
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
         'neovim/nvim-lspconfig',
-    }   
+    }
     use { 'nvim-telescope/telescope.nvim',  -- FuzzyFind
         tag = '0.1.1',
         requires = {
@@ -72,7 +81,7 @@ local function packer_startup(use)
             -- ripgrep might not actually
             -- be a nvim package
         }
-    }  
+    }
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
