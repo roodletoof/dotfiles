@@ -86,7 +86,7 @@ local function packer_startup(use)
             -- be a nvim package
         }
     }
-    use 'm4xshen/autoclose.nvim'
+    use 'roodletoof/autoclose.nvim'
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -199,6 +199,12 @@ local function packer_startup(use)
     vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
 
     require('autoclose').setup{
+        filetype_specific_keys = {
+            tex = {
+                ['$'] = { escape = true, close = true, pair = '$$' },
+                ["'"] = false,
+            }
+        },
         options = {
             pair_spaces = true,
             auto_indent = true,
