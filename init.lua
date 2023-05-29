@@ -28,7 +28,7 @@ local keymap = {
     move_to_panel_right                     = '<c-l>',
 }
 
-local theme_with_real_colors = false
+local theme_with_real_colors = true
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -86,6 +86,7 @@ local function packer_startup(use)
             -- be a nvim package
         }
     }
+    use 'm4xshen/autoclose.nvim'
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -111,6 +112,7 @@ local function packer_startup(use)
         ensure_installed = 'all',
         sync_install = false,
         auto_install = true,
+        --indent = { enable = true },
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = false,
@@ -196,6 +198,20 @@ local function packer_startup(use)
     vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
     vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
 
+    require('autoclose').setup{
+        options = {
+            pair_spaces = true,
+            auto_indent = true,
+        }
+    }
+
+    vim.g.python_indent = { -- Fixes retarded default python indentation.
+        open_paren = 'shiftwidth()',
+        nested_paren = 'shiftwidth()',
+        continue = 'shiftwidth()',
+        closed_paren_align_last_line = false,
+        searchpair_timeout = 300,
+    }
 end
 
 return require('packer').startup(packer_startup)
