@@ -208,6 +208,7 @@ local function packer_startup(use)
         options = {
             pair_spaces = true,
             auto_indent = true,
+            disabled_filetypes = {"text"}
         }
     }
 
