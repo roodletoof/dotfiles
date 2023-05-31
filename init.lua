@@ -85,9 +85,6 @@ local function packer_startup(use)
         tag = '0.1.1',
         requires = {
             {'nvim-lua/plenary.nvim'},
-            {'BurntSushi/ripgrep'},
-            -- ripgrep might not actually
-            -- be a nvim package
         }
     }
     use 'roodletoof/autoclose.nvim'
