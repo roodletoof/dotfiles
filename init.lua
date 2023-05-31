@@ -67,10 +67,15 @@ local function packer_startup(use)
     use 'nvim-tree/nvim-web-devicons'       -- Icons for file explorer and info bar
     use 'nvim-lualine/lualine.nvim'         -- Lower info-bar
     use 'nvim-treesitter/nvim-treesitter'   -- Syntax highlighting
-    use 'hrsh7th/nvim-cmp'                  -- Autocompletion
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'L3MON4D3/LuaSnip'
-    use 'saadparwaiz1/cmp_luasnip'
+
+    use 'hrsh7th/nvim-cmp'                  -- Autocompletion framework
+    use 'hrsh7th/cmp-nvim-lsp'              -- Autocompletion lsp integration
+
+    use 'dcampos/nvim-snippy'               -- Snippet engine Handles the actual
+                                            -- pasting of lsp suggestions. As well as custom snippets
+
+    use 'dcampos/cmp-snippy'                -- nvim-cmp integration
+
     use {                                   -- LSP
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
@@ -111,16 +116,15 @@ local function packer_startup(use)
         ensure_installed = 'all',
         sync_install = false,
         auto_install = true,
-        --indent = { enable = true },
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = false,
         }
     }
 
-    local luasnip = require('luasnip')
     local cmp = require('cmp')
-    require('luasnip.loaders.from_vscode').lazy_load()
+    local snippy = require('snippy')
+
     cmp.setup{
         mapping = cmp.mapping.preset.insert {
             [keymap.autocomplete_scroll_down_docs]   = cmp.mapping.scroll_docs(-4),
@@ -128,15 +132,15 @@ local function packer_startup(use)
             [keymap.autocomplete_abort]         = cmp.mapping.abort(),
             [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
             [keymap.jump_forward_in_snippet] = cmp.mapping(function(fallback)
-                if luasnip.jumpable(1) then
-                    luasnip.jump(1)
+                if snippy.can_jump(1) then
+                    snippy.next()
                 else
                     fallback()
                 end
             end, { "i", "s" }),
             [keymap.jump_backward_in_snippet] = cmp.mapping(function(fallback)
-                if luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
+                if snippy.can_jump(-1) then
+                    snippy.previous()
                 else
                     fallback()
                 end
@@ -144,13 +148,13 @@ local function packer_startup(use)
         },
         snippet = {
             expand = function(args)
-                require('luasnip').lsp_expand(args.body)
+                snippy.expand_snippet(args.body)
             end,
         },
         sources = cmp.config.sources(
             {
                 { name = 'nvim_lsp' },
-                { name = 'luasnip' },
+                { name = 'snippy' }
             },
             {{ name = 'buffer' }}
         )
