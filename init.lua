@@ -221,4 +221,43 @@ local function packer_startup(use)
     }
 end
 
+local function file_exists(name)
+    local f = io.open(name,"r")
+
+    if f~=nil then
+        f:close()
+        return true
+    else
+        return false
+    end
+end
+
+-- Opens a default .snippets file for the filetype you are currently editing in a horizontal split pane.
+-- If the .snippets file does not exist, it will be created.
+-- This requires the snippets folder to exist in the config folder.
+-- If the folder does not exist, the command will print out a helpful error message showing what the path
+-- should look like.
+vim.api.nvim_create_user_command(
+    'S',
+    function ()
+        ---@type string
+        local snippets_path = vim.fn.stdpath('config') .. '/snippets/' ..
+                              vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
+
+        if not file_exists(snippets_path) then
+            local file = io.open(snippets_path, 'w')
+            assert(
+                file ~= nil,
+                ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
+                "Make sure the snippets folder in the above path exists."
+            )
+            file:close()
+            print('created file: ', snippets_path)
+        end
+
+        vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
+    end,
+    { nargs = 0 }
+)
+
 return require('packer').startup(packer_startup)
