@@ -130,8 +130,18 @@ local function packer_startup(use)
 
     cmp.setup{
         mapping = {
-            [keymap.autocomplete_abort]         = cmp.mapping.abort(),
-            [keymap.autocomplete_confirm]       = function(_) cmp.confirm{ select = true } end,
+            [keymap.autocomplete_abort]         = cmp.mapping(
+                function (_)
+                    cmp.mapping.abort()
+                end,
+                { "i", "s" }
+            ),
+            [keymap.autocomplete_confirm]       = cmp.mapping(
+                function (_)
+                    cmp.confirm{ select = true }
+                end,
+                { "i", "s" }
+            ),
             [keymap.jump_backward_in_snippet]   = cmp.mapping(
                 function (_)
                     if snippy.can_jump(-1) then
