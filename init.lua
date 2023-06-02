@@ -75,6 +75,7 @@ local function packer_startup(use)
 
     use 'hrsh7th/nvim-cmp'                  -- Autocompletion framework
     use 'hrsh7th/cmp-nvim-lsp'              -- Autocompletion lsp integration
+    use 'folke/neodev.nvim'                 -- lsp integration with the nvim lua API
 
     use 'dcampos/nvim-snippy'               -- Snippet engine Handles the actual
                                             -- pasting of lsp suggestions. As well as custom snippets
@@ -184,17 +185,10 @@ local function packer_startup(use)
                 capabilities = capabilities
             }
         end,
-
         lua_ls = function()
+            require("neodev").setup{} -- load the neovim api
             require("lspconfig").lua_ls.setup {
-                capabilities = capabilities,
-                settings = {
-                    Lua = {
-                        diagnostics = {
-                            globals = {'vim'}
-                        }
-                    }
-                }
+                capabilities = capabilities
             }
         end,
     }
