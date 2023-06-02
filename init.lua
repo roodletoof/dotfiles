@@ -29,6 +29,7 @@ local keymap = {
     autocomplete_abort                      = '<C-e>',
     autocomplete_confirm                    = '<C-j>',
     jump_forward_in_snippet                 = '<C-k>',
+    jump_backward_in_snippet                = '<C-h>',
     jump_to_snippet_end                     = '<C-l>',
 }
 
@@ -129,7 +130,15 @@ local function packer_startup(use)
     cmp.setup{
         mapping = {
             [keymap.autocomplete_abort]         = cmp.mapping.abort(),
-            [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
+            [keymap.autocomplete_confirm]       = function(_) cmp.confirm{ select = true } end,
+            [keymap.jump_backward_in_snippet]   = cmp.mapping(
+                function (_)
+                    if snippy.can_jump(-1) then
+                        snippy.previous()
+                    end
+                end,
+                { "i", "s" }
+            ),
             [keymap.jump_forward_in_snippet]    = cmp.mapping(
                 function(_)
                     if snippy.can_jump(1) then
