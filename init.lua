@@ -1,9 +1,11 @@
 local keymap = {
+    -- n
     search_for_files_in_working_directory   = '<c-p>',
     search_for_previously_opened_files      = '<Space><Space>',
     live_grep                               = '<Space>fg',
     search_help_pages                       = '<Space>fh',
 
+    -- n
     rename_symbol                           = '<leader>rn',
     code_action                             = '<leader>ca',
     go_to_definition                        = 'gd',
@@ -11,21 +13,23 @@ local keymap = {
     show_references                         = 'gr',
     hovering_documentation                  = 'K',
 
-    autocomplete_scroll_down_docs           = '<C-d>',
-    autocomplete_scroll_up_docs             = '<C-f>',
-    autocomplete_abort                      = '<C-e>',
-    autocomplete_confirm                    = '<CR>',
-    jump_forward_in_snippet                 = '<C-n>',
-    jump_backward_in_snippet                = '<C-a>',
-
+    -- n
     toggle_file_explorer                    ='<c-n>',
 
+    -- n
     leader_key                              = ';',
 
+    -- n
     move_to_panel_left                      = '<c-h>',
     move_to_panel_down                      = '<c-j>',
     move_to_panel_up                        = '<c-k>',
     move_to_panel_right                     = '<c-l>',
+
+    -- i, s
+    autocomplete_abort                      = '<C-e>',
+    autocomplete_confirm                    = '<C-j>',
+    jump_forward_in_snippet                 = '<C-k>',
+    jump_to_snippet_end                     = '<C-l>',
 }
 
 local theme_with_real_colors = true
@@ -123,25 +127,25 @@ local function packer_startup(use)
     local snippy = require('snippy')
 
     cmp.setup{
-        mapping = cmp.mapping.preset.insert {
-            [keymap.autocomplete_scroll_down_docs]   = cmp.mapping.scroll_docs(-4),
-            [keymap.autocomplete_scroll_up_docs]     = cmp.mapping.scroll_docs( 4),
+        mapping = {
             [keymap.autocomplete_abort]         = cmp.mapping.abort(),
             [keymap.autocomplete_confirm]       = cmp.mapping.confirm{ select = true },
-            [keymap.jump_forward_in_snippet] = cmp.mapping(function(fallback)
-                if snippy.can_jump(1) then
-                    snippy.next()
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
-            [keymap.jump_backward_in_snippet] = cmp.mapping(function(fallback)
-                if snippy.can_jump(-1) then
-                    snippy.previous()
-                else
-                    fallback()
-                end
-            end, { "i", "s" }),
+            [keymap.jump_forward_in_snippet]    = cmp.mapping(
+                function(_)
+                    if snippy.can_jump(1) then
+                        snippy.next()
+                    end
+                end,
+                { "i", "s" }
+            ),
+            [keymap.jump_to_snippet_end]        = cmp.mapping(
+                function(_)
+                    while snippy.can_jump(1) do
+                        snippy.next()
+                    end
+                end,
+                { "i", "s" }
+            ),
         },
         snippet = {
             expand = function(args)
@@ -208,7 +212,8 @@ local function packer_startup(use)
         options = {
             pair_spaces = true,
             auto_indent = true,
-            disabled_filetypes = {"text"}
+            disabled_filetypes = {"text"},
+            disable_when_touch = true
         }
     }
 
