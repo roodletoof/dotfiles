@@ -44,6 +44,9 @@ vim.opt.nu = true       -- Shows current line number
 vim.opt.wrap = false    -- Don't wrap the line. Let it go offscreen.
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+vim.opt.hlsearch = false
+vim.opt.incsearch = true
+vim.opt.scrolloff = 8
 vim.api.nvim_set_option("clipboard", "unnamed")
 vim.keymap.set('n', keymap.move_to_panel_left, '<c-w>h', {})
 vim.keymap.set('n', keymap.move_to_panel_down, '<c-w>j', {})
