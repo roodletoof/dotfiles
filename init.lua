@@ -97,9 +97,16 @@ local function packer_startup(use)
         }
     }
 
+    use{    "roodletoof/markdown-preview.nvim-asciimath",
+            run = "cd app && npm install",
+            setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+            ft = { "markdown" }, }
+
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
     end
+
+    vim.g.mkdp_auto_start = 1
 
     vim.g.vimtex_view_method = 'zathura'
     vim.g.vimtex_syntax_enabled = false
