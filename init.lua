@@ -96,7 +96,6 @@ local function packer_startup(use)
             {'nvim-lua/plenary.nvim'},
         }
     }
-    use 'roodletoof/autoclose.nvim'
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -129,10 +128,13 @@ local function packer_startup(use)
     }
 
     local cmp = require('cmp')
+    local types = require('cmp.types')
     local snippy = require('snippy')
 
     cmp.setup{
         mapping = {
+            ['<Down>'] = { i = cmp.mapping.select_next_item{ behavior = types.cmp.SelectBehavior.Select } },
+            ['<Up>'] = { i = cmp.mapping.select_prev_item{ behavior = types.cmp.SelectBehavior.Select } },
             [keymap.autocomplete_abort]         = cmp.mapping(
                 function (_)
                     cmp.mapping.abort()
@@ -217,21 +219,6 @@ local function packer_startup(use)
     vim.keymap.set('n', keymap.search_for_previously_opened_files, builtin.oldfiles, {})
     vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
     vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
-
-    require('autoclose').setup{
-        filetype_specific_keys = {
-            tex = {
-                ['$'] = { escape = true, close = true, pair = '$$' },
-                ["'"] = false,
-            }
-        },
-        options = {
-            pair_spaces = true,
-            auto_indent = true,
-            disabled_filetypes = {"text"},
-            disable_when_touch = true
-        }
-    }
 
     vim.g.python_indent = { -- Fixes retarded default python indentation.
         open_paren = 'shiftwidth()',
