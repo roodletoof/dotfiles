@@ -97,7 +97,7 @@ local function packer_startup(use)
         }
     }
 
-    use{    "roodletoof/markdown-preview.nvim-asciimath",
+    use{    "iamcco/markdown-preview.nvim",
             run = "cd app && npm install",
             setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
             ft = { "markdown" }, }
