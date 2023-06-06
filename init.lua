@@ -106,8 +106,6 @@ local function packer_startup(use)
         require('packer').sync()
     end
 
-    vim.g.mkdp_auto_start = 1
-
     vim.g.vimtex_view_method = 'zathura'
     vim.g.vimtex_syntax_enabled = false
 
