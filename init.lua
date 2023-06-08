@@ -209,7 +209,11 @@ local function packer_startup(use)
             require("neodev").setup{} -- load the neovim api
             require("lspconfig").lua_ls.setup {
                 capabilities = capabilities,
-                Lua = { runtime = { version = 'LuaJIT', } }
+                settings = {
+                    Lua = {
+                        runtime = { version = 'LuaJIT', }
+                    }
+                }
             }
         end,
     }
