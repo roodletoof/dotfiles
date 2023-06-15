@@ -47,7 +47,7 @@ vim.opt.expandtab = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.scrolloff = 8
-vim.api.nvim_set_option("clipboard", "unnamed")
+vim.api.nvim_set_option("clipboard", "unnamedplus")
 vim.keymap.set('n', keymap.move_to_panel_left, '<c-w>h', {})
 vim.keymap.set('n', keymap.move_to_panel_down, '<c-w>j', {})
 vim.keymap.set('n', keymap.move_to_panel_up, '<c-w>k', {})
