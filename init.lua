@@ -37,21 +37,21 @@ local theme_with_real_colors = true
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
-vim.opt.tabstop = 4     -- Character width of a tab
-vim.opt.shiftwidth = 0  -- Will always be eual to the tabstop
-vim.opt.rnu = true      -- Shows relative line numbers
-vim.opt.nu = true       -- Shows current line number
-vim.opt.wrap = false    -- Don't wrap the line. Let it go offscreen.
+vim.opt.tabstop = 4       -- Character width of a tab
+vim.opt.shiftwidth = 0    -- Will always be eual to the tabstop
+vim.opt.rnu = true        -- Shows relative line numbers
+vim.opt.nu = true         -- Shows current line number
+vim.opt.wrap = false      -- Don't wrap the line. Let it go offscreen.
 vim.opt.shiftround = true
 vim.opt.expandtab = true
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-vim.opt.scrolloff = 8
+vim.opt.hlsearch = false  -- Don't highlight searches
+vim.opt.incsearch = true  -- Highlight matching patterns as the you are typing it.
+vim.opt.scrolloff = 8     -- Always keep 8 lines of code between the cursor and the top/bottom of the screen.
 vim.api.nvim_set_option("clipboard", "unnamedplus")
-vim.keymap.set('n', keymap.move_to_panel_left, '<c-w>h', {})
-vim.keymap.set('n', keymap.move_to_panel_down, '<c-w>j', {})
-vim.keymap.set('n', keymap.move_to_panel_up, '<c-w>k', {})
-vim.keymap.set('n', keymap.move_to_panel_right, '<c-w>l', {})
+vim.api.nvim_set_keymap('n', keymap.move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
 
 -- Will only run the first time nvim launches to install packer
 local ensure_packer = function()
@@ -118,7 +118,7 @@ local function packer_startup(use)
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
     require('nvim-tree').setup()
-    vim.keymap.set('n', keymap.toggle_file_explorer, ':NvimTreeFindFileToggle<CR>')
+    vim.keymap.set('n', keymap.toggle_file_explorer, '<cmd>NvimTreeFindFileToggle<CR>', {silent = true})
 
     require('lualine').setup {options = {icons_enabled = true, theme = 'gruvbox'}}
 
@@ -263,12 +263,12 @@ vim.api.nvim_create_user_command(
                               vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
 
         if not file_exists(snippets_path) then
-            local file = io.open(snippets_path, 'w')
-            assert(
-                file ~= nil,
-                ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
-                "Make sure the snippets folder in the above path exists."
-            )
+            local file = io.open( snippets_path, 'w' )
+                assert(
+                    file ~= nil,
+                    ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
+                    "Make sure the snippets folder in the above path exists."
+                )
             file:close()
             print('created file: ', snippets_path)
         end
