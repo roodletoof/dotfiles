@@ -115,8 +115,8 @@ local function packer_startup(use)
         vim.cmd [[ colorscheme gruvbox ]]
     end
 
-    vim.g.loaded_netrw = 1
-    vim.g.loaded_netrwPlugin = 1
+    vim.g.loaded_netrw = 1       -- Disables some built in plugin
+    vim.g.loaded_netrwPlugin = 1 -- Disables some built in plugin
     require('nvim-tree').setup()
     vim.keymap.set('n', keymap.toggle_file_explorer, '<cmd>NvimTreeFindFileToggle<CR>', {silent = true})
 
