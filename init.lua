@@ -1,3 +1,5 @@
+local tab_width = 4
+
 local keymap = {
     -- n
     search_for_files_in_working_directory   = '<c-p>',
@@ -38,16 +40,16 @@ local theme_with_real_colors = true
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
-vim.opt.tabstop = 4       -- Character width of a tab
-vim.opt.shiftwidth = 0    -- Will always be eual to the tabstop
-vim.opt.rnu = true        -- Shows relative line numbers
-vim.opt.nu = true         -- Shows current line number
-vim.opt.wrap = false      -- Don't wrap the line. Let it go offscreen.
+vim.opt.tabstop = tab_width     -- Character width of a tab
+vim.opt.shiftwidth = 0          -- Will always be eual to the tabstop
+vim.opt.rnu = true              -- Shows relative line numbers
+vim.opt.nu = true               -- Shows current line number
+vim.opt.wrap = false            -- Don't wrap the line. Let it go offscreen.
 vim.opt.shiftround = true
 vim.opt.expandtab = true
-vim.opt.hlsearch = false  -- Don't highlight searches
-vim.opt.incsearch = true  -- Highlight matching patterns as the you are typing it.
-vim.opt.scrolloff = 8     -- Always keep 8 lines of code between the cursor and the top/bottom of the screen.
+vim.opt.hlsearch = false        -- Don't highlight searches
+vim.opt.incsearch = true        -- Highlight matching patterns as the you are typing it.
+vim.opt.scrolloff = 8           -- Always keep 8 lines of code between the cursor and the top/bottom of the screen.
 vim.api.nvim_set_option("clipboard", "unnamedplus")
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
@@ -279,6 +281,10 @@ vim.api.nvim_create_user_command(
     { nargs = 0 }
 )
 
+local tab_whitespace = ''
+for _ = 1, tab_width do
+    tab_whitespace = tab_whitespace .. ' '
+end
 
 local function split_line()
     local line = vim.api.nvim_get_current_line()
@@ -287,49 +293,17 @@ local function split_line()
 
     local opening_pattern = "[%(%[%{]"
     local closing_pattern = "[%)%]%}]"
-    local string_opener_pattern = "['\"]"
 
     --Find the first parenthesized range within the text.
     local scope_start = line:find(opening_pattern, cursor_i)
-
     assert(scope_start ~= nil, 'No opening bracket found on current line after cursor position')
 
-    -- Now find the scope end index, and populate comma separated item list
+    -- Now find the scope end index.
     ---@type integer
     local scope_end
-    ---@type string[]
-    local items = {}
-    local last_item_begin = scope_start+1
-
     local scope_debth = 1
-    local in_string = false
-    local string_opener_symbol
-
-    local quotes = {
-        single = "'",
-        double = '"',
-    }
-
-    for i = scope_start+1, #line do
+    for i = scope_start, #line do
         local char = line:sub(i,i)
-
-        -- This approach for checking whether we are in a string
-        -- does not account for escaped double/single quotes.
-        -- Oh well.
-        if in_string then
-            if char == string_opener_symbol then
-                in_string = false
-            end
-            goto continue
-        end
-
-        if char:match(string_opener_pattern) then
-            in_string = true
-            string_opener_symbol = char
-            goto continue
-        end
-
-        -- If we get here, we are not in a string
 
         if char:match(opening_pattern) then
             scope_debth = scope_debth + 1
@@ -346,27 +320,31 @@ local function split_line()
             break
         end
 
-        if scope_debth == 1 and char == ',' then
-            table.insert(items, line:sub(last_item_begin, i))
-            last_item_begin = line:find('[^%s]', last_item_begin+1)
-        end
-
         ::continue::
     end
     assert(scope_end ~= nil, 'Opening bracket was not closed on ths line')
 
-      --local line = vim.api.nvim_get_current_line()
-      --local new_lines = vim.split(line, ",")
-      --local indent = string.match(line, "^%s*")
+    local first_part = line:sub(1, scope_start)
+    local last_part = line:sub(scope_end, #line)
+    local middle_plaintext = line:sub(scope_start+1, scope_end-1)
+    local split_middle = vim.split(middle_plaintext, ", ?")
+    local indent_spaces = string.match(line, "^%s*") .. tab_whitespace
+    split_middle[1] = indent_spaces .. split_middle[1]
+    local joined_lines = table.concat(split_middle, ',\n' .. indent_spaces)
+    --TODO complete this
 
-      ---- Join the split lines with proper indentation
-      --local indented
-      --local joined_lines = table.concat(new_lines, ",\n" .. indent)
+    --local line = vim.api.nvim_get_current_line()
+    --local new_lines = vim.split(line, ",")
+    --local indent = string.match(line, "^%s*")
 
-      ---- Update the current line and insert the new lines
-      --vim.api.nvim_set_current_line(joined_lines)
-      --vim.api.nvim_buf_set_lines()
-      --vim.api.nvim_feedkeys("o", "n", false)
+    ---- Join the split lines with proper indentation
+    --local indented
+    --local joined_lines = table.concat(new_lines, ",\n" .. indent)
+
+    ---- Update the current line and insert the new lines
+    --vim.api.nvim_set_current_line(joined_lines)
+    --vim.api.nvim_buf_set_lines()
+    --vim.api.nvim_feedkeys("o", "n", false)
 end
 
 vim.keymap.set('n', keymap.split_line, split_line, { silent = true })
