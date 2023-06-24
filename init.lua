@@ -184,8 +184,8 @@ local function packer_startup(use)
         },
         sources = cmp.config.sources(
             {
+                { name = 'snippy' },
                 { name = 'nvim_lsp' },
-                { name = 'snippy' }
             },
             {{ name = 'buffer' }}
         )
