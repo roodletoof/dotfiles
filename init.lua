@@ -18,6 +18,7 @@ local keymap = {
 
     -- n
     leader_key                              = ';',
+    split_line                              = "<leader>s",
 
     -- n
     move_to_panel_left                      = '<c-h>',
@@ -277,5 +278,97 @@ vim.api.nvim_create_user_command(
     end,
     { nargs = 0 }
 )
+
+
+local function split_line()
+    local line = vim.api.nvim_get_current_line()
+    local _, cursor_i = vim.api.nvim_win_get_cursor(0)
+    cursor_i = cursor_i + 1
+
+    local opening_pattern = "[%(%[%{]"
+    local closing_pattern = "[%)%]%}]"
+    local string_opener_pattern = "['\"]"
+
+    --Find the first parenthesized range within the text.
+    local scope_start = line:find(opening_pattern, cursor_i)
+
+    assert(scope_start ~= nil, 'No opening bracket found on current line after cursor position')
+
+    -- Now find the scope end index, and populate comma separated item list
+    ---@type integer
+    local scope_end
+    ---@type string[]
+    local items = {}
+    local last_item_begin = scope_start+1
+
+    local scope_debth = 1
+    local in_string = false
+    local string_opener_symbol
+
+    local quotes = {
+        single = "'",
+        double = '"',
+    }
+
+    for i = scope_start+1, #line do
+        local char = line:sub(i,i)
+
+        -- This approach for checking whether we are in a string
+        -- does not account for escaped double/single quotes.
+        -- Oh well.
+        if in_string then
+            if char == string_opener_symbol then
+                in_string = false
+            end
+            goto continue
+        end
+
+        if char:match(string_opener_pattern) then
+            in_string = true
+            string_opener_symbol = char
+            goto continue
+        end
+
+        -- If we get here, we are not in a string
+
+        if char:match(opening_pattern) then
+            scope_debth = scope_debth + 1
+            goto continue
+        end
+
+        if char:match(closing_pattern) then
+            scope_debth = scope_debth - 1
+            goto continue
+        end
+
+        if scope_debth == 0 then
+            scope_end = i
+            break
+        end
+
+        if scope_debth == 1 and char == ',' then
+            table.insert(items, line:sub(last_item_begin, i))
+            last_item_begin = line:find('[^%s]', last_item_begin+1)
+        end
+
+        ::continue::
+    end
+    assert(scope_end ~= nil, 'Opening bracket was not closed on ths line')
+
+      --local line = vim.api.nvim_get_current_line()
+      --local new_lines = vim.split(line, ",")
+      --local indent = string.match(line, "^%s*")
+
+      ---- Join the split lines with proper indentation
+      --local indented
+      --local joined_lines = table.concat(new_lines, ",\n" .. indent)
+
+      ---- Update the current line and insert the new lines
+      --vim.api.nvim_set_current_line(joined_lines)
+      --vim.api.nvim_buf_set_lines()
+      --vim.api.nvim_feedkeys("o", "n", false)
+end
+
+vim.keymap.set('n', keymap.split_line, split_line, { silent = true })
 
 return require('packer').startup(packer_startup)
