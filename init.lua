@@ -55,6 +55,7 @@ vim.api.nvim_set_keymap('n', keymap.move_to_panel_left, '<cmd>wincmd h<CR>', {si
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+vim.g.c_syntax_for_h = 1
 
 -- Will only run the first time nvim launches to install packer
 local ensure_packer = function()
@@ -288,65 +289,22 @@ end
 
 local function split_line()
     local line = vim.api.nvim_get_current_line()
-    local _, cursor_i = vim.api.nvim_win_get_cursor(0)
-    cursor_i = cursor_i + 1
+    local items = vim.split(line, ", *")
+    local indent = string.match(line, "^%s*")
 
-    local opening_pattern = "[%(%[%{]"
-    local closing_pattern = "[%)%]%}]"
-
-    --Find the first parenthesized range within the text.
-    local scope_start = line:find(opening_pattern, cursor_i)
-    assert(scope_start ~= nil, 'No opening bracket found on current line after cursor position')
-
-    -- Now find the scope end index.
-    ---@type integer
-    local scope_end
-    local scope_debth = 1
-    for i = scope_start, #line do
-        local char = line:sub(i,i)
-
-        if char:match(opening_pattern) then
-            scope_debth = scope_debth + 1
-            goto continue
-        end
-
-        if char:match(closing_pattern) then
-            scope_debth = scope_debth - 1
-            goto continue
-        end
-
-        if scope_debth == 0 then
-            scope_end = i
-            break
-        end
-
-        ::continue::
+    local formatted_items = {items[1] .. ','}
+    for i = 2, #items -1 do
+        table.insert(formatted_items, indent .. tab_whitespace .. items[i] .. ',')
     end
-    assert(scope_end ~= nil, 'Opening bracket was not closed on ths line')
+    table.insert(formatted_items, indent .. tab_whitespace .. items[#items] )
 
-    local first_part = line:sub(1, scope_start)
-    local last_part = line:sub(scope_end, #line)
-    local middle_plaintext = line:sub(scope_start+1, scope_end-1)
-    local split_middle = vim.split(middle_plaintext, ", ?")
-    local indent_spaces = string.match(line, "^%s*") .. tab_whitespace
-    split_middle[1] = indent_spaces .. split_middle[1]
-    local joined_lines = table.concat(split_middle, ',\n' .. indent_spaces)
-    --TODO complete this
-
-    --local line = vim.api.nvim_get_current_line()
-    --local new_lines = vim.split(line, ",")
-    --local indent = string.match(line, "^%s*")
-
-    ---- Join the split lines with proper indentation
-    --local indented
-    --local joined_lines = table.concat(new_lines, ",\n" .. indent)
-
-    ---- Update the current line and insert the new lines
-    --vim.api.nvim_set_current_line(joined_lines)
-    --vim.api.nvim_buf_set_lines()
-    --vim.api.nvim_feedkeys("o", "n", false)
+    local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+    vim.api.nvim_buf_set_lines(0, row-1, row, false, formatted_items)
 end
 
-vim.keymap.set('n', keymap.split_line, split_line, { silent = true })
+vim.keymap.set('n',
+    keymap.split_line,
+    split_line,
+    { silent = true })
 
 return require('packer').startup(packer_startup)
