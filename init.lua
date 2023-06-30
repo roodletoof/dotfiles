@@ -302,6 +302,40 @@ local function split_line()
     vim.api.nvim_buf_set_lines(0, row-1, row, false, formatted_items)
 end
 
+local BRACKETS = {
+    ['{'] ='}',
+    ['['] = ']',
+    ['('] = ')'
+}
+local function split_line()
+    local line = vim.api.nvim_get_current_line()
+    local leading_whitespace = string.match(line, "^%s*")
+    local leading_indented_whitespace = leading_whitespace .. tab_whitespace
+
+    local first_bracket_i = string.find(line, "[%(%[{]")
+
+    local index_ranges = {} -- populate this list with a series of index ranges
+                            -- An index range is a list of two numbers: start, end (inclusive)
+    local last_bracket_i = nil -- And find this index
+
+    local curr_string_symbol = nil
+    for i = first_bracket_i, #line do
+        local char = line:sub(i,i)
+
+        if (not curr_string_symbol) and (char == '"' or char == "'") then
+            curr_string_symbol = char
+            goto continue
+        end
+
+        if curr_string_symbol == char then
+            curr_string_symbol = nil
+            goto continue
+        end
+        ::continue::
+    end
+end
+
+
 vim.keymap.set('n',
     keymap.split_line,
     split_line,
