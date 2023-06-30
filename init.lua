@@ -243,95 +243,101 @@ local function packer_startup(use)
     }
 end
 
-local function file_exists(name)
-    local f = io.open(name,"r")
+do
+    local function file_exists(name)
+        local f = io.open(name,"r")
 
-    if f~=nil then
-        f:close()
-        return true
-    else
-        return false
+        if f~=nil then
+            f:close()
+            return true
+        else
+            return false
+        end
     end
+
+    -- Opens a default .snippets file for the filetype you are currently editing in a horizontal split pane.
+    -- If the .snippets file does not exist, it will be created.
+    -- This requires the snippets folder to exist in the config folder.
+    -- If the folder does not exist, the command will print out a helpful error message showing what the path
+    -- should look like.
+    vim.api.nvim_create_user_command(
+        'S',
+        function ()
+            ---@type string
+            local snippets_path = vim.fn.stdpath('config') .. '/snippets/' ..
+                                vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
+
+            if not file_exists(snippets_path) then
+                local file = io.open( snippets_path, 'w' )
+                    assert(
+                        file ~= nil,
+                        ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
+                        "Make sure the snippets folder in the above path exists."
+                    )
+                file:close()
+                print('created file: ', snippets_path)
+            end
+
+            vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
+        end,
+        { nargs = 0 }
+    )
 end
 
--- Opens a default .snippets file for the filetype you are currently editing in a horizontal split pane.
--- If the .snippets file does not exist, it will be created.
--- This requires the snippets folder to exist in the config folder.
--- If the folder does not exist, the command will print out a helpful error message showing what the path
--- should look like.
-vim.api.nvim_create_user_command(
-    'S',
-    function ()
-        ---@type string
-        local snippets_path = vim.fn.stdpath('config') .. '/snippets/' ..
-                              vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
+--  local function split_line()
+--      local line = vim.api.nvim_get_current_line()
+--      local items = vim.split(line, ", *")
+--      local indent = string.match(line, "^%s*")
 
-        if not file_exists(snippets_path) then
-            local file = io.open( snippets_path, 'w' )
-                assert(
-                    file ~= nil,
-                    ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
-                    "Make sure the snippets folder in the above path exists."
-                )
-            file:close()
-            print('created file: ', snippets_path)
-        end
+--      local formatted_items = {items[1] .. ','}
+--      for i = 2, #items -1 do
+--          table.insert(formatted_items, indent .. tab_whitespace .. items[i] .. ',')
+--      end
+--      table.insert(formatted_items, indent .. tab_whitespace .. items[#items] )
 
-        vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
-    end,
-    { nargs = 0 }
-)
+--      local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+--      vim.api.nvim_buf_set_lines(0, row-1, row, false, formatted_items)
+--  end
 
-local tab_whitespace = ''
-for _ = 1, tab_width do
-    tab_whitespace = tab_whitespace .. ' '
-end
-
-local function split_line()
-    local line = vim.api.nvim_get_current_line()
-    local items = vim.split(line, ", *")
-    local indent = string.match(line, "^%s*")
-
-    local formatted_items = {items[1] .. ','}
-    for i = 2, #items -1 do
-        table.insert(formatted_items, indent .. tab_whitespace .. items[i] .. ',')
+local split_line
+do
+    local tab_whitespace = ''
+    for _ = 1, tab_width do
+        tab_whitespace = tab_whitespace .. ' '
     end
-    table.insert(formatted_items, indent .. tab_whitespace .. items[#items] )
 
-    local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
-    vim.api.nvim_buf_set_lines(0, row-1, row, false, formatted_items)
-end
+    local BRACKETS = {
+        ['{'] ='}',
+        ['['] = ']',
+        ['('] = ')'
+    }
 
-local BRACKETS = {
-    ['{'] ='}',
-    ['['] = ']',
-    ['('] = ')'
-}
-local function split_line()
-    local line = vim.api.nvim_get_current_line()
-    local leading_whitespace = string.match(line, "^%s*")
-    local leading_indented_whitespace = leading_whitespace .. tab_whitespace
+    split_line = function()
+        local line = vim.api.nvim_get_current_line()
+        local leading_whitespace = string.match(line, "^%s*")
+        local leading_indented_whitespace = leading_whitespace .. tab_whitespace
 
-    local first_bracket_i = string.find(line, "[%(%[{]")
+        local first_bracket_i = string.find(line, "[%(%[{]")
 
-    local index_ranges = {} -- populate this list with a series of index ranges
-                            -- An index range is a list of two numbers: start, end (inclusive)
-    local last_bracket_i = nil -- And find this index
+        local index_ranges = {} -- populate this list with a series of index ranges
+                                -- An index range is a list of two numbers: start, end (inclusive)
+        local last_bracket_i = nil -- And find this index
 
-    local curr_string_symbol = nil
-    for i = first_bracket_i, #line do
-        local char = line:sub(i,i)
+        local curr_string_symbol = nil
+        for i = first_bracket_i, #line do
+            local char = line:sub(i,i)
 
-        if (not curr_string_symbol) and (char == '"' or char == "'") then
-            curr_string_symbol = char
-            goto continue
+            if (not curr_string_symbol) and (char == '"' or char == "'") then
+                curr_string_symbol = char
+                goto continue
+            end
+
+            if curr_string_symbol == char then
+                curr_string_symbol = nil
+                goto continue
+            end
+            ::continue::
         end
-
-        if curr_string_symbol == char then
-            curr_string_symbol = nil
-            goto continue
-        end
-        ::continue::
     end
 end
 
