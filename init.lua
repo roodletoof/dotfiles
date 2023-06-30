@@ -20,7 +20,7 @@ local keymap = {
 
     -- n
     leader_key                              = ';',
-    split_line                              = "<leader>s",
+    split_line                              = "<leader>s", --TODO Not complete yet. Too tired atm
 
     -- n
     move_to_panel_left                      = '<c-h>',
@@ -56,6 +56,13 @@ vim.api.nvim_set_keymap('n', keymap.move_to_panel_down, '<cmd>wincmd j<CR>', {si
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
 vim.api.nvim_set_keymap('n', keymap.move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
 vim.g.c_syntax_for_h = 1
+vim.g.python_indent = { -- Fixes retarded default python indentation.
+    open_paren = 'shiftwidth()',
+    nested_paren = 'shiftwidth()',
+    continue = 'shiftwidth()',
+    closed_paren_align_last_line = false,
+    searchpair_timeout = 300,
+}
 
 -- Will only run the first time nvim launches to install packer
 local ensure_packer = function()
@@ -73,12 +80,12 @@ local packer_bootstrap = ensure_packer()
 -- Packages
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
-    use 'lervag/vimtex'                     -- Latex
-    use 'ellisonleao/gruvbox.nvim'          -- Theme
-    use 'nvim-tree/nvim-tree.lua'           -- File explorer
-    use 'nvim-tree/nvim-web-devicons'       -- Icons for file explorer and info bar
-    use 'nvim-lualine/lualine.nvim'         -- Lower info-bar
-    use 'nvim-treesitter/nvim-treesitter'   -- Syntax highlighting
+    use 'lervag/vimtex'                     -- Provides autocompile on save and stuff. (Could probably just replace this thing with something custom)
+    use 'ellisonleao/gruvbox.nvim'          -- Provides these sick colors.
+    use 'nvim-tree/nvim-tree.lua'           -- File explorer.
+    use 'nvim-tree/nvim-web-devicons'       -- Provides Pretty icons to look at. Makes the plugin above and below pretty.
+    use 'nvim-lualine/lualine.nvim'         -- Lower info-bar. Displays filetype of current open file, and whether the file has unstated changes.
+    use 'nvim-treesitter/nvim-treesitter'   -- Provides syntax highlighting for many lanugages.
 
     use 'hrsh7th/nvim-cmp'                  -- Autocompletion framework
     use 'hrsh7th/cmp-nvim-lsp'              -- Autocompletion lsp integration
@@ -86,25 +93,27 @@ local function packer_startup(use)
 
     use 'dcampos/nvim-snippy'               -- Snippet engine Handles the actual
                                             -- pasting of lsp suggestions. As well as custom snippets
+                                            -- (Custom snippets are awesome)
 
     use 'dcampos/cmp-snippy'                -- nvim-cmp integration
 
-    use {                                   -- LSP
+    use {-- LSP
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
-        'neovim/nvim-lspconfig',
-    }
-    use { 'nvim-telescope/telescope.nvim',  -- FuzzyFind
-        tag = '0.1.1',
-        requires = {
-            {'nvim-lua/plenary.nvim'},
-        }
-    }
+        'neovim/nvim-lspconfig', }
 
-    use{    "iamcco/markdown-preview.nvim",
-            run = "cd app && npm install",
-            setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
-            ft = { "markdown" }, }
+    use {-- FuzzyFind your way through previously open files, or project files.
+        'nvim-telescope/telescope.nvim',
+        tag = '0.1.1',
+        requires = { {'nvim-lua/plenary.nvim'}, } }
+
+    use {-- Provides live preview of markdown files that follows the cursor around.
+        "iamcco/markdown-preview.nvim",
+        run = "cd app && npm install",
+        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
+        ft = { "markdown" }, }
+
+    use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -234,13 +243,6 @@ local function packer_startup(use)
     vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
     vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
 
-    vim.g.python_indent = { -- Fixes retarded default python indentation.
-        open_paren = 'shiftwidth()',
-        nested_paren = 'shiftwidth()',
-        continue = 'shiftwidth()',
-        closed_paren_align_last_line = false,
-        searchpair_timeout = 300,
-    }
 end
 
 do
