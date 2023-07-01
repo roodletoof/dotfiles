@@ -380,38 +380,34 @@ do
         local leading_whitespace = string.match(line, "^%s*")
         local first_line = line:sub(1, first_bracket_i)
         local last_line = leading_whitespace .. line:sub(last_bracket_i, #line)
-        local concatenated_middle = line:sub(first_bracket_i+1, last_bracket_i-1)
-        local adjusted_comma_indexes = {1}
-        --TODO populate this instead. Don't bother with the indexes
-        local dirty_middle_lines = {}
-        do
-            local first_line_len = #first_line
-            for _, comma_i in ipairs(comma_indexes) do
-                table.insert(adjusted_comma_indexes, comma_i - #first_line)
-            end
-            table.insert(adjusted_comma_indexes, #concatenated_middle)
+
+        -- Gather items
+        local middle_lines = {line:sub(first_bracket_i+1, comma_indexes[1])}
+        for i = 1, #comma_indexes-1 do
+            table.insert(middle_lines, line:sub(comma_indexes[i], comma_indexes[i+1]))
+        end
+        table.insert(middle_lines, line:sub(comma_indexes[#comma_indexes], last_bracket_i-1))
+
+        -- Cleanup step
+        for i, middle_line in ipairs(middle_lines) do
+            middle_line = middle_line:gsub("^[%s,]*", leading_whitespace .. TAB_WHITESPACE, 1)
+            middle_line = middle_line:gsub("[%s]*$", '', 1)
+            middle_lines[i] = middle_line
         end
 
-        ---@type string[]
-        local middle_lines = {}
-        do
-            ---@type string
-            local leading_indented_whitespace = leading_whitespace .. TAB_WHITESPACE
-            for _, comma_i in ipairs(adjusted_comma_indexes) do
-                table.insert(
-                    middle_lines,
-                    --TODO does not work. Need to separate all the different items, and match from beginning to end to clean them up
-                    leading_indented_whitespace .. concatenated_middle:match('([^%s,].*)%s*,%s*', comma_i)
-                )
-            end
-        end
+        local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+        vim.api.nvim_buf_set_lines(0, row-1, row, false, {first_line})
+        vim.api.nvim_buf_set_lines(0, row, row, false, {last_line})
+        vim.api.nvim_buf_set_lines(0, row, row, false, middle_lines)
     end
 end
 
 
-vim.keymap.set('n',
+vim.keymap.set(
+    'n',
     keymap.split_line,
     split_line,
-    { silent = true })
+    { silent = true }
+)
 
 return require('packer').startup(packer_startup)
