@@ -1,4 +1,4 @@
-local tab_width = 4
+local TAB_WIDTH = 4
 
 local keymap = {
     -- n
@@ -40,7 +40,7 @@ local theme_with_real_colors = true
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
-vim.opt.tabstop = tab_width     -- Character width of a tab
+vim.opt.tabstop = TAB_WIDTH     -- Character width of a tab
 vim.opt.shiftwidth = 0          -- Will always be eual to the tabstop
 vim.opt.rnu = true              -- Shows relative line numbers
 vim.opt.nu = true               -- Shows current line number
@@ -303,42 +303,107 @@ end
 
 local split_line
 do
-    local tab_whitespace = ''
-    for _ = 1, tab_width do
-        tab_whitespace = tab_whitespace .. ' '
+    local TAB_WHITESPACE = ''
+    for _ = 1, TAB_WIDTH do
+        TAB_WHITESPACE = TAB_WHITESPACE .. ' '
     end
 
-    local BRACKETS = {
+    local BRACKET_COMPLEMENTS = {
         ['{'] ='}',
         ['['] = ']',
         ['('] = ')'
     }
 
+    local OPENING_BRACKET_PATTERN = "[%(%[{]"
+
     split_line = function()
         local line = vim.api.nvim_get_current_line()
-        local leading_whitespace = string.match(line, "^%s*")
-        local leading_indented_whitespace = leading_whitespace .. tab_whitespace
 
-        local first_bracket_i = string.find(line, "[%(%[{]")
+        ---@type integer?
+        local first_bracket_i = string.find(line, OPENING_BRACKET_PATTERN)
+        assert(first_bracket_i, 'No opening brackets found on given line')
 
-        local index_ranges = {} -- populate this list with a series of index ranges
-                                -- An index range is a list of two numbers: start, end (inclusive)
+        ---@type integer[]
+        local comma_indexes = {} -- Populate this array
+        ---@type integer?
         local last_bracket_i = nil -- And find this index
 
-        local curr_string_symbol = nil
-        for i = first_bracket_i, #line do
-            local char = line:sub(i,i)
+        do
+            ---@type string[]
+            local closing_bracket_stack = {}
+            local icon_to_close_string = ''
+            local in_string = false
 
-            if (not curr_string_symbol) and (char == '"' or char == "'") then
-                curr_string_symbol = char
-                goto continue
-            end
+            for i = first_bracket_i, #line do
+                local char = line:sub(i,i)
 
-            if curr_string_symbol == char then
-                curr_string_symbol = nil
-                goto continue
+                if in_string then
+                    in_string = not (char == icon_to_close_string)
+                    goto continue
+                end
+
+                if char == '"' or char == "'" then
+                    icon_to_close_string = char
+                    in_string = true
+                    goto continue
+                end
+                -- string handling complete
+
+                if char:match(OPENING_BRACKET_PATTERN) then
+                    table.insert(
+                        closing_bracket_stack,
+                        BRACKET_COMPLEMENTS[
+                            line:sub(i, i)
+                        ]
+                    )
+                end
+
+                if char == closing_bracket_stack[#closing_bracket_stack] then
+                    table.remove(closing_bracket_stack)
+                end
+
+                if #closing_bracket_stack == 1 and char == ',' then
+                    table.insert(comma_indexes, i)
+                end
+
+                if #closing_bracket_stack == 0 then
+                    last_bracket_i = i
+                    break
+                end
+                ::continue::
             end
-            ::continue::
+        end
+
+        assert(last_bracket_i, "The opening bracket was not closed")
+
+        ---@type string
+        local leading_whitespace = string.match(line, "^%s*")
+        local first_line = line:sub(1, first_bracket_i)
+        local last_line = leading_whitespace .. line:sub(last_bracket_i, #line)
+        local concatenated_middle = line:sub(first_bracket_i+1, last_bracket_i-1)
+        local adjusted_comma_indexes = {1}
+        --TODO populate this instead. Don't bother with the indexes
+        local dirty_middle_lines = {}
+        do
+            local first_line_len = #first_line
+            for _, comma_i in ipairs(comma_indexes) do
+                table.insert(adjusted_comma_indexes, comma_i - #first_line)
+            end
+            table.insert(adjusted_comma_indexes, #concatenated_middle)
+        end
+
+        ---@type string[]
+        local middle_lines = {}
+        do
+            ---@type string
+            local leading_indented_whitespace = leading_whitespace .. TAB_WHITESPACE
+            for _, comma_i in ipairs(adjusted_comma_indexes) do
+                table.insert(
+                    middle_lines,
+                    --TODO does not work. Need to separate all the different items, and match from beginning to end to clean them up
+                    leading_indented_whitespace .. concatenated_middle:match('([^%s,].*)%s*,%s*', comma_i)
+                )
+            end
         end
     end
 end
