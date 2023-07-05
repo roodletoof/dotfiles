@@ -308,20 +308,38 @@ do
         TAB_WHITESPACE = TAB_WHITESPACE .. ' '
     end
 
-    local BRACKET_COMPLEMENTS = {
-        ['{'] ='}',
-        ['['] = ']',
-        ['('] = ')'
-    }
+    local get_closing_bracket = function(char)
+        if char == '(' then return ')' end
+        if char == '[' then return ']' end
+        if char == '{' then return '}' end
+        error("Not an opening bracket")
+    end
 
-    local OPENING_BRACKET_PATTERN = "[%(%[{]"
+    ---@param char string
+    ---@return boolean
+    local is_opening_bracket = function(char)
+        return char == '(' or char == '[' or char == '{'
+    end
 
     split_line = function()
         local line = vim.api.nvim_get_current_line()
+        local _, col =  unpack(vim.api.nvim_win_get_cursor(0))
+        col = col + 1 -- Doing this to make it 1-indexed
 
         ---@type integer?
-        local first_bracket_i = string.find(line, OPENING_BRACKET_PATTERN)
-        assert(first_bracket_i, 'No opening brackets found on given line')
+        local first_bracket_i = nil
+        for i = col, #line do
+            local char = line:sub(i, i)
+            if is_opening_bracket(char) then
+                first_bracket_i = i
+                break
+            end
+        end
+
+        if not first_bracket_i then
+            print('No opening brackets found after cursor on this line.')
+            return
+        end
 
         ---@type integer[]
         local comma_indexes = {} -- Populate this array
@@ -349,12 +367,10 @@ do
                 end
                 -- string handling complete
 
-                if char:match(OPENING_BRACKET_PATTERN) then
+                if is_opening_bracket( char ) then
                     table.insert(
                         closing_bracket_stack,
-                        BRACKET_COMPLEMENTS[
-                            line:sub(i, i)
-                        ]
+                        get_closing_bracket( char )
                     )
                 end
 
@@ -374,7 +390,14 @@ do
             end
         end
 
-        assert(last_bracket_i, "The opening bracket was not closed")
+        if not last_bracket_i then
+            print("The opening bracket was not closed")
+            return
+        end
+        if #comma_indexes == 0 then
+            print('No comma separated items in the given parenthesis scope')
+            return
+        end
 
         ---@type string
         local leading_whitespace = string.match(line, "^%s*")
