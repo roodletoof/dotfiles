@@ -2,38 +2,35 @@ local TAB_WIDTH = 4
 
 local keymap = {
     -- n
-    search_for_files_in_working_directory   = '<c-p>',
-    search_for_previously_opened_files      = '<Space><Space>',
-    live_grep                               = '<Space>fg',
-    search_help_pages                       = '<Space>fh',
-
-    -- n
-    rename_symbol                           = '<leader>rn',
-    code_action                             = '<leader>ca',
-    go_to_definition                        = 'gd',
-    go_to_implementation                    = 'gi',
-    show_references                         = 'gr',
-    hovering_documentation                  = 'K',
-
-    -- n
-    toggle_file_explorer                    ='<c-n>',
-
-    -- n
     leader_key                              = ';',
-    split_line                              = "<leader>s",
 
-    -- n
-    move_to_panel_left                      = '<c-h>',
-    move_to_panel_down                      = '<c-j>',
-    move_to_panel_up                        = '<c-k>',
-    move_to_panel_right                     = '<c-l>',
+    search_for_files_in_working_directory   = '<c-p>',          -- 
+    search_for_previously_opened_files      = '<Space><Space>', -- 
+    live_grep                               = '<Space>g',       -- 
+    search_help_pages                       = '<Space>h',       -- 
+
+    rename_symbol                           = '<leader>rn',     -- 
+    code_action                             = '<leader>ca',     -- 
+    go_to_definition                        = 'gd',             -- 
+    go_to_implementation                    = 'gi',             -- 
+    show_references                         = 'gr',             -- 
+    hovering_documentation                  = 'K',              -- 
+
+    toggle_file_explorer                    ='<c-n>',           -- 
+
+    move_to_panel_left                      = '<c-h>',          -- 
+    move_to_panel_down                      = '<c-j>',          -- 
+    move_to_panel_up                        = '<c-k>',          -- 
+    move_to_panel_right                     = '<c-l>',          -- 
+
+    split_line                              = "<leader>s",      -- Splits the current line with comma separated items in paranthesis into multiple lines.
 
     -- i, s
-    autocomplete_abort                      = '<C-e>',
-    autocomplete_confirm                    = '<C-j>',
-    jump_forward_in_snippet                 = '<C-k>',
-    jump_backward_in_snippet                = '<C-h>',
-    jump_to_snippet_end                     = '<C-l>',
+    autocomplete_abort                      = '<C-e>',          -- 
+    autocomplete_confirm                    = '<C-j>',          -- 
+    jump_forward_in_snippet                 = '<C-k>',          -- 
+    jump_backward_in_snippet                = '<C-h>',          -- 
+    jump_to_snippet_end                     = '<C-l>',          -- 
 }
 
 local theme_with_real_colors = true
@@ -293,6 +290,8 @@ end
 ---Then formats all comma separated items within that bracket scope, and splits the line into multiple.
 ---The function is aware for strings starting with ' or ", and keeps track of how deeply nested it is 
 ---in the brackets.
+---The function will properly indent all the lines, but only uses spaces to do so.
+---It is currently tied to this init.lua file by a couple of variables. Might become a separate package at some point.
 ---@type function
 local split_line
 do
@@ -384,11 +383,11 @@ do
         end
 
         if not last_bracket_i then
-            print("The opening bracket was not closed")
+            print("The first opening bracket found after the cursor was not closed on this line.")
             return
         end
         if #comma_indexes == 0 then
-            print('No comma separated items in the given parenthesis scope')
+            print('No comma separated items within brackets that were opened and closed after the cursor.')
             return
         end
 
