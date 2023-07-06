@@ -20,7 +20,7 @@ local keymap = {
 
     -- n
     leader_key                              = ';',
-    split_line                              = "<leader>s", --TODO Not complete yet. Too tired atm
+    split_line                              = "<leader>s",
 
     -- n
     move_to_panel_left                      = '<c-h>',
@@ -286,21 +286,14 @@ do
     )
 end
 
---  local function split_line()
---      local line = vim.api.nvim_get_current_line()
---      local items = vim.split(line, ", *")
---      local indent = string.match(line, "^%s*")
 
---      local formatted_items = {items[1] .. ','}
---      for i = 2, #items -1 do
---          table.insert(formatted_items, indent .. tab_whitespace .. items[i] .. ',')
---      end
---      table.insert(formatted_items, indent .. tab_whitespace .. items[#items] )
-
---      local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
---      vim.api.nvim_buf_set_lines(0, row-1, row, false, formatted_items)
---  end
-
+---Splits the line under the cursor into multiple lines.
+---Works on lines with properly opening and closing brackets: (),[],{}
+---Starts at the cursor position and moves to the right until it finds an opening bracket.
+---Then formats all comma separated items within that bracket scope, and splits the line into multiple.
+---The function is aware for strings starting with ' or ", and keeps track of how deeply nested it is 
+---in the brackets.
+---@type function
 local split_line
 do
     local TAB_WHITESPACE = ''
