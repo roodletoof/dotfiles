@@ -2,10 +2,10 @@ local TAB_WIDTH = 4
 
 local keymap = {
     -- n
-    search_for_files_in_working_directory   = '<c-p>',
+    search_for_files_in_working_directory   = '<Space>d',
     search_for_previously_opened_files      = '<Space><Space>',
-    live_grep                               = '<Space>fg',
-    search_help_pages                       = '<Space>fh',
+    live_grep                               = '<Space>g',
+    search_help_pages                       = '<Space>h',
 
     -- n
     rename_symbol                           = '<leader>rn',
@@ -105,13 +105,17 @@ local function packer_startup(use)
     use {-- FuzzyFind your way through previously open files, or project files.
         'nvim-telescope/telescope.nvim',
         tag = '0.1.1',
-        requires = { {'nvim-lua/plenary.nvim'}, } }
+        requires = {
+            {'nvim-lua/plenary.nvim'},
+        }
+    }
 
     use {-- Provides live preview of markdown files that follows the cursor around.
         "iamcco/markdown-preview.nvim",
         run = "cd app && npm install",
         setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
-        ft = { "markdown" }, }
+        ft = { "markdown" }
+    }
 
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
 
@@ -229,6 +233,9 @@ local function packer_startup(use)
                 }
             }
         end,
+    }
+    require("lspconfig").gdscript.setup{
+        capabilities = capabilities
     }
     vim.keymap.set('n', keymap.rename_symbol, vim.lsp.buf.rename, {})
     vim.keymap.set('n', keymap.code_action, vim.lsp.buf.code_action, {})
