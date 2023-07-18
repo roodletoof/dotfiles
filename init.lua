@@ -1,6 +1,7 @@
 local TAB_WIDTH = 4
 
 local keymap = {
+    leader_key                              = ';',
     -- n
     search_for_files_in_working_directory   = '<Space>d',
     search_for_previously_opened_files      = '<Space><Space>',
