@@ -36,7 +36,8 @@ local keymap = {
     jump_to_snippet_end                     = '<C-l>',          -- 
 }
 
-local theme_with_real_colors = true
+---@type 'gruvbox'|'vscode'|nil
+local color_scheme = 'vscode'
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -81,7 +82,12 @@ local packer_bootstrap = ensure_packer()
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
     use 'lervag/vimtex'                     -- Provides autocompile on save and stuff. (Could probably just replace this thing with something custom)
-    use 'ellisonleao/gruvbox.nvim'          -- Provides these sick colors.
+
+    -- Themes --
+    use 'ellisonleao/gruvbox.nvim'
+    use 'Mofiqul/vscode.nvim'
+    ------------
+
     use 'nvim-tree/nvim-tree.lua'           -- File explorer.
     use 'nvim-tree/nvim-web-devicons'       -- Provides Pretty icons to look at. Makes the plugin above and below pretty.
     use 'nvim-lualine/lualine.nvim'         -- Lower info-bar. Displays filetype of current open file, and whether the file has unstated changes.
@@ -126,10 +132,10 @@ local function packer_startup(use)
     vim.g.vimtex_view_method = 'zathura'
     vim.g.vimtex_syntax_enabled = false
 
-    if theme_with_real_colors then
+    if color_scheme ~= nil then
         vim.o.termguicolors = true
         vim.o.background = "dark"
-        vim.cmd [[ colorscheme gruvbox ]]
+        vim.cmd(" colorscheme " .. color_scheme .. " ")
     end
 
     vim.g.loaded_netrw = 1       -- Disables some built in plugin
