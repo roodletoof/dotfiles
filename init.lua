@@ -1,5 +1,3 @@
-local TAB_WIDTH = 4
-
 local keymap = {
     leader_key = ';',
 
@@ -16,9 +14,19 @@ local keymap = {
         lsp_show_references        = 'gr',
         lsp_hovering_documentation = 'K',
 
+        --TODO implement test functionality for
+        -- [ ] python
+        -- [ ] lua
+        -- [ ] c
+        -- [ ] c++
+
+        --TODO find good keybindings
         test_execute_file      = '<leader>e',
         test_debug_file        = '<leader>d',
         test_toggle_breakpoint = '<leader>b',
+        test_step_over         = nil,
+        test_step_into         = nil,
+        test_inspect_state     = nil,
 
         navigation_toggle_file_explorer ='<c-n>',
 
@@ -40,12 +48,14 @@ local keymap = {
             --> Follow the printed instructions on failure.
 }
 
+local TAB_WIDTH = 4
+
 ---@type { [string]: 'gruvbox'|'vscode'|false }
 local color_scheme_settings = {
     default = 'gruvbox',
     markdown = 'vscode',
 }
-assert(color_scheme_settings.default ~= nil, 'A default color scheme must be set.')
+assert(color_scheme_settings.default ~= nil, 'The default color scheme must be either false or a valid string.')
     --> set color to false for ugly default colors
 
 vim.g.mapleader = keymap.leader_key
@@ -159,10 +169,10 @@ local function packer_startup(use)
 
                 if theme then
                     vim.o.termguicolors = true
-                    --vim.o.background = "dark"
                     vim.cmd(" colorscheme " .. theme .. " ")
                 else
                     vim.o.termguicolors = false
+                    vim.cmd(" colorscheme default ")
                 end
             end
         }
