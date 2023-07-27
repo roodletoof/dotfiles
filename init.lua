@@ -1,43 +1,52 @@
 local TAB_WIDTH = 4
 
 local keymap = {
-    leader_key                              = ';',
-    -- n
-    search_for_files_in_working_directory   = '<Space>d',
-    search_for_previously_opened_files      = '<Space><Space>',
-    live_grep                               = '<Space>g',
-    search_help_pages                       = '<Space>h',
+    leader_key = ';',
 
-    -- n
-    rename_symbol                           = '<leader>rn',
-    code_action                             = '<leader>ca',
-    go_to_definition                        = 'gd',
-    go_to_implementation                    = 'gi',
-    show_references                         = 'gr',
-    hovering_documentation                  = 'K',
+    -- Normal mode --------------------------------------------------------
+        telescope_search_for_files_in_working_directory = '<Space>d',
+        telescope_search_for_previously_opened_files    = '<Space><Space>',
+        telescope_live_grep                             = '<Space>g',
+        telescope_search_help_pages                     = '<Space>h',
 
-    -- n
-    toggle_file_explorer                    ='<c-n>',
+        lsp_rename_symbol          = '<leader>rn',
+        lsp_code_action            = '<leader>ca',
+        lsp_go_to_definition       = 'gd',
+        lsp_go_to_implementation   = 'gi',
+        lsp_show_references        = 'gr',
+        lsp_hovering_documentation = 'K',
 
-    -- n
+        test_execute_file      = '<leader>e',
+        test_debug_file        = '<leader>d',
+        test_toggle_breakpoint = '<leader>b',
 
-    move_to_panel_left                      = '<c-h>',          -- 
-    move_to_panel_down                      = '<c-j>',          -- 
-    move_to_panel_up                        = '<c-k>',          -- 
-    move_to_panel_right                     = '<c-l>',          -- 
+        navigation_toggle_file_explorer ='<c-n>',
 
-    split_line                              = "<leader>s",      -- Splits the current line with comma separated items in paranthesis into multiple lines.
+        navigation_move_to_panel_left   = '<c-h>',
+        navigation_move_to_panel_down   = '<c-j>',
+        navigation_move_to_panel_up     = '<c-k>',
+        navigation_move_to_panel_right  = '<c-l>',
 
-    -- i, s
-    autocomplete_abort                      = '<C-e>',          -- 
-    autocomplete_confirm                    = '<C-j>',          -- 
-    jump_forward_in_snippet                 = '<C-k>',          -- 
-    jump_backward_in_snippet                = '<C-h>',          -- 
-    jump_to_snippet_end                     = '<C-l>',          -- 
+        formatting_split_line = "<leader>s",
+            --> Splits the current line with comma separated items in paranthesis into multiple lines.
+            --> Works on all types of parenthesis, and is aware of strings.
+
+    -- Insert / Selection mode --------------------------------------------
+        snippet_confirm       = '<C-j>',
+        snippet_jump_forward  = '<C-k>',
+        snippet_jump_backward = '<C-h>',
+        snippet_jump_to_end   = '<C-l>',
+            --> Edit snippets for the current file with the custom S command.
+            --> Follow the printed instructions on failure.
 }
 
----@type 'gruvbox'|'vscode'|nil
-local color_scheme = 'vscode'
+---@type { [string]: 'gruvbox'|'vscode'|false }
+local color_scheme_settings = {
+    default = 'gruvbox',
+    markdown = 'vscode',
+}
+assert(color_scheme_settings.default ~= nil, 'A default color scheme must be set.')
+    --> set color to false for ugly default colors
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -52,10 +61,10 @@ vim.opt.hlsearch = false        -- Don't highlight searches
 vim.opt.incsearch = true        -- Highlight matching patterns as the you are typing it.
 vim.opt.scrolloff = 8           -- Always keep 8 lines of code between the cursor and the top/bottom of the screen.
 vim.api.nvim_set_option("clipboard", "unnamedplus")
-vim.api.nvim_set_keymap('n', keymap.move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', keymap.move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', keymap.move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', keymap.move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
+vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
 vim.g.c_syntax_for_h = 1
 vim.g.python_indent = { -- Fixes retarded default python indentation.
     open_paren = 'shiftwidth()',
@@ -90,7 +99,6 @@ local function packer_startup(use)
 
     use 'nvim-tree/nvim-tree.lua'           -- File explorer.
     use 'nvim-tree/nvim-web-devicons'       -- Provides Pretty icons to look at. Makes the plugin above and below pretty.
-    use 'nvim-lualine/lualine.nvim'         -- Lower info-bar. Displays filetype of current open file, and whether the file has unstated changes.
     use 'nvim-treesitter/nvim-treesitter'   -- Provides syntax highlighting for many lanugages.
 
     use 'hrsh7th/nvim-cmp'                  -- Autocompletion framework
@@ -107,6 +115,8 @@ local function packer_startup(use)
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
         'neovim/nvim-lspconfig', }
+
+    use 'mfussenegger/nvim-dap' -- debug adapter protocol
 
     use {-- FuzzyFind your way through previously open files, or project files.
         'nvim-telescope/telescope.nvim',
@@ -132,18 +142,36 @@ local function packer_startup(use)
     vim.g.vimtex_view_method = 'zathura'
     vim.g.vimtex_syntax_enabled = false
 
-    if color_scheme ~= nil then
-        vim.o.termguicolors = true
-        vim.o.background = "dark"
-        vim.cmd(" colorscheme " .. color_scheme .. " ")
-    end
+    vim.api.nvim_create_autocmd(
+        {'BufEnter'},
+        {
+            callback = function(_)
+                ---@type string
+                local filetype = vim.api.nvim_buf_get_option(0, "filetype")
+
+                ---@type string|false
+                local theme
+                if color_scheme_settings[filetype] ~= nil then
+                    theme = color_scheme_settings[filetype]
+                else
+                    theme = color_scheme_settings.default
+                end
+
+                if theme then
+                    vim.o.termguicolors = true
+                    --vim.o.background = "dark"
+                    vim.cmd(" colorscheme " .. theme .. " ")
+                else
+                    vim.o.termguicolors = false
+                end
+            end
+        }
+    )
 
     vim.g.loaded_netrw = 1       -- Disables some built in plugin
     vim.g.loaded_netrwPlugin = 1 -- Disables some built in plugin
     require('nvim-tree').setup()
-    vim.keymap.set('n', keymap.toggle_file_explorer, '<cmd>NvimTreeFindFileToggle<CR>', {silent = true})
-
-    require('lualine').setup {options = {icons_enabled = true, theme = 'gruvbox'}}
+    vim.keymap.set('n', keymap.navigation_toggle_file_explorer, '<cmd>NvimTreeFindFileToggle<CR>', {silent = true})
 
     require('nvim-treesitter.configs').setup {
         ensure_installed = 'all',
@@ -159,23 +187,17 @@ local function packer_startup(use)
     local types = require('cmp.types')
     local snippy = require('snippy')
 
-    cmp.setup{
+    cmp.setup{ ---ignore
         mapping = {
             ['<Down>'] = { i = cmp.mapping.select_next_item{ behavior = types.cmp.SelectBehavior.Select } },
             ['<Up>'] = { i = cmp.mapping.select_prev_item{ behavior = types.cmp.SelectBehavior.Select } },
-            [keymap.autocomplete_abort]         = cmp.mapping(
-                function (_)
-                    cmp.mapping.abort()
-                end,
-                { "i", "s" }
-            ),
-            [keymap.autocomplete_confirm]       = cmp.mapping(
+            [keymap.snippet_confirm]       = cmp.mapping(
                 function (_)
                     cmp.confirm{ select = true }
                 end,
                 { "i", "s" }
             ),
-            [keymap.jump_backward_in_snippet]   = cmp.mapping(
+            [keymap.snippet_jump_backward]   = cmp.mapping(
                 function (_)
                     if snippy.can_jump(-1) then
                         snippy.previous()
@@ -183,7 +205,7 @@ local function packer_startup(use)
                 end,
                 { "i", "s" }
             ),
-            [keymap.jump_forward_in_snippet]    = cmp.mapping(
+            [keymap.snippet_jump_forward]    = cmp.mapping(
                 function(_)
                     if snippy.can_jump(1) then
                         snippy.next()
@@ -191,7 +213,7 @@ local function packer_startup(use)
                 end,
                 { "i", "s" }
             ),
-            [keymap.jump_to_snippet_end]        = cmp.mapping(
+            [keymap.snippet_jump_to_end]        = cmp.mapping(
                 function(_)
                     while snippy.can_jump(1) do
                         snippy.next()
@@ -243,18 +265,18 @@ local function packer_startup(use)
     require("lspconfig").gdscript.setup{
         capabilities = capabilities
     }
-    vim.keymap.set('n', keymap.rename_symbol, vim.lsp.buf.rename, {})
-    vim.keymap.set('n', keymap.code_action, vim.lsp.buf.code_action, {})
-    vim.keymap.set('n', keymap.go_to_definition, vim.lsp.buf.definition, {})
-    vim.keymap.set('n', keymap.go_to_implementation, vim.lsp.buf.implementation, {})
-    vim.keymap.set('n', keymap.show_references, require('telescope.builtin').lsp_references, {})
-    vim.keymap.set('n', keymap.hovering_documentation, vim.lsp.buf.hover, {})
+    vim.keymap.set('n', keymap.lsp_rename_symbol, vim.lsp.buf.rename, {})
+    vim.keymap.set('n', keymap.lsp_code_action, vim.lsp.buf.code_action, {})
+    vim.keymap.set('n', keymap.lsp_go_to_definition, vim.lsp.buf.definition, {})
+    vim.keymap.set('n', keymap.lsp_go_to_implementation, vim.lsp.buf.implementation, {})
+    vim.keymap.set('n', keymap.lsp_show_references, require('telescope.builtin').lsp_references, {})
+    vim.keymap.set('n', keymap.lsp_hovering_documentation, vim.lsp.buf.hover, {})
 
     local builtin = require('telescope.builtin')
-    vim.keymap.set('n', keymap.search_for_files_in_working_directory, builtin.find_files, {})
-    vim.keymap.set('n', keymap.search_for_previously_opened_files, builtin.oldfiles, {})
-    vim.keymap.set('n', keymap.live_grep, builtin.live_grep, {})
-    vim.keymap.set('n', keymap.search_help_pages, builtin.help_tags, {})
+    vim.keymap.set('n', keymap.telescope_search_for_files_in_working_directory, builtin.find_files, {})
+    vim.keymap.set('n', keymap.telescope_search_for_previously_opened_files, builtin.oldfiles, {})
+    vim.keymap.set('n', keymap.telescope_live_grep, builtin.live_grep, {})
+    vim.keymap.set('n', keymap.telescope_search_help_pages, builtin.help_tags, {})
 
 end
 
@@ -298,7 +320,6 @@ do
         { nargs = 0 }
     )
 end
-
 
 ---Splits the line under the cursor into multiple lines.
 ---Works on lines with properly opening and closing brackets: (),[],{}
@@ -412,12 +433,21 @@ do
         local first_line = line:sub(1, first_bracket_i)
         local last_line = leading_whitespace .. line:sub(last_bracket_i, #line)
 
-        -- Gather items
-        local middle_lines = {line:sub(first_bracket_i+1, comma_indexes[1])}
+        local middle_lines = {}
+        table.insert(
+            middle_lines,
+            line:sub(first_bracket_i+1, comma_indexes[1])
+        )
         for i = 1, #comma_indexes-1 do
-            table.insert(middle_lines, line:sub(comma_indexes[i], comma_indexes[i+1]))
+            table.insert(
+                middle_lines,
+                line:sub(comma_indexes[i], comma_indexes[i+1])
+            )
         end
-        table.insert(middle_lines, line:sub(comma_indexes[#comma_indexes], last_bracket_i-1))
+        table.insert(
+            middle_lines,
+            line:sub(comma_indexes[#comma_indexes], last_bracket_i-1)
+        )
 
         -- Cleanup step
         for i, middle_line in ipairs(middle_lines) do
@@ -436,7 +466,7 @@ end
 
 vim.keymap.set(
     'n',
-    keymap.split_line,
+    keymap.formatting_split_line,
     split_line,
     { silent = true }
 )
