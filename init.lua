@@ -53,7 +53,7 @@ local TAB_WIDTH = 4
 ---@type installed_themes
 local default_theme = 'gruvbox'
 
----@type { [string]: installed_themes}
+---@type { [string]: installed_themes }
 local file_specific_themes = {
     markdown = 'vscode',
 }
