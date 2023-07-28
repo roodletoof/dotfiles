@@ -50,13 +50,13 @@ local keymap = {
 
 local TAB_WIDTH = 4
 
----@type { [string]: 'gruvbox'|'vscode'|false }
-local color_scheme_settings = {
-    default = 'gruvbox',
+---@type installed_themes
+local default_theme = 'gruvbox'
+
+---@type { [string]: installed_themes}
+local file_specific_themes = {
     markdown = 'vscode',
 }
-assert(color_scheme_settings.default ~= nil, 'The default color scheme must be either false or a valid string.')
-    --> set color to false for ugly default colors
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -156,24 +156,9 @@ local function packer_startup(use)
         {'BufEnter'},
         {
             callback = function(_)
-                ---@type string
-                local filetype = vim.api.nvim_buf_get_option(0, "filetype")
-
-                ---@type string|false
-                local theme
-                if color_scheme_settings[filetype] ~= nil then
-                    theme = color_scheme_settings[filetype]
-                else
-                    theme = color_scheme_settings.default
-                end
-
-                if theme then
-                    vim.o.termguicolors = true
-                    vim.cmd(" colorscheme " .. theme .. " ")
-                else
-                    vim.o.termguicolors = false
-                    vim.cmd(" colorscheme default ")
-                end
+                local theme = file_specific_themes[vim.api.nvim_buf_get_option(0, "filetype")] or default_theme
+                vim.o.termguicolors = theme ~= 'default'
+                vim.cmd(" colorscheme " .. theme .. " ")
             end
         }
     )
@@ -482,3 +467,9 @@ vim.keymap.set(
 )
 
 return require('packer').startup(packer_startup)
+
+
+---@alias installed_themes
+---| 'default'
+---| 'gruvbox'
+---| 'vscode'
