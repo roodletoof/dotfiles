@@ -1,62 +1,58 @@
 local keymap = {
     leader_key = ';',
 
-    -- Normal mode --------------------------------------------------------
-        telescope_search_for_files_in_working_directory = '<Space>d',
-        telescope_search_for_previously_opened_files    = '<Space><Space>',
-        telescope_live_grep                             = '<Space>g',
-        telescope_search_help_pages                     = '<Space>h',
+    -- Normal mode --------------------------------------------------------------------------------------
+    telescope_search_for_files_in_working_directory = '<Space>d',
+    telescope_search_for_previously_opened_files    = '<Space><Space>',
+    telescope_live_grep                             = '<Space>g',
+    telescope_search_help_pages                     = '<Space>h',
 
-        lsp_rename_symbol          = '<leader>rn',
-        lsp_code_action            = '<leader>ca',
-        lsp_go_to_definition       = 'gd',
-        lsp_go_to_implementation   = 'gi',
-        lsp_show_references        = 'gr',
-        lsp_hovering_documentation = 'K',
+    lsp_rename_symbol          = '<leader>rn',
+    lsp_code_action            = '<leader>ca',
+    lsp_go_to_definition       = 'gd',
+    lsp_go_to_implementation   = 'gi',
+    lsp_show_references        = 'gr',
+    lsp_hovering_documentation = 'K',
 
-        --TODO implement test functionality for
-        -- [ ] python
-        -- [ ] lua
-        -- [ ] c
-        -- [ ] c++
+    --TODO implement test functionality for
+    -- [ ] python
+    -- [ ] lua
+    -- [ ] c
+    -- [ ] c++
 
-        --TODO find good keybindings
-        test_execute_file      = '<leader>e',
-        test_debug_file        = '<leader>d',
-        test_toggle_breakpoint = '<leader>b',
-        test_step_over         = nil,
-        test_step_into         = nil,
-        test_inspect_state     = nil,
+    --TODO find good keybindings
+    test_execute_file      = '<leader>e',
+    test_debug_file        = '<leader>d',
+    test_toggle_breakpoint = '<leader>b',
+    test_step_over         = nil,
+    test_step_into         = nil,
+    test_inspect_state     = nil,
 
-        navigation_toggle_file_explorer ='<c-n>',
+    navigation_toggle_file_explorer ='<c-n>',
 
-        navigation_move_to_panel_left   = '<c-h>',
-        navigation_move_to_panel_down   = '<c-j>',
-        navigation_move_to_panel_up     = '<c-k>',
-        navigation_move_to_panel_right  = '<c-l>',
+    navigation_move_to_panel_left   = '<c-h>',
+    navigation_move_to_panel_down   = '<c-j>',
+    navigation_move_to_panel_up     = '<c-k>',
+    navigation_move_to_panel_right  = '<c-l>',
 
-        formatting_split_line = "<leader>s",
-            --> Splits the current line with comma separated items in paranthesis into multiple lines.
-            --> Works on all types of parenthesis, and is aware of strings.
+    formatting_split_line = "<leader>s",
+        --> Splits the current line with comma separated items in paranthesis into multiple lines.
+        --> Works on all types of parenthesis, and is aware of strings.
 
-    -- Insert / Selection mode --------------------------------------------
-        snippet_confirm       = '<C-j>',
-        snippet_jump_forward  = '<C-k>',
-        snippet_jump_backward = '<C-h>',
-        snippet_jump_to_end   = '<C-l>',
-            --> Edit snippets for the current file with the custom S command.
-            --> Follow the printed instructions on failure.
+    -- Insert / Selection mode --------------------------------------------------------------------------
+    snippet_confirm       = '<c-j>',
+    snippet_jump_forward  = '<c-k>',
+    snippet_jump_backward = '<c-h>',
+    snippet_jump_to_end   = '<c-l>',
+        --> Edit snippets for the current file with the custom S command.
+        --> Follow the printed instructions on failure.
 }
 
 local TAB_WIDTH = 4
 
 ---@type installed_themes
-local default_theme = 'gruvbox'
-
----@type { [string]: installed_themes }
-local file_specific_themes = {
-    markdown = 'vscode',
-}
+local colorscheme = 'gruvbox'
+vim.o.termguicolors = true
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -84,7 +80,6 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
     searchpair_timeout = 300,
 }
 
--- Will only run the first time nvim launches to install packer
 local ensure_packer = function()
     local fn = vim.fn
     local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
@@ -97,7 +92,6 @@ local ensure_packer = function()
 end
 local packer_bootstrap = ensure_packer()
 
--- Packages
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
     use 'lervag/vimtex'                     -- Provides autocompile on save and stuff. (Could probably just replace this thing with something custom)
@@ -149,23 +143,15 @@ local function packer_startup(use)
         require('packer').sync()
     end
 
+    vim.cmd('colorscheme ' .. colorscheme)
+
     vim.g.vimtex_view_method = 'zathura'
     vim.g.vimtex_syntax_enabled = false
 
-    vim.api.nvim_create_autocmd(
-        {'BufEnter'},
-        {
-            callback = function(_)
-                local theme = file_specific_themes[vim.api.nvim_buf_get_option(0, "filetype")] or default_theme
-                vim.o.termguicolors = theme ~= 'default'
-                vim.cmd(" colorscheme " .. theme .. " ")
-            end
-        }
-    )
 
     vim.g.loaded_netrw = 1       -- Disables some built in plugin
     vim.g.loaded_netrwPlugin = 1 -- Disables some built in plugin
-    require('nvim-tree').setup()
+    require'nvim-tree'.setup()
     vim.keymap.set('n', keymap.navigation_toggle_file_explorer, '<cmd>NvimTreeFindFileToggle<CR>', {silent = true})
 
     require('nvim-treesitter.configs').setup {
@@ -470,6 +456,26 @@ return require('packer').startup(packer_startup)
 
 
 ---@alias installed_themes
+---| 'blue'
+---| 'darkblue'
 ---| 'default'
+---| 'delek'
+---| 'desert'
+---| 'elflord'
+---| 'evening'
 ---| 'gruvbox'
+---| 'habamax'
+---| 'industry'
+---| 'koehler'
+---| 'lunaperche'
+---| 'morning'
+---| 'murphy'
+---| 'pablo'
+---| 'peachpuff'
+---| 'quiet'
+---| 'ron'
+---| 'shine'
+---| 'slate'
+---| 'torte'
 ---| 'vscode'
+---| 'zellner'
