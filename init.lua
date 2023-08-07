@@ -242,6 +242,16 @@ local function packer_startup(use)
                 }
             }
         end,
+        zls = function()
+            require'lspconfig'.zls.setup {
+                settings = {
+                    zig = {
+                        use_comptime_interpreter = true,
+                        enable_snippets = true,
+                    }
+                }
+            }
+        end
     }
     require("lspconfig").gdscript.setup{
         capabilities = capabilities
