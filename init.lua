@@ -94,7 +94,6 @@ local packer_bootstrap = ensure_packer()
 
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
-    use 'lervag/vimtex'                     -- Provides autocompile on save and stuff. (Could probably just replace this thing with something custom)
 
     -- Themes --
     use 'ellisonleao/gruvbox.nvim'
