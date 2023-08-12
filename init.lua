@@ -103,6 +103,8 @@ local function packer_startup(use)
 
     use 'nvim-tree/nvim-tree.lua'           -- File explorer.
     use 'nvim-tree/nvim-web-devicons'       -- Provides Pretty icons to look at. Makes the plugin above and below pretty.
+    use 'nvim-lualine/lualine.nvim'         -- Provides file information on status bar on the bottom of the wihdow.
+
     use 'nvim-treesitter/nvim-treesitter'   -- Provides syntax highlighting for many lanugages.
 
     use 'hrsh7th/nvim-cmp'                  -- Autocompletion framework
@@ -153,6 +155,8 @@ local function packer_startup(use)
     vim.g.loaded_netrwPlugin = 1 -- Disables some built in plugin
     require'nvim-tree'.setup()
     vim.keymap.set('n', keymap.navigation_toggle_file_explorer, '<cmd>NvimTreeFindFileToggle<CR>', {silent = true})
+
+    require'lualine'.setup{}
 
     require('nvim-treesitter.configs').setup {
         ensure_installed = 'all',
@@ -221,7 +225,7 @@ local function packer_startup(use)
     require('mason-lspconfig').setup{
         ensure_installed = {
             'clangd', 'golangci_lint_ls', 'kotlin_language_server',
-            'ltex', 'lua_ls', 'marksman', 'pyright', 'zls', 'rust_analyzer'
+            'ltex', 'lua_ls', 'marksman', 'pyright', 'rust_analyzer'
         }
     }
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
