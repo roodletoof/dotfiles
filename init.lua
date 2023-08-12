@@ -52,7 +52,9 @@ local TAB_WIDTH = 4
 
 ---@type installed_themes
 local colorscheme = 'gruvbox'
+
 vim.o.termguicolors = true
+vim.cmd('colorscheme ' .. colorscheme)
 
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
@@ -94,7 +96,6 @@ local packer_bootstrap = ensure_packer()
 
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
-    use 'lervag/vimtex'                     -- Provides autocompile on save and stuff. (Could probably just replace this thing with something custom)
 
     -- Themes --
     use 'ellisonleao/gruvbox.nvim'
@@ -144,11 +145,6 @@ local function packer_startup(use)
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
     end
-
-    vim.cmd('colorscheme ' .. colorscheme)
-
-    vim.g.vimtex_view_method = 'zathura'
-    vim.g.vimtex_syntax_enabled = false
 
 
     vim.g.loaded_netrw = 1       -- Disables some built in plugin
