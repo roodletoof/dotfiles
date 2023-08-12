@@ -242,18 +242,11 @@ local function packer_startup(use)
                 }
             }
         end,
-        zls = function()
-            require'lspconfig'.zls.setup {
-                settings = {
-                    zig = {
-                        use_comptime_interpreter = true,
-                        enable_snippets = true,
-                    }
-                }
-            }
-        end
     }
     require("lspconfig").gdscript.setup{
+        capabilities = capabilities
+    }
+    require('lspconfig').zls.setup{
         capabilities = capabilities
     }
     vim.keymap.set('n', keymap.lsp_rename_symbol, vim.lsp.buf.rename, {})
