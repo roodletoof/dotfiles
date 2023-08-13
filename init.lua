@@ -319,7 +319,10 @@ do
 
         local run_script_path = vim.fn.getcwd() .. "/" .. run_script_name
         if not file_exists(run_script_path) then
-            error( "The run script: '" .. run_script_path .. "' does not exist")
+            error(
+                "The run script: '" .. run_script_path .. "' does not exist.\n"..
+                "All this command does, is to execute that file."
+            )
         end
 
         vim.cmd('!sh ' .. run_script_path)
