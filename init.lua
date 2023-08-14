@@ -308,7 +308,7 @@ vim.api.nvim_create_user_command(
 ---@type function
 local run_file
 do
-    local run_script_name = "run.sh"
+    local run_script_name = ".run.sh"
 
     run_file = function()
         ---@type "Linux" | "Darwin" | "Windows_NT"
