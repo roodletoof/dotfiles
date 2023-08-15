@@ -21,7 +21,7 @@ local keymap = {
     -- [ ] c++
 
     --TODO find good keybindings
-    test_execute_file      = '<leader>e',
+    test_execute_script      = '<leader>e',
     test_debug_file        = '<leader>d',
     test_toggle_breakpoint = '<leader>b',
     test_step_over         = nil,
@@ -305,19 +305,19 @@ vim.api.nvim_create_user_command(
     { nargs = 0 }
 )
 
----@type function
-local run_file
-do
-    local run_script_name = ".run.sh"
-
-    run_file = function()
+---Returns function that runs the given script_name in the current working directory.
+---Only implemented for Linux. ( Uses the sh command )
+---@param script_name string
+---@return fun() 
+local function get_run_script_function(script_name)
+    return function()
         ---@type "Linux" | "Darwin" | "Windows_NT"
         local os_name = vim.loop.os_uname().sysname
         if os_name ~= "Linux" then
             error('run_file not implemented for non-linux platforms')
         end
 
-        local run_script_path = vim.fn.getcwd() .. "/" .. run_script_name
+        local run_script_path = vim.fn.getcwd() .. "/" .. script_name
         if not file_exists(run_script_path) then
             error(
                 "The run script: '" .. run_script_path .. "' does not exist.\n"..
@@ -329,12 +329,18 @@ do
     end
 end
 
-vim.keymap.set(
-    'n',
-    keymap.test_execute_file,
-    run_file,
-    { silent = true }
-)
+do
+    local alphabet = 'abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ'
+    for i = 1, #alphabet do
+        local char = alphabet:sub(i, i)
+        vim.keymap.set(
+            'n',
+            keymap.test_execute_script .. char,
+            get_run_script_function("." .. char .. ".sh"),
+            { silent = true }
+        )
+    end
+end
 
 ---Splits the line under the cursor into multiple lines.
 ---Works on lines with properly opening and closing brackets: (),[],{}
