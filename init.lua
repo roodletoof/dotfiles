@@ -14,19 +14,14 @@ local keymap = {
     lsp_show_references        = 'gr',
     lsp_hovering_documentation = 'K',
 
-    --TODO implement test functionality for
-    -- [ ] python
-    -- [ ] lua
-    -- [ ] c
-    -- [ ] c++
-
-    --TODO find good keybindings
+    -- dap is not integrated. Current solution is the execute_script command
+    -- implemented after line 302
     test_execute_script      = '<leader>e',
-    test_debug_file        = '<leader>d',
-    test_toggle_breakpoint = '<leader>b',
-    test_step_over         = nil,
-    test_step_into         = nil,
-    test_inspect_state     = nil,
+    -- test_debug_file        = '<leader>d',
+    -- test_toggle_breakpoint = '<leader>b',
+    -- test_step_over         = nil,
+    -- test_step_into         = nil,
+    -- test_inspect_state     = nil,
 
     navigation_toggle_file_explorer ='<c-n>',
 
@@ -330,6 +325,8 @@ local function get_run_script_function(script_name)
 end
 
 do
+    -- To create a script that runs when typing the command "<leader>er",
+    -- create a script called ".r.sh" in the current directory.
     local alphabet = 'abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ'
     for i = 1, #alphabet do
         local char = alphabet:sub(i, i)
