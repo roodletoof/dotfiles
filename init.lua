@@ -14,14 +14,7 @@ local keymap = {
     lsp_show_references        = 'gr',
     lsp_hovering_documentation = 'K',
 
-    -- dap is not integrated. Current solution is the execute_script command
-    -- implemented after line 302
     test_execute_script      = '<leader>e',
-    -- test_debug_file        = '<leader>d',
-    -- test_toggle_breakpoint = '<leader>b',
-    -- test_step_over         = nil,
-    -- test_step_into         = nil,
-    -- test_inspect_state     = nil,
 
     navigation_toggle_file_explorer ='<c-n>',
 
@@ -42,11 +35,10 @@ local keymap = {
         --> Edit snippets for the current file with the custom S command.
         --> Follow the printed instructions on failure.
 }
-
 local TAB_WIDTH = 4
 
 ---@type installed_themes
-local colorscheme = 'gruvbox'
+local colorscheme = 'habamax'
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
@@ -117,8 +109,6 @@ local function packer_startup(use)
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
         'neovim/nvim-lspconfig', }
-
-    use 'mfussenegger/nvim-dap' -- debug adapter protocol
 
     use {-- FuzzyFind your way through previously open files, or project files.
         'nvim-telescope/telescope.nvim',
