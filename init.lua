@@ -127,9 +127,13 @@ local function packer_startup(use)
 
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
 
+    use 'lervag/vimtex'
+
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
     end
+
+    vim.g.vimtex_view_method = 'zathura'
 
 
     vim.g.loaded_netrw = 1       -- Disables some built in plugin
