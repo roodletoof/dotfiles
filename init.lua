@@ -38,7 +38,7 @@ local keymap = {
 local TAB_WIDTH = 4
 
 ---@type installed_themes
-local colorscheme = 'habamax'
+local colorscheme = 'gruvbox'
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
@@ -84,10 +84,7 @@ local packer_bootstrap = ensure_packer()
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
 
-    -- Themes --
     use 'ellisonleao/gruvbox.nvim'
-    use 'Mofiqul/vscode.nvim'
-    ------------
 
     use 'nvim-tree/nvim-tree.lua'           -- File explorer.
     use 'nvim-tree/nvim-web-devicons'       -- Provides Pretty icons to look at. Makes the plugin above and below pretty.
@@ -118,22 +115,12 @@ local function packer_startup(use)
         }
     }
 
-    use {-- Provides live preview of markdown files that follows the cursor around.
-        "iamcco/markdown-preview.nvim",
-        run = "cd app && npm install",
-        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
-        ft = { "markdown" }
-    }
-
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
 
-    use 'lervag/vimtex'
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
     end
-
-    vim.g.vimtex_view_method = 'zathura'
 
 
     vim.g.loaded_netrw = 1       -- Disables some built in plugin
@@ -157,7 +144,7 @@ local function packer_startup(use)
     local types = require('cmp.types')
     local snippy = require('snippy')
 
-    cmp.setup{ ---ignore
+    cmp.setup{
         mapping = {
             ['<Down>'] = { i = cmp.mapping.select_next_item{ behavior = types.cmp.SelectBehavior.Select } },
             ['<Up>'] = { i = cmp.mapping.select_prev_item{ behavior = types.cmp.SelectBehavior.Select } },
@@ -178,14 +165,6 @@ local function packer_startup(use)
             [keymap.snippet_jump_forward]    = cmp.mapping(
                 function(_)
                     if snippy.can_jump(1) then
-                        snippy.next()
-                    end
-                end,
-                { "i", "s" }
-            ),
-            [keymap.snippet_jump_to_end]        = cmp.mapping(
-                function(_)
-                    while snippy.can_jump(1) do
                         snippy.next()
                     end
                 end,
@@ -508,5 +487,4 @@ return require('packer').startup(packer_startup)
 ---| 'shine'
 ---| 'slate'
 ---| 'torte'
----| 'vscode'
 ---| 'zellner'
