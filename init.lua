@@ -31,18 +31,18 @@ local keymap = {
     snippet_confirm       = '<c-j>',
     snippet_jump_forward  = '<c-k>',
     snippet_jump_backward = '<c-h>',
-    snippet_jump_to_end   = '<c-l>',
         --> Edit snippets for the current file with the custom S command.
         --> Follow the printed instructions on failure.
 }
 local TAB_WIDTH = 4
 
 ---@type installed_themes
-local colorscheme = 'gruvbox'
+local colorscheme = 'habamax'
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
 
+vim.cmd [[ autocmd VimEnter * NoMatchParen ]]
 vim.g.mapleader = keymap.leader_key
 vim.g.maplocalleader = keymap.leader_key
 vim.opt.tabstop = TAB_WIDTH     -- Character width of a tab
@@ -116,7 +116,6 @@ local function packer_startup(use)
     }
 
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
-
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
