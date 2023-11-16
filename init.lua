@@ -116,7 +116,7 @@ local function packer_startup(use)
     }
 
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
-
+    use 'michaeljsmith/vim-indent-object' -- Treats lines of the same indentation as a new text object, access with i and I.
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
