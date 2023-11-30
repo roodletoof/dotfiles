@@ -281,8 +281,8 @@ local function get_run_script_function(script_name)
     return function()
         ---@type "Linux" | "Darwin" | "Windows_NT"
         local os_name = vim.loop.os_uname().sysname
-        if os_name ~= "Linux" then
-            error('run_file not implemented for non-linux platforms')
+        if os_name == "Windows_NT" then
+            error('run_file not implemented for non-unix platforms')
         end
 
         local run_script_path = vim.fn.getcwd() .. "/" .. script_name
