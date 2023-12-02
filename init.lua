@@ -109,13 +109,15 @@ local function packer_startup(use)
 
     use {-- FuzzyFind your way through previously open files, or project files.
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.1',
+        tag = '0.1.4',
         requires = {
             {'nvim-lua/plenary.nvim'},
         }
     }
 
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
+
+    use 'michaeljsmith/vim-indent-object' -- Treats lines of the same indentation as a new text object, access with i and I.
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -280,8 +282,8 @@ local function get_run_script_function(script_name)
     return function()
         ---@type "Linux" | "Darwin" | "Windows_NT"
         local os_name = vim.loop.os_uname().sysname
-        if os_name ~= "Linux" then
-            error('run_file not implemented for non-linux platforms')
+        if os_name == "Windows_NT" then
+            error('run_file not implemented for non-unix platforms')
         end
 
         local run_script_path = vim.fn.getcwd() .. "/" .. script_name
