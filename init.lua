@@ -37,7 +37,7 @@ local keymap = {
 local TAB_WIDTH = 4
 
 ---@type installed_themes
-local colorscheme = 'habamax'
+local colorscheme = 'gruvbox'
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
