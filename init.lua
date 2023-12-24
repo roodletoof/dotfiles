@@ -119,6 +119,7 @@ local function packer_startup(use)
 
     use 'michaeljsmith/vim-indent-object' -- Treats lines of the same indentation as a new text object, access with i and I.
     use 'tpope/vim-surround' -- Allows you to surround text with tags, quotes and brackets.
+    use 'tpope/vim-repeat' -- Needed for above plugin to repeat actions.
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
