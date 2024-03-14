@@ -91,7 +91,7 @@ vim.api.nvim_create_autocmd('TextYankPost', { -- Highlights yanked text.
     end
 })
 vim.o.exrc = true -- Allows project specific .nvim.lua config files.
-
+vim.cmd [[ autocmd FileType * set formatoptions-=cro ]] -- Disable automatic comment.
 
 
 local ensure_packer = function()
