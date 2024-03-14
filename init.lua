@@ -216,8 +216,15 @@ local function packer_startup(use)
     require('mason').setup()
     require('mason-lspconfig').setup{
         ensure_installed = {
-            'clangd', 'kotlin_language_server',
-            'ltex', 'lua_ls', 'marksman', 'pyright', 'rust_analyzer'
+            'clangd',
+            'kotlin_language_server',
+            'csharp_ls',
+            'ltex',
+            'lua_ls',
+            'marksman',
+            'pyright',
+            'rust_analyzer',
+            'gopls'
         }
     }
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
