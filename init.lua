@@ -83,13 +83,14 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
     closed_paren_align_last_line = false,
     searchpair_timeout = 300,
 }
-vim.api.nvim_create_autocmd('TextYankPost', {
+vim.api.nvim_create_autocmd('TextYankPost', { -- Highlights yanked text.
     desc = 'Highlight when yanking text',
     group = vim.api.nvim_create_augroup('highlight-yank', {clear = true}),
     callback = function()
         vim.highlight.on_yank()
     end
 })
+vim.o.exrc = true -- Allows project specific .nvim.lua config files.
 
 
 
