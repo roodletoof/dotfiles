@@ -202,13 +202,15 @@ local function packer_startup(use)
                 capabilities = capabilities
             }
         end,
+--Lua.workspace.checkThirdParty
         lua_ls = function()
             require("neodev").setup{} -- load the neovim api
             require("lspconfig").lua_ls.setup {
                 capabilities = capabilities,
                 settings = {
                     Lua = {
-                        runtime = { version = 'LuaJIT', }
+                        runtime = { version = 'LuaJIT' },
+                        workspace = { checkThirdParty = true },
                     }
                 }
             }
