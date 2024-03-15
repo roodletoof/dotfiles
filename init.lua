@@ -13,6 +13,8 @@ local keymap = {
     lsp_go_to_implementation   = 'gi',
     lsp_show_references        = 'gr',
     lsp_hovering_documentation = 'K',
+    lsp_next_diagnostic        = '<leader>j',
+    lsp_hovering_diagnostics   = '<leader>k',
 
     test_execute_script      = '<leader>e',
 
@@ -33,11 +35,24 @@ local keymap = {
     snippet_jump_backward = '<c-h>',
         --> Edit snippets for the current file with the custom S command.
         --> Follow the printed instructions on failure.
+
+    debug_continue = '<space>r',
+    debug_run_to_cursor = '<space>c',
+    debug_toggle_breakpoint = '<space>b',
+    debug_clear_breakpoints = '<space>B',
+    debug_step_over = '<right>',
+    debug_step_into = '<down>',
+    debug_step_out = '<up>',
+    debug_state = '<space>s',
+    debug_terminate = '<space>t',
+    debug_view_expr_value = '<space>e',
+    debug_frames = '<space>f',
+
 }
 local TAB_WIDTH = 4
 
 ---@type installed_themes
-local colorscheme = 'gruvbox'
+local colorscheme = 'slate'
 
 vim.o.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
@@ -68,6 +83,16 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
     closed_paren_align_last_line = false,
     searchpair_timeout = 300,
 }
+vim.api.nvim_create_autocmd('TextYankPost', { -- Highlights yanked text.
+    desc = 'Highlight when yanking text',
+    group = vim.api.nvim_create_augroup('highlight-yank', {clear = true}),
+    callback = function()
+        vim.highlight.on_yank()
+    end
+})
+vim.o.exrc = true -- Allows project specific .nvim.lua config files.
+vim.cmd [[ autocmd FileType * set formatoptions-=cro ]] -- Disable automatic comment.
+
 
 local ensure_packer = function()
     local fn = vim.fn
@@ -83,8 +108,6 @@ local packer_bootstrap = ensure_packer()
 
 local function packer_startup(use)
     use 'wbthomason/packer.nvim'
-
-    use 'ellisonleao/gruvbox.nvim'
 
     use 'nvim-tree/nvim-tree.lua'           -- File explorer.
     use 'nvim-tree/nvim-web-devicons'       -- Provides Pretty icons to look at. Makes the plugin above and below pretty.
@@ -109,10 +132,8 @@ local function packer_startup(use)
 
     use {-- FuzzyFind your way through previously open files, or project files.
         'nvim-telescope/telescope.nvim',
-        tag = '0.1.4',
-        requires = {
-            {'nvim-lua/plenary.nvim'},
-        }
+        branch = '0.1.x',
+        requires = { {'nvim-lua/plenary.nvim'} }
     }
 
     use 'folke/zen-mode.nvim' -- For centering the text on screen giving a better editing experience in full-screen mode.
@@ -120,6 +141,10 @@ local function packer_startup(use)
     use 'michaeljsmith/vim-indent-object' -- Treats lines of the same indentation as a new text object, access with i and I.
     use 'tpope/vim-surround' -- Allows you to surround text with tags, quotes and brackets.
     use 'tpope/vim-repeat' -- Needed for above plugin to repeat actions.
+
+    use 'mfussenegger/nvim-dap'
+    use 'mfussenegger/nvim-dap-python' -- follow instructions or start venv before starting nvim.
+    use 'theHamsta/nvim-dap-virtual-text'
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -191,8 +216,15 @@ local function packer_startup(use)
     require('mason').setup()
     require('mason-lspconfig').setup{
         ensure_installed = {
-            'clangd', 'golangci_lint_ls', 'kotlin_language_server',
-            'ltex', 'lua_ls', 'marksman', 'pyright', 'rust_analyzer'
+            'clangd',
+            'kotlin_language_server',
+            'csharp_ls',
+            'ltex',
+            'lua_ls',
+            'marksman',
+            'pyright',
+            'rust_analyzer',
+            'gopls'
         }
     }
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -228,12 +260,61 @@ local function packer_startup(use)
     vim.keymap.set('n', keymap.lsp_go_to_implementation, vim.lsp.buf.implementation, {})
     vim.keymap.set('n', keymap.lsp_show_references, require('telescope.builtin').lsp_references, {})
     vim.keymap.set('n', keymap.lsp_hovering_documentation, vim.lsp.buf.hover, {})
+    vim.keymap.set('n', keymap.lsp_next_diagnostic, vim.diagnostic.goto_next, {})
+    vim.keymap.set('n', keymap.lsp_hovering_diagnostics, vim.diagnostic.open_float, {})
 
     local builtin = require('telescope.builtin')
     vim.keymap.set('n', keymap.telescope_search_for_files_in_working_directory, builtin.find_files, {})
     vim.keymap.set('n', keymap.telescope_search_for_previously_opened_files, builtin.oldfiles, {})
     vim.keymap.set('n', keymap.telescope_live_grep, builtin.live_grep, {})
     vim.keymap.set('n', keymap.telescope_search_help_pages, builtin.help_tags, {})
+
+
+    local dap = require'dap'
+    local widgets = require('dap.ui.widgets')
+    local my_sidebar = widgets.sidebar(widgets.scopes)
+    local my_centered = widgets.centered_float(widgets.frames)
+    my_centered.close()
+    vim.keymap.set('n', keymap.debug_continue, dap.continue, {})
+    vim.keymap.set('n', keymap.debug_toggle_breakpoint, dap.toggle_breakpoint, {})
+    vim.keymap.set('n', keymap.debug_clear_breakpoints, dap.clear_breakpoints, {})
+    vim.keymap.set('n', keymap.debug_step_over, dap.step_over, {})
+    vim.keymap.set('n', keymap.debug_step_into, dap.step_into, {})
+    vim.keymap.set('n', keymap.debug_step_out, dap.step_out, {})
+    vim.keymap.set('n', keymap.debug_state, my_sidebar.toggle, {})
+    vim.keymap.set('n', keymap.debug_frames, my_centered.toggle, {})
+    vim.keymap.set('n', keymap.debug_terminate, dap.terminate, {})
+    vim.keymap.set('n', keymap.debug_run_to_cursor, dap.run_to_cursor, {})
+    vim.keymap.set('n', keymap.debug_view_expr_value, widgets.hover, {})
+
+    -- More configurations:
+    -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go
+    require'dap-python'.setup('~/.virtualenvs/debugpy/bin/python')
+
+    -- nicer debugging. displays variable values inline
+    -- https://github.com/theHamsta/nvim-dap-virtual-text
+    require'nvim-dap-virtual-text'.setup{
+
+    }
+
+    dap.adapters.gdb = {
+        type = "executable",
+        command = "gdb",
+        args = { "-i", "dap" }
+    }
+
+    dap.configurations.c = {
+        {
+            name = "Launch",
+            type = "gdb",
+            request = "launch",
+            program = function()
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            end,
+            cwd = "${workspaceFolder}",
+            stopAtBeginningOfMainSubprogram = false,
+        },
+    }
 
 end
 
@@ -278,34 +359,34 @@ vim.api.nvim_create_user_command(
     { nargs = 0 }
 )
 
----Returns function that runs the given script_name in the current working directory.
----Only implemented for Linux. ( Uses the sh command )
----@param script_name string
----@return fun() 
-local function get_run_script_function(script_name)
-    return function()
-        ---@type "Linux" | "Darwin" | "Windows_NT"
-        local os_name = vim.loop.os_uname().sysname
-        if os_name == "Windows_NT" then
-            error('run_file not implemented for non-unix platforms')
-        end
-
-        local run_script_path = vim.fn.getcwd() .. "/" .. script_name
-        if not file_exists(run_script_path) then
-            error(
-                "The run script: '" .. run_script_path .. "' does not exist.\n"..
-                "All this command does, is to execute that file."
-            )
-        end
-
-        vim.cmd('!sh ' .. run_script_path)
-    end
-end
-
 do
+    ---Returns function that runs the given script_name in the current working directory.
+    ---Only implemented for Linux. ( Uses the sh command )
+    ---@param script_name string
+    ---@return fun() 
+    local function get_run_script_function(script_name)
+        return function()
+            ---@type "Linux" | "Darwin" | "Windows_NT"
+            local os_name = vim.loop.os_uname().sysname
+            if os_name == "Windows_NT" then
+                error('run_file not implemented for non-unix platforms')
+            end
+
+            local run_script_path = vim.fn.getcwd() .. "/" .. script_name
+            if not file_exists(run_script_path) then
+                error(
+                    "The run script: '" .. run_script_path .. "' does not exist.\n"..
+                    "All this command does, is to execute that file."
+                )
+            end
+
+            vim.cmd('!sh ' .. run_script_path)
+        end
+    end
+
     -- To create a script that runs when typing the command "<leader>er",
     -- create a script called ".r.sh" in the current directory.
-    local alphabet = 'abcdefghijklmnopqrstuvwxyzæøåABCDEFGHIJKLMNOPQRSTUVWXYZÆØÅ'
+    local alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
     for i = 1, #alphabet do
         local char = alphabet:sub(i, i)
         vim.keymap.set(
@@ -478,7 +559,6 @@ return require('packer').startup(packer_startup)
 ---| 'desert'
 ---| 'elflord'
 ---| 'evening'
----| 'gruvbox'
 ---| 'habamax'
 ---| 'industry'
 ---| 'koehler'
