@@ -274,7 +274,15 @@ local function packer_startup(use)
     local widgets = require('dap.ui.widgets')
     local my_sidebar = widgets.sidebar(widgets.scopes)
     local my_centered = widgets.centered_float(widgets.frames)
-    my_centered.close()
+
+    vim.api.nvim_create_autocmd('VimEnter', { -- Close the middle window that automatically opens for some reason.
+        desc = 'Close the window floating in the middle as vim opens.',
+        group = vim.api.nvim_create_augroup('close-dap-frames', {clear = true}),
+        callback = function()
+            my_centered.close()
+        end
+    }) --TODO change this if I can. Super hacky.
+
     vim.keymap.set('n', keymap.debug_continue, dap.continue, {})
     vim.keymap.set('n', keymap.debug_toggle_breakpoint, dap.toggle_breakpoint, {})
     vim.keymap.set('n', keymap.debug_clear_breakpoints, dap.clear_breakpoints, {})
@@ -291,11 +299,6 @@ local function packer_startup(use)
     -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go
     require'dap-python'.setup('~/.virtualenvs/debugpy/bin/python')
 
-    -- nicer debugging. displays variable values inline
-    -- https://github.com/theHamsta/nvim-dap-virtual-text
-    require'nvim-dap-virtual-text'.setup{
-
-    }
 
     dap.adapters.gdb = {
         type = "executable",
@@ -314,6 +317,12 @@ local function packer_startup(use)
             cwd = "${workspaceFolder}",
             stopAtBeginningOfMainSubprogram = false,
         },
+    }
+
+    -- nicer debugging. displays variable values inline
+    -- https://github.com/theHamsta/nvim-dap-virtual-text
+    require'nvim-dap-virtual-text'.setup{
+
     }
 
 end
