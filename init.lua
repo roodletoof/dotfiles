@@ -145,6 +145,7 @@ local function packer_startup(use)
     use 'mfussenegger/nvim-dap'
     use 'mfussenegger/nvim-dap-python' -- follow instructions or start venv before starting nvim.
     use 'theHamsta/nvim-dap-virtual-text'
+    use 'leoluz/nvim-dap-go'
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -298,6 +299,7 @@ local function packer_startup(use)
     -- More configurations:
     -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go
     require'dap-python'.setup('~/.virtualenvs/debugpy/bin/python')
+    require'dap-go'.setup()
 
 
     dap.adapters.gdb = {
@@ -321,9 +323,7 @@ local function packer_startup(use)
 
     -- nicer debugging. displays variable values inline
     -- https://github.com/theHamsta/nvim-dap-virtual-text
-    require'nvim-dap-virtual-text'.setup{
-
-    }
+    require'nvim-dap-virtual-text'.setup{ }
 
 end
 
