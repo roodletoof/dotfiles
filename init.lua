@@ -1,6 +1,10 @@
 local keymap = {
     leader_key = ';',
 
+    -- Terminal mode ------------------------------------------------------------------------------------
+    exit_terminal_mode = '<esc>',
+    toggle_terminal = '<c-;>',
+
     -- Normal mode --------------------------------------------------------------------------------------
     telescope_search_for_files_in_working_directory = '<space>d',
     telescope_search_for_previously_opened_files = '<space><space>',
@@ -77,6 +81,14 @@ vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_left, '<cmd>wincmd 
 vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
 vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
 vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+
+vim.api.nvim_set_keymap('t', keymap.exit_terminal_mode, '<C-\\><C-n>', {silent = true})
+vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
+vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
+vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
+vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+vim.cmd [[ autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif ]]
+
 vim.g.c_syntax_for_h = 1
 vim.g.python_indent = { -- Fixes retarded default python indentation.
     open_paren = 'shiftwidth()',
@@ -150,6 +162,10 @@ local function packer_startup(use)
     use 'leoluz/nvim-dap-go'
 
     use "ellisonleao/gruvbox.nvim"
+
+    use {"akinsho/toggleterm.nvim", tag = '*', config = function()
+        require("toggleterm").setup{ }
+    end}
 
     if packer_bootstrap then --Comes after packages
         require('packer').sync()
@@ -268,23 +284,22 @@ local function packer_startup(use)
     require('lspconfig').zls.setup{
         capabilities = capabilities
     }
+    local telescope_builtin = require('telescope.builtin')
     vim.keymap.set('n', keymap.lsp_rename_symbol, vim.lsp.buf.rename, {})
     vim.keymap.set('n', keymap.lsp_code_action, vim.lsp.buf.code_action, {})
     vim.keymap.set('n', keymap.lsp_go_to_definition, vim.lsp.buf.definition, {})
     vim.keymap.set('n', keymap.lsp_go_to_implementation, vim.lsp.buf.implementation, {})
-    vim.keymap.set('n', keymap.lsp_show_references, require('telescope.builtin').lsp_references, {})
+    vim.keymap.set('n', keymap.lsp_show_references, telescope_builtin.lsp_references, {})
     vim.keymap.set('n', keymap.lsp_hovering_documentation, vim.lsp.buf.hover, {})
     vim.keymap.set('n', keymap.lsp_next_diagnostic, vim.diagnostic.goto_next, {})
     vim.keymap.set('n', keymap.lsp_hovering_diagnostics, vim.diagnostic.open_float, {})
 
-    local builtin = require('telescope.builtin')
-    vim.keymap.set('n', keymap.telescope_search_for_files_in_working_directory, builtin.find_files, {})
-    vim.keymap.set('n', keymap.telescope_search_for_previously_opened_files, builtin.oldfiles, {})
-    vim.keymap.set('n', keymap.telescope_live_grep, builtin.live_grep, {})
-    vim.keymap.set('n', keymap.telescope_search_help_pages, builtin.help_tags, {})
-    vim.keymap.set('n', keymap.telescope_search_current_buffer, builtin.current_buffer_fuzzy_find, {})
-    vim.keymap.set('n', keymap.telescope_search_buffers, builtin.buffers, {})
-
+    vim.keymap.set('n', keymap.telescope_search_for_files_in_working_directory, telescope_builtin.find_files, {})
+    vim.keymap.set('n', keymap.telescope_search_for_previously_opened_files, telescope_builtin.oldfiles, {})
+    vim.keymap.set('n', keymap.telescope_live_grep, telescope_builtin.live_grep, {})
+    vim.keymap.set('n', keymap.telescope_search_help_pages, telescope_builtin.help_tags, {})
+    vim.keymap.set('n', keymap.telescope_search_current_buffer, telescope_builtin.current_buffer_fuzzy_find, {})
+    vim.keymap.set('n', keymap.telescope_search_buffers, telescope_builtin.buffers, {})
 
     local dap = require'dap'
     local widgets = require('dap.ui.widgets')
@@ -436,7 +451,7 @@ do
                 )
             end
 
-            vim.cmd('!sh ' .. run_script_path)
+            vim.cmd([[ TermExec cmd="!sh ]].. run_script_path ..[[" direction=vertical size=80 ]])
         end
     end
 
@@ -604,6 +619,15 @@ vim.keymap.set(
     'n',
     keymap.formatting_split_line,
     split_line,
+    { silent = true }
+)
+
+vim.keymap.set(
+    {'n', 't', 'i'},
+    keymap.toggle_terminal,
+    function ()
+        vim.cmd [[ ToggleTerm direction=vertical size=80 ]]
+    end,
     { silent = true }
 )
 
