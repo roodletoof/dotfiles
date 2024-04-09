@@ -16,6 +16,7 @@ local keymap = {
     lsp_rename_symbol = '<leader>rn',
     lsp_code_action = '<leader>ca',
     lsp_go_to_definition = 'gd',
+    lsp_go_to_type_definition = 'gt',
     lsp_go_to_implementation = 'gi',
     lsp_show_references = 'gr',
     lsp_hovering_documentation = 'K',
@@ -287,8 +288,9 @@ local function packer_startup(use)
     local telescope_builtin = require('telescope.builtin')
     vim.keymap.set('n', keymap.lsp_rename_symbol, vim.lsp.buf.rename, {})
     vim.keymap.set('n', keymap.lsp_code_action, vim.lsp.buf.code_action, {})
-    vim.keymap.set('n', keymap.lsp_go_to_definition, vim.lsp.buf.definition, {})
-    vim.keymap.set('n', keymap.lsp_go_to_implementation, vim.lsp.buf.implementation, {})
+    vim.keymap.set('n', keymap.lsp_go_to_definition, telescope_builtin.lsp_definitions, {})
+    vim.keymap.set('n', keymap.lsp_go_to_type_definition, telescope_builtin.lsp_type_definitions, {})
+    vim.keymap.set('n', keymap.lsp_go_to_implementation, telescope_builtin.lsp_implementations, {})
     vim.keymap.set('n', keymap.lsp_show_references, telescope_builtin.lsp_references, {})
     vim.keymap.set('n', keymap.lsp_hovering_documentation, vim.lsp.buf.hover, {})
     vim.keymap.set('n', keymap.lsp_next_diagnostic, vim.diagnostic.goto_next, {})
@@ -451,7 +453,7 @@ do
                 )
             end
 
-            vim.cmd([[ TermExec cmd="!sh ]].. run_script_path ..[[" direction=vertical size=80 ]])
+            vim.cmd([[ TermExec cmd="sh ]].. run_script_path ..[[" direction=vertical size=80 ]])
         end
     end
 
