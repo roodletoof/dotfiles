@@ -90,8 +90,8 @@ vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_up, '<cmd>wincmd k<
 vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
 vim.cmd [[ autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif ]]
 
-vim.cmd [[ autocmd BufWinLeave *.* mkview ]]
-vim.cmd [[ autocmd BufWinEnter *.* silent loadview ]]
+vim.cmd [[ autocmd BufWinLeave *.* silent! mkview ]]
+vim.cmd [[ autocmd BufWinEnter *.* silent! loadview ]]
 
 vim.g.c_syntax_for_h = 1
 vim.g.python_indent = { -- Fixes retarded default python indentation.
