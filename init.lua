@@ -1,9 +1,4 @@
 -- GENERAL SETTINGS
----@type installed_themes
-local colorscheme = 'habamax'
-vim.o.termguicolors = true
-vim.cmd('colorscheme ' .. colorscheme)
-
 vim.cmd [[ autocmd VimEnter * NoMatchParen ]]
 do
     local leader_key = ','
@@ -323,29 +318,6 @@ vim.keymap.set(
     { silent = true }
 )
 
----@alias installed_themes
----| 'blue'
----| 'darkblue'
----| 'default'
----| 'delek'
----| 'desert'
----| 'elflord'
----| 'evening'
----| 'habamax'
----| 'industry'
----| 'koehler'
----| 'lunaperche'
----| 'morning'
----| 'murphy'
----| 'pablo'
----| 'peachpuff'
----| 'quiet'
----| 'ron'
----| 'shine'
----| 'slate'
----| 'torte'
----| 'zellner'
-
 -- LAZY.NVIM BOOTSTRAP
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -393,13 +365,13 @@ require('lazy').setup(
                 require('snippy').setup({
                     enable_auto = true,
                     mappings = {
-                        is = {
-                            ['<Tab>'] = 'expand_or_advance',
-                            ['<S-Tab>'] = 'previous',
-                        },
-                        nx = {
-                            ['<leader>x'] = 'cut_text',
-                        },
+                        -- is = {
+                        --     ['<Tab>'] = 'expand_or_advance',
+                        --     ['<S-Tab>'] = 'previous',
+                        -- },
+                        -- nx = {
+                        --     ['<leader>x'] = 'cut_text',
+                        -- },
                     },
                 })
             end
@@ -423,7 +395,9 @@ require('lazy').setup(
                         {name = 'nvim_lsp'},
                     },
                     mapping = {
-                        ['<Tab>'] = cmp.mapping.confirm({select = true}),
+                        ['<c-j>'] = function (_) cmp.confirm({select = true}) end,
+                        ['<c-k>'] = function (_) snippy.next() end,
+                        ['<c-h>'] = function (_) snippy.previous() end,
                     },
                 }
             end,
@@ -473,6 +447,15 @@ require('lazy').setup(
                 map('t', builtin.lsp_type_definitions)
                 map('e', builtin.diagnostics)
 
+            end,
+        },
+        { 'sainnhe/everforest', -- THE THEME SETUP
+            lazy = false,
+            priority = 1000,
+            config = function()
+                vim.o.termguicolors = true
+                vim.g.everforest_enable_italic = true
+                vim.cmd.colorscheme('everforest')
             end,
         },
     }
