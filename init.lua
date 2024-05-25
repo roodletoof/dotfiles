@@ -358,6 +358,9 @@ require('lazy').setup(
                     }
                 }
                 lspconfig.gopls.setup{}
+                lspconfig.pyright.setup{}
+
+                vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Perform code action" })
             end,
         },
         { 'dcampos/nvim-snippy',
@@ -369,9 +372,9 @@ require('lazy').setup(
                         --     ['<Tab>'] = 'expand_or_advance',
                         --     ['<S-Tab>'] = 'previous',
                         -- },
-                        -- nx = {
-                        --     ['<leader>x'] = 'cut_text',
-                        -- },
+                        nx = {
+                            ['<leader>x'] = 'cut_text',
+                        },
                     },
                 })
             end
