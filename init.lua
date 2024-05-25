@@ -458,5 +458,15 @@ require('lazy').setup(
                 vim.cmd.colorscheme('everforest')
             end,
         },
+        { 'folke/zen-mode.nvim',
+            config = function ()
+                vim.keymap.set(
+                    'n',
+                    "<leader>z",
+                    vim.cmd.ZenMode,
+                    { silent = true }
+                )
+            end
+        },
     }
 )
