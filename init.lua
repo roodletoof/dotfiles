@@ -6,7 +6,7 @@ vim.cmd('colorscheme ' .. colorscheme)
 
 vim.cmd [[ autocmd VimEnter * NoMatchParen ]]
 do
-    local leader_key = ' '
+    local leader_key = ','
     vim.g.mapleader = leader_key
     vim.g.maplocalleader = leader_key
 end
@@ -63,6 +63,7 @@ vim.o.exrc = true -- Allows project specific .nvim.lua config files.
 
 vim.cmd [[ autocmd FileType * set formatoptions-=cro ]] -- Disable automatic comment.
 
+-- HELPER FUNCTIONS
 ---@param name string
 ---@return boolean
 local function file_exists(name)
@@ -76,7 +77,7 @@ local function file_exists(name)
     end
 end
 
--- Snippet edit functionality. Requires Snippy.
+-- SNIPPET EDIT FUNCTIONALITY. REQUIRES SNIPPY.
 -- Opens a default .snippets file for the filetype you are currently editing in a horizontal split pane.
 -- If the .snippets file does not exist, it will be created.
 -- This requires the snippets folder to exist in the config folder.
@@ -104,7 +105,7 @@ vim.api.nvim_create_user_command(
     { nargs = 0 }
 )
 
--- Json2go command. Convert selected json into a go struct by using json2struct terminal command. (install separateley)
+-- JSON2GO COMMAND. CONVERT SELECTED JSON INTO A GO STRUCT BY USING JSON2STRUCT TERMINAL COMMAND. (INSTALL SEPARATELEY)
 vim.api.nvim_create_user_command(
     'Json2go',
     function(opts)
@@ -135,7 +136,7 @@ vim.api.nvim_create_user_command(
     { range = true }
 )
 
--- execute project specific scripts
+-- EXECUTE PROJECT SPECIFIC SCRIPTS
 do
     ---Returns function that runs the given script_name in the current working directory.
     ---Only implemented for Linux. ( Uses the sh command )
@@ -175,7 +176,7 @@ do
     end
 end
 
--- split line functionality
+-- SPLIT LINE FUNCTIONALITY
 ---@type function
 local split_line
 do
@@ -345,7 +346,7 @@ vim.keymap.set(
 ---| 'torte'
 ---| 'zellner'
 
--- lazy.nvim bootstrap
+-- LAZY.NVIM BOOTSTRAP
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
@@ -361,6 +362,32 @@ vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup(
     {
+        { 'neovim/nvim-lspconfig',
+            config = function()
+                local lspconfig = require('lspconfig')
+                lspconfig.lua_ls.setup{
+                    settings = {
+                        Lua = {
+                            runtime = {
+                                version = 'LuaJIT'
+                            },
+                            diagnostics = {
+                                globals = {
+                                    'vim'
+                                }
+                            },
+                            workspace = {
+                                checktirdparty = true,
+                                library = {
+                                    vim.env.VIMRUNTIME
+                                }
+                            }
+                        }
+                    }
+                }
+                lspconfig.gopls.setup{}
+            end,
+        },
         { 'dcampos/nvim-snippy',
             config = function()
                 require('snippy').setup({
@@ -371,20 +398,82 @@ require('lazy').setup(
                             ['<S-Tab>'] = 'previous',
                         },
                         nx = {
-                            ['x'] = 'cut_text',
+                            ['<leader>x'] = 'cut_text',
                         },
                     },
                 })
             end
         },
-        { "kylechui/nvim-surround",
-            version = "*", -- Use for stability; omit to use `main` branch for the latest features
-            event = "VeryLazy",
+        { 'hrsh7th/nvim-cmp',
+            dependencies = {
+                'dcampos/cmp-snippy',
+                'hrsh7th/cmp-nvim-lsp'
+            },
             config = function()
-                require("nvim-surround").setup({
+                local cmp = require('cmp')
+                local snippy = require('snippy')
+                cmp.setup{
+                    snippet = {
+                        expand = function(args)
+                            snippy.expand_snippet(args.body)
+                        end,
+                    },
+                    sources = {
+                        {name = 'snippy'},
+                        {name = 'nvim_lsp'},
+                    },
+                    mapping = {
+                        ['<Tab>'] = cmp.mapping.confirm({select = true}),
+                    },
+                }
+            end,
+        },
+        { 'kylechui/nvim-surround',
+            version = '*', -- Use for stability; omit to use `main` branch for the latest features
+            event = 'VeryLazy',
+            config = function()
+                require('nvim-surround').setup({
                     -- Configuration here, or leave empty to use defaults
                 })
             end
+        },
+        { 'nvim-treesitter/nvim-treesitter',
+            build = ':TSUpdate',
+            config = function ()
+                local configs = require('nvim-treesitter.configs')
+
+                configs.setup({
+                    ensure_installed = 'all',
+                    sync_install = false,
+                    highlight = { enable = true },
+                    indent = { enable = true },
+                })
+            end,
+        },
+        { 'nvim-telescope/telescope.nvim',
+            tag = '0.1.6',
+            dependencies = { 'nvim-lua/plenary.nvim' },
+            config = function()
+                local builtin = require('telescope.builtin')
+
+                ---@param key string
+                ---@param fun function
+                local map = function(key, fun)
+                    vim.keymap.set('n', '<leader>f' .. key, fun, {})
+                end
+
+                map('f', builtin.find_files)
+                map('g', builtin.live_grep)
+                map('b', builtin.buffers)
+                map('h', builtin.help_tags)
+                map('m', builtin.man_pages)
+                map('r', builtin.lsp_references)
+                map('d', builtin.lsp_definitions)
+                map('i', builtin.lsp_implementations)
+                map('t', builtin.lsp_type_definitions)
+                map('e', builtin.diagnostics)
+
+            end,
         },
     }
 )
