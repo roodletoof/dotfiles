@@ -1,28 +1,15 @@
-local keymap = {
-    leader_key = ' ',
-
-    navigation_move_to_panel_left = '<c-h>',
-    navigation_move_to_panel_down = '<c-j>',
-    navigation_move_to_panel_up = '<c-k>',
-    navigation_move_to_panel_right = '<c-l>',
-
-    exit_terminal_mode = '<esc>',
-
-    split_line = "<leader>s",
-        --> Splits the current line with comma separated items in paranthesis into multiple lines.
-        --> Works on all types of parenthesis, and is aware of strings.
-
-    execute_script_leading = "<leader>e", -- <leader>er: executes .r.sh in bash
-}
-
+-- GENERAL SETTINGS
 ---@type installed_themes
 local colorscheme = 'habamax'
 vim.o.termguicolors = true
 vim.cmd('colorscheme ' .. colorscheme)
 
 vim.cmd [[ autocmd VimEnter * NoMatchParen ]]
-vim.g.mapleader = keymap.leader_key
-vim.g.maplocalleader = keymap.leader_key
+do
+    local leader_key = ' '
+    vim.g.mapleader = leader_key
+    vim.g.maplocalleader = leader_key
+end
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 0
 vim.opt.rnu = true
@@ -36,15 +23,23 @@ vim.opt.scrolloff = 8
 
 vim.api.nvim_set_option("clipboard", "unnamedplus")
 
-vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
-vim.api.nvim_set_keymap('n', keymap.navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
-vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
-vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
-vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
-vim.api.nvim_set_keymap('t', keymap.navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
-vim.api.nvim_set_keymap('t', keymap.exit_terminal_mode, '<C-\\><C-n>', {silent = true})
+do
+    local navigation_move_to_panel_left = '<c-h>'
+    local navigation_move_to_panel_down = '<c-j>'
+    local navigation_move_to_panel_up = '<c-k>'
+    local navigation_move_to_panel_right = '<c-l>'
+
+    vim.api.nvim_set_keymap('n', navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+end
+
+vim.api.nvim_set_keymap('t', '<esc>', '<C-\\><C-n>', {silent = true})
 vim.cmd [[ autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif ]]
 
 vim.cmd [[ autocmd BufWinLeave *.* silent! mkview ]]
@@ -68,7 +63,6 @@ vim.o.exrc = true -- Allows project specific .nvim.lua config files.
 
 vim.cmd [[ autocmd FileType * set formatoptions-=cro ]] -- Disable automatic comment.
 
-
 ---@param name string
 ---@return boolean
 local function file_exists(name)
@@ -82,6 +76,7 @@ local function file_exists(name)
     end
 end
 
+-- Snippet edit functionality. Requires Snippy.
 -- Opens a default .snippets file for the filetype you are currently editing in a horizontal split pane.
 -- If the .snippets file does not exist, it will be created.
 -- This requires the snippets folder to exist in the config folder.
@@ -109,6 +104,7 @@ vim.api.nvim_create_user_command(
     { nargs = 0 }
 )
 
+-- Json2go command. Convert selected json into a go struct by using json2struct terminal command. (install separateley)
 vim.api.nvim_create_user_command(
     'Json2go',
     function(opts)
@@ -139,7 +135,7 @@ vim.api.nvim_create_user_command(
     { range = true }
 )
 
-
+-- execute project specific scripts
 do
     ---Returns function that runs the given script_name in the current working directory.
     ---Only implemented for Linux. ( Uses the sh command )
@@ -172,13 +168,14 @@ do
         local char = alphabet:sub(i, i)
         vim.keymap.set(
             'n',
-            keymap.execute_script_leading .. char,
+            "<leader>e" .. char,
             get_run_script_function("." .. char .. ".sh"),
             { silent = true }
         )
     end
 end
 
+-- split line functionality
 ---@type function
 local split_line
 do
@@ -318,14 +315,12 @@ do
     end
 end
 
-
 vim.keymap.set(
     'n',
-    keymap.split_line,
+     "<leader>s",
     split_line,
     { silent = true }
 )
-
 
 ---@alias installed_themes
 ---| 'blue'
@@ -349,3 +344,47 @@ vim.keymap.set(
 ---| 'slate'
 ---| 'torte'
 ---| 'zellner'
+
+-- lazy.nvim bootstrap
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require('lazy').setup(
+    {
+        { 'dcampos/nvim-snippy',
+            config = function()
+                require('snippy').setup({
+                    enable_auto = true,
+                    mappings = {
+                        is = {
+                            ['<Tab>'] = 'expand_or_advance',
+                            ['<S-Tab>'] = 'previous',
+                        },
+                        nx = {
+                            ['x'] = 'cut_text',
+                        },
+                    },
+                })
+            end
+        },
+        { "kylechui/nvim-surround",
+            version = "*", -- Use for stability; omit to use `main` branch for the latest features
+            event = "VeryLazy",
+            config = function()
+                require("nvim-surround").setup({
+                    -- Configuration here, or leave empty to use defaults
+                })
+            end
+        },
+    }
+)
