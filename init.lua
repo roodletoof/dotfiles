@@ -437,6 +437,7 @@ require('lazy').setup(
                 end
 
                 map('f', builtin.find_files)
+                map('o', builtin.oldfiles)
                 map('g', builtin.live_grep)
                 map('b', builtin.buffers)
                 map('h', builtin.help_tags)
@@ -467,6 +468,30 @@ require('lazy').setup(
                     { silent = true }
                 )
             end
+        },
+        { 'stevearc/oil.nvim',
+            dependencies = { 'nvim-tree/nvim-web-devicons', },
+            config = function ()
+                local oil = require('oil')
+                oil.setup{
+                    default_file_explorer = true,
+                    columns = {'icon'},
+                    view_options = {
+                        show_hidden = true,
+                    },
+                }
+                vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
+            end,
+        },
+        { 'akinsho/toggleterm.nvim',
+            version = "*",
+            config = function ()
+                require('toggleterm').setup{
+                    direction = 'vertical',
+                    size = 80,
+                }
+                vim.keymap.set("n", "<leader>t", vim.cmd.ToggleTerm, { desc = "Toggle terminal" })
+            end,
         },
     }
 )
