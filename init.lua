@@ -361,6 +361,7 @@ require('lazy').setup(
                 lspconfig.pyright.setup{}
 
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Perform code action" })
+                vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename token under cursor" })
             end,
         },
         { 'dcampos/nvim-snippy',
