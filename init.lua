@@ -354,6 +354,7 @@ require('lazy').setup(
                 }
                 lspconfig.gopls.setup{}
                 lspconfig.pyright.setup{}
+                lspconfig.csharp_ls.setup{} -- install with: "dotnet tool install --global csharp-ls"
 
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Perform code action" })
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename token under cursor" })
