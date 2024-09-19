@@ -19,19 +19,40 @@ vim.opt.scrolloff = 8
 vim.api.nvim_set_option("clipboard", "unnamedplus")
 
 do
-    local navigation_move_to_panel_left = '<c-h>'
-    local navigation_move_to_panel_down = '<c-j>'
-    local navigation_move_to_panel_up = '<c-k>'
-    local navigation_move_to_panel_right = '<c-l>'
+    local move_left = '<c-h>'
+    local move_down = '<c-j>'
+    local move_up = '<c-k>'
+    local move_right = '<c-l>'
 
-    vim.api.nvim_set_keymap('n', navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
-    vim.api.nvim_set_keymap('n', navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
-    vim.api.nvim_set_keymap('n', navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
-    vim.api.nvim_set_keymap('n', navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
-    vim.api.nvim_set_keymap('t', navigation_move_to_panel_left, '<cmd>wincmd h<CR>', {silent = true})
-    vim.api.nvim_set_keymap('t', navigation_move_to_panel_down, '<cmd>wincmd j<CR>', {silent = true})
-    vim.api.nvim_set_keymap('t', navigation_move_to_panel_up, '<cmd>wincmd k<CR>', {silent = true})
-    vim.api.nvim_set_keymap('t', navigation_move_to_panel_right, '<cmd>wincmd l<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', move_left, '<cmd>wincmd h<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', move_down, '<cmd>wincmd j<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', move_up, '<cmd>wincmd k<CR>', {silent = true})
+    vim.api.nvim_set_keymap('n', move_right, '<cmd>wincmd l<CR>', {silent = true})
+
+    vim.api.nvim_set_keymap('t', move_left, '<cmd>wincmd h<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', move_down, '<cmd>wincmd j<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', move_up, '<cmd>wincmd k<CR>', {silent = true})
+    vim.api.nvim_set_keymap('t', move_right, '<cmd>wincmd l<CR>', {silent = true})
+end
+
+do -- building, errors and folder navigation
+    ---comment
+    ---@param key string
+    ---@param command string
+    local function map(key, command)
+        local prefix = '<leader>'
+        vim.api.nvim_set_keymap('n', prefix .. key, '<cmd>'..command..'<CR>', {silent = true})
+    end
+
+    map('co', 'copen')
+    map('cc', 'cclose')
+    map('cf', 'cfirst')
+    map('cl', 'clast')
+    map('cn', 'cnext')
+    map('cp', 'cprevious')
+    map('cd', 'cd %:p:h')
+    map('m', 'make')
+
 end
 
 vim.api.nvim_set_keymap('t', '<esc>', '<C-\\><C-n>', {silent = true})
@@ -327,6 +348,11 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+--=> This package requires additional configuration for use in editors. Install package
+--   'user-setup', or manually:
+--   * for Vim, add this line to ~/.vimrc:
+--     set rtp^="/home/ivarfatland/.opam/default/share/ocp-indent/vim"
+
 require('lazy').setup(
     {
         { 'neovim/nvim-lspconfig',
@@ -356,7 +382,7 @@ require('lazy').setup(
                 lspconfig.pyright.setup{}
                 lspconfig.csharp_ls.setup{} -- install with: "dotnet tool install --global csharp-ls"
                 lspconfig.gdscript.setup{}
-                lspconfig.clangd.setup{}
+                --lspconfig.clangd.setup{}
 
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Perform code action" })
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename token under cursor" })
@@ -367,10 +393,6 @@ require('lazy').setup(
                 require('snippy').setup({
                     enable_auto = true,
                     mappings = {
-                        -- is = {
-                        --     ['<Tab>'] = 'expand_or_advance',
-                        --     ['<S-Tab>'] = 'previous',
-                        -- },
                         nx = {
                             ['<leader>x'] = 'cut_text',
                         },
@@ -448,6 +470,7 @@ require('lazy').setup(
                 map('d', builtin.lsp_definitions)
                 map('i', builtin.lsp_implementations)
                 map('t', builtin.lsp_type_definitions)
+                map('s', builtin.lsp_document_symbols)
                 map('e', builtin.diagnostics)
 
             end,
