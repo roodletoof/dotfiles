@@ -330,6 +330,9 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup(
     {
         { 'neovim/nvim-lspconfig',
+            dependencies = {
+                "Hoffs/omnisharp-extended-lsp.nvim"
+            },
             config = function()
                 local lspconfig = require('lspconfig')
                 lspconfig.lua_ls.setup{
@@ -354,9 +357,59 @@ require('lazy').setup(
                 }
                 lspconfig.gopls.setup{}
                 lspconfig.pyright.setup{}
-                lspconfig.csharp_ls.setup{} -- install with: "dotnet tool install --global csharp-ls"
+                -- lspconfig.csharp_ls.setup{} -- install with: "dotnet tool install --global csharp-ls"
+                -- TODO ALSO TELESCOPE
+                -- https://github.com/Hoffs/omnisharp-extended-lsp.nvim
+                lspconfig.omnisharp.setup {
+                    cmd = { "dotnet", "/Users/ivar.fatland/bin/omnisharp/OmniSharp.dll"},
+
+                    settings = {
+                        FormattingOptions = {
+                            -- Enables support for reading code style, naming convention and analyzer
+                            -- settings from .editorconfig.
+                            EnableEditorConfigSupport = true,
+                            -- Specifies whether 'using' directives should be grouped and sorted during
+                            -- document formatting.
+                            OrganizeImports = nil,
+                        },
+                        MsBuild = {
+                            -- If true, MSBuild project system will only load projects for files that
+                            -- were opened in the editor. This setting is useful for big C# codebases
+                            -- and allows for faster initialization of code navigation features only
+                            -- for projects that are relevant to code that is being edited. With this
+                            -- setting enabled OmniSharp may load fewer projects and may thus display
+                            -- incomplete reference lists for symbols.
+                            LoadProjectsOnDemand = nil,
+                        },
+                        RoslynExtensionsOptions = {
+                            -- Enables support for roslyn analyzers, code fixes and rulesets.
+                            EnableAnalyzersSupport = nil,
+                            -- Enables support for showing unimported types and unimported extension
+                            -- methods in completion lists. When committed, the appropriate using
+                            -- directive will be added at the top of the current file. This option can
+                            -- have a negative impact on initial completion responsiveness,
+                            -- particularly for the first few completion sessions after opening a
+                            -- solution.
+                            EnableImportCompletion = nil,
+                            -- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+                            -- true
+                            AnalyzeOpenDocumentsOnly = nil,
+                        },
+                        Sdk = {
+                            -- Specifies whether to include preview versions of the .NET SDK when
+                            -- determining which version to use for project loading.
+                            IncludePrereleases = true,
+                        },
+                    },
+                }
                 lspconfig.gdscript.setup{}
-                lspconfig.clangd.setup{}
+                lspconfig.clangd.setup{
+                    cmd = { "clangd", "--compile-commands-dir=build" }, -- Specify the directory of compile_commands.json
+                    filetypes = { "c", "cpp", "objc", "objcpp" },
+                    root_dir = lspconfig.util.root_pattern("compile_commands.json", ".git"),
+                }
+                lspconfig.sqlls.setup{}
+                lspconfig.rust_analyzer.setup{}
 
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Perform code action" })
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename token under cursor" })
@@ -397,9 +450,9 @@ require('lazy').setup(
                         {name = 'nvim_lsp'},
                     },
                     mapping = {
-                        ['<c-j>'] = function (_) cmp.confirm({select = true}) end,
-                        ['<c-k>'] = function (_) snippy.next() end,
-                        ['<c-h>'] = function (_) snippy.previous() end,
+                        ['<c-j>'] = cmp.mapping(function (_) cmp.confirm({select = true}) end, { "i", "s" }),
+                        ['<c-k>'] = cmp.mapping(function (_) snippy.next() end, { "i", "s" }),
+                        ['<c-h>'] = cmp.mapping(function (_) snippy.previous() end, { "i", "s" }),
                     },
                 }
             end,
@@ -428,7 +481,10 @@ require('lazy').setup(
         },
         { 'nvim-telescope/telescope.nvim',
             tag = '0.1.6',
-            dependencies = { 'nvim-lua/plenary.nvim' },
+            dependencies = {
+                'nvim-lua/plenary.nvim',
+                'Hoffs/omnisharp-extended-lsp.nvim'
+            },
             config = function()
                 local builtin = require('telescope.builtin')
 
@@ -444,10 +500,31 @@ require('lazy').setup(
                 map('b', builtin.buffers)
                 map('h', builtin.help_tags)
                 map('m', builtin.man_pages)
-                map('r', builtin.lsp_references)
-                map('d', builtin.lsp_definitions)
-                map('i', builtin.lsp_implementations)
-                map('t', builtin.lsp_type_definitions)
+
+                local function cswrapper(default, cs)
+                    -- TODO cs is null for some reason...
+
+                    return function(...)
+                        if vim.api.nvim_buf_get_option(0, "filetype") == 'cs' then
+                            cs(...)
+                        else
+                            default(...)
+                        end
+                    end
+                end
+
+                local omnisharp_extended = require('omnisharp_extended')
+
+                map('r', cswrapper(builtin.lsp_references, omnisharp_extended.telescope_lsp_references))
+                map('d', cswrapper(builtin.lsp_definitions, omnisharp_extended.telescope_lsp_definitions))
+                map('t', cswrapper(builtin.lsp_type_definitions, omnisharp_extended.telescope_lsp_type_definitions))
+                map('i', cswrapper(builtin.lsp_implementations, omnisharp_extended.telescope_lsp_implementations))
+
+                --map('r', omnisharp_extended.lsp_references)
+                --map('d', omnisharp_extended.lsp_definitions)
+                --map('t', omnisharp_extended.lsp_type_definitions)
+                --map('i', omnisharp_extended.lsp_impelentations)
+
                 map('e', builtin.diagnostics)
 
             end,
@@ -493,6 +570,19 @@ require('lazy').setup(
                     size = 80,
                 }
                 vim.keymap.set("n", "<leader>t", vim.cmd.ToggleTerm, { desc = "Toggle terminal" })
+            end,
+        },
+        { 'michaeljsmith/vim-indent-object',
+        },
+        { "iamcco/markdown-preview.nvim",
+            cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+            build = "cd app && yarn install",
+            init = function()
+                vim.g.mkdp_filetypes = { "markdown" }
+            end,
+            ft = { "markdown" },
+            config = function ()
+                vim.keymap.set('n', '<leader>md', ':MarkdownPreviewToggle<cr>', {})
             end,
         },
     }
