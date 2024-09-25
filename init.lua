@@ -475,6 +475,10 @@ require('lazy').setup(
                         ['<c-j>'] = cmp.mapping(function (_) cmp.confirm({select = true}) end, { "i", "s" }),
                         ['<c-k>'] = cmp.mapping(function (_) snippy.next() end, { "i", "s" }),
                         ['<c-h>'] = cmp.mapping(function (_) snippy.previous() end, { "i", "s" }),
+                        ['<c-d>'] = cmp.mapping.scroll_docs(4),
+                        ['<c-u>'] = cmp.mapping.scroll_docs(-4),
+                        ['<c-n>'] = cmp.mapping.select_next_item(),
+                        ['<c-p>'] = cmp.mapping.select_prev_item(),
                     },
                 }
             end,
