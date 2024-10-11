@@ -18,6 +18,10 @@ vim.opt.scrolloff = 8
 
 vim.api.nvim_set_option("clipboard", "unnamedplus")
 
+ALPHABET_LOWER = 'abcdefghijklmnopqrstuvwxyz'
+ALPHABET_UPPER = string.upper(ALPHABET_LOWER)
+DIGITS = '0123456789'
+
 do
     local move_left = '<c-h>'
     local move_down = '<c-j>'
@@ -33,6 +37,15 @@ do
     vim.api.nvim_set_keymap('t', move_down, '<cmd>wincmd j<CR>', {silent = true})
     vim.api.nvim_set_keymap('t', move_up, '<cmd>wincmd k<CR>', {silent = true})
     vim.api.nvim_set_keymap('t', move_right, '<cmd>wincmd l<CR>', {silent = true})
+end
+
+do -- always global marks
+    for i = 1, #ALPHABET_LOWER do
+        local lower = string.sub(ALPHABET_LOWER, i, i)
+        local upper = string.sub(ALPHABET_UPPER, i, i)
+        vim.api.nvim_set_keymap('n', 'm' .. lower, 'm' .. upper, {silent = true})
+        vim.api.nvim_set_keymap('n', "'" .. lower, "'" .. upper, {silent = true})
+    end
 end
 
 do -- building, errors and folder navigation
@@ -71,6 +84,16 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
 }
 
 vim.o.exrc = true -- Allows project specific .nvim.lua config files.
+
+--better scrolling
+vim.cmd [[ noremap <c-d> <c-d>M0w ]]
+vim.cmd [[ noremap <c-u> <c-u>M0w ]]
+
+--move buffer to window
+vim.cmd [[ nnoremap <leader>bh :let buf=bufnr('%')<CR><C-w>h:buffer <C-r>=buf<CR><CR> ]]
+vim.cmd [[ nnoremap <leader>bj :let buf=bufnr('%')<CR><C-w>j:buffer <C-r>=buf<CR><CR> ]]
+vim.cmd [[ nnoremap <leader>bk :let buf=bufnr('%')<CR><C-w>k:buffer <C-r>=buf<CR><CR> ]]
+vim.cmd [[ nnoremap <leader>bl :let buf=bufnr('%')<CR><C-w>l:buffer <C-r>=buf<CR><CR> ]]
 
 vim.cmd [[ autocmd FileType * set formatoptions-=cro ]] -- Disable automatic comment.
 
@@ -175,9 +198,9 @@ do
 
     -- To create a script that runs when typing the command "<leader>er",
     -- create a script called ".r.sh" in the current directory.
-    local alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-    for i = 1, #alphabet do
-        local char = alphabet:sub(i, i)
+    local characters = ALPHABET_LOWER .. ALPHABET_UPPER .. DIGITS
+    for i = 1, #characters do
+        local char = characters:sub(i, i)
         vim.keymap.set(
             'n',
             "<leader>e" .. char,
@@ -436,6 +459,9 @@ require('lazy').setup(
                 }
                 lspconfig.sqlls.setup{}
                 lspconfig.rust_analyzer.setup{}
+                lspconfig.hls.setup{
+                    filetypes = { 'haskell', 'lhaskell', 'cabal' }
+                }
 
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Perform code action" })
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename token under cursor" })
