@@ -1,9 +1,5 @@
 -- GENERAL SETTINGS
-do
-	local leader_key = ','
-	vim.g.mapleader = leader_key
-	vim.g.maplocalleader = leader_key
-end
+
 vim.opt.tabstop = 8
 vim.opt.shiftwidth = 0
 vim.opt.rnu = true
@@ -18,41 +14,41 @@ vim.opt.scrolloff = 8
 vim.o.exrc = true       -- Enable local project configuration files
 vim.o.secure = true     -- Disable potentially unsafe commands in .nvimrc
 
-vim.api.nvim_set_option("clipboard", "unnamedplus")
+vim.cmd [[
+	set clipboard=unnamedplus
 
-ALPHABET_LOWER = 'abcdefghijklmnopqrstuvwxyz'
-ALPHABET_UPPER = string.upper(ALPHABET_LOWER)
-DIGITS = '0123456789'
+	nnoremap ,co :copen<CR>
+	nnoremap ,cc :cclose<CR>
+	nnoremap ,cf :cfirst<CR>
+	nnoremap ,cl :clast<CR>
+	nnoremap ,cn :cnext<CR>
+	nnoremap ,cp :cprevious<CR>
+	nnoremap ,cd :cd %:p:h<CR>
 
-for i = 1, #ALPHABET_LOWER do
-	local lower = string.sub(ALPHABET_LOWER, i, i)
-	local upper = string.sub(ALPHABET_UPPER, i, i)
-	vim.api.nvim_set_keymap('n', 'm' .. lower, 'm' .. upper, {silent = true})
-	vim.api.nvim_set_keymap('n', "'" .. lower, "'" .. upper, {silent = true})
-end
+	tnoremap <esc> <c-\><c-n>
+	autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif 
+	nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
 
-do
-	local function map_command(key, command)
-		vim.api.nvim_set_keymap('n', key, '<cmd>'..command..'<CR>', {silent = true})
-	end
+	autocmd BufWinLeave *.* silent! mkview 
+	autocmd BufWinEnter *.* silent! loadview 
 
-	-- quickfix
-	map_command('<leader>co', 'copen')
-	map_command('<leader>cc', 'cclose')
-	map_command('<leader>cf', 'cfirst')
-	map_command('<leader>cl', 'clast')
-	map_command('<leader>cn', 'cnext')
-	map_command('<leader>cp', 'cprevious')
+	nnoremap ,bh :let buf=bufnr('%')<CR><c-w>h:buffer <c-r>=buf<CR><CR>
+	nnoremap ,bj :let buf=bufnr('%')<CR><c-w>j:buffer <c-r>=buf<CR><CR>
+	nnoremap ,bk :let buf=bufnr('%')<CR><c-w>k:buffer <c-r>=buf<CR><CR>
+	nnoremap ,bl :let buf=bufnr('%')<CR><c-w>l:buffer <c-r>=buf<CR><CR>
 
-	-- folder navigation
-	map_command('<leader>cd', 'cd %:p:h')
-end
+	nnoremap <c-h> <c-w>h
+	nnoremap <c-j> <c-w>j
+	nnoremap <c-k> <c-w>k
+	nnoremap <c-l> <c-w>l
+	nnoremap ,v <c-w>v
+	tnoremap <c-h> <c-\><c-n><c-w>h
+	tnoremap <c-j> <c-\><c-n><c-w>j
+	tnoremap <c-k> <c-\><c-n><c-w>k
+	tnoremap <c-l> <c-\><c-n><c-w>l
 
-vim.api.nvim_set_keymap('t', '<esc>', '<C-\\><C-n>', {silent = true})
-vim.cmd [[ autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif ]]
-
-vim.cmd [[ autocmd BufWinLeave *.* silent! mkview ]]
-vim.cmd [[ autocmd BufWinEnter *.* silent! loadview ]]
+	tnoremap <c-w>c <c-\><c-n><c-w>c
+]]
 
 vim.g.c_syntax_for_h = 1
 vim.g.python_indent = { -- Fixes retarded default python indentation.
@@ -62,12 +58,6 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
 	closed_paren_align_last_line = false,
 	searchpair_timeout = 300,
 }
-
---move buffer to window
-vim.cmd [[ nnoremap <leader>bh :let buf=bufnr('%')<CR><C-w>h:buffer <C-r>=buf<CR><CR> ]]
-vim.cmd [[ nnoremap <leader>bj :let buf=bufnr('%')<CR><C-w>j:buffer <C-r>=buf<CR><CR> ]]
-vim.cmd [[ nnoremap <leader>bk :let buf=bufnr('%')<CR><C-w>k:buffer <C-r>=buf<CR><CR> ]]
-vim.cmd [[ nnoremap <leader>bl :let buf=bufnr('%')<CR><C-w>l:buffer <C-r>=buf<CR><CR> ]]
 
 local function file_exists(name)
 	local f = io.open(name,"r")
@@ -215,7 +205,7 @@ do -- split line
 
 	vim.keymap.set(
 		'n',
-		"<leader>s",
+		",s",
 		split_line,
 		{ silent = true }
 	)
@@ -259,7 +249,7 @@ require'lazy'.setup(
 			config = function ()
 				vim.keymap.set(
 					'n',
-					"<leader>z",
+					",z",
 					vim.cmd.ZenMode,
 					{ silent = true }
 				)
