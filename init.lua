@@ -48,6 +48,8 @@ vim.cmd [[
 	tnoremap <c-l> <c-\><c-n><c-w>l
 
 	tnoremap <c-w>c <c-\><c-n><c-w>c
+
+        autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=100}
 ]]
 
 vim.g.c_syntax_for_h = 1
@@ -286,6 +288,7 @@ require'lazy'.setup(
 		{ 'neovim/nvim-lspconfig',
 			config = function()
 				require'lspconfig'.gopls.setup{}
+				require'lspconfig'.rust_analyzer.setup{}
 				vim.cmd [[
 					noremap ,rn :lua vim.lsp.buf.rename()<CR>
 					noremap ,fd :lua vim.lsp.buf.definition()<CR>
