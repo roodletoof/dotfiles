@@ -11,8 +11,8 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.scrolloff = 8
 
-vim.o.exrc = true       -- Enable local project configuration files
-vim.o.secure = true     -- Disable potentially unsafe commands in .nvimrc
+vim.o.exrc = true   -- Enable local project configuration files
+vim.o.secure = true -- Disable potentially unsafe commands in .nvimrc
 
 vim.cmd [[
 	set clipboard=unnamedplus
@@ -227,112 +227,141 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require'lazy'.setup(
-	{
-		{ 'justinmk/vim-sneak', },
-		{ 'michaeljsmith/vim-indent-object', },
-		{ 'kylechui/nvim-surround',
-			version = '*', -- Use for stability; omit to use `main` branch for the latest features
-			event = 'VeryLazy',
-			config = function()
-				require('nvim-surround').setup{}
-			end
-		},
-		{ 'sainnhe/everforest',
-			lazy = false,
-			priority = 1000,
-			config = function()
-				vim.o.termguicolors = true
-				vim.g.everforest_enable_italic = true
-				vim.cmd.colorscheme('everforest')
-			end,
-		},
-		{ 'folke/zen-mode.nvim',
-			config = function ()
-				vim.keymap.set(
-					'n',
-					",z",
-					vim.cmd.ZenMode,
-					{ silent = true }
-				)
-			end
-		},
-		{ 'stevearc/oil.nvim',
-			dependencies = { 'nvim-tree/nvim-web-devicons', },
-			config = function ()
-				local oil = require('oil')
-				oil.setup{
-					default_file_explorer = true,
-					columns = {'icon'},
-					view_options = {
-						show_hidden = true,
-					},
-				}
-				vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
-			end,
-		},
-		{ 'nvim-telescope/telescope.nvim',
-			tag = '0.1.8',
-			dependencies = { 'nvim-lua/plenary.nvim', },
-			config = function()
-				vim.cmd [[
-					noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
-					noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
-					noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
-					noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
-					noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
-					noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
-				]]
-			end,
-		},
-		{ 'neovim/nvim-lspconfig',
-			config = function()
-				require'lspconfig'.gopls.setup{}
-				require'lspconfig'.rust_analyzer.setup{}
-				vim.cmd [[
-					noremap ,rn :lua vim.lsp.buf.rename()<CR>
-					noremap ,fd :lua vim.lsp.buf.definition()<CR>
-					noremap ,ft :lua vim.lsp.buf.type_definition()<CR>
-					noremap ,fr :lua vim.lsp.buf.references()<CR>
-					noremap ,ca :lua vim.lsp.buf.code_action()<CR>
-					noremap ,oe :lua vim.diagnostic.open_float()<CR>
-					noremap ,fe :lua vim.diagnostic.setqflist()<CR>
-				]]
-			end
-		},
-		{ 'dcampos/nvim-snippy',
-			config = function()
-				require'snippy'.setup{ enable_auto = true, }
-				vim.cmd [[
-					imap <expr> <c-l> '<Plug>(snippy-expand-or-advance)'
-					imap <expr> <c-k> '<Plug>(snippy-previous)'
-					smap <expr> <c-l> '<Plug>(snippy-next)'
-					smap <expr> <c-k> '<Plug>(snippy-previous)'
-					xmap <Tab> <Plug>(snippy-cut-text)
-				]]
+require'lazy'.setup{
+	{ 'justinmk/vim-sneak', },
+	{ 'michaeljsmith/vim-indent-object', },
+	{ 'kylechui/nvim-surround',
+		version = '*', -- Use for stability; omit to use `main` branch for the latest features
+		event = 'VeryLazy',
+		config = function()
+			require('nvim-surround').setup{}
+		end
+	},
+	{ 'sainnhe/everforest',
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.o.termguicolors = true
+			vim.g.everforest_enable_italic = true
+			vim.cmd.colorscheme('everforest')
+		end,
+	},
+	{ 'folke/zen-mode.nvim',
+		config = function ()
+			vim.keymap.set(
+				'n',
+				",z",
+				vim.cmd.ZenMode,
+				{ silent = true }
+			)
+		end
+	},
+	{ 'stevearc/oil.nvim',
+		dependencies = { 'nvim-tree/nvim-web-devicons', },
+		config = function ()
+			local oil = require('oil')
+			oil.setup{
+				default_file_explorer = true,
+				columns = {'icon'},
+				view_options = {
+					show_hidden = true,
+				},
+			}
+			vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
+		end,
+	},
+	{ 'nvim-telescope/telescope.nvim',
+		tag = '0.1.8',
+		dependencies = { 'nvim-lua/plenary.nvim', },
+		config = function()
+			vim.cmd [[
+				noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
+				noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
+				noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
+				noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
+				noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
+				noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
+			]]
+		end,
+	},
+	{ 'neovim/nvim-lspconfig',
+		config = function()
+			require'lspconfig'.gopls.setup{}
+			require'lspconfig'.rust_analyzer.setup{}
+			vim.cmd [[
+				noremap ,rn :lua vim.lsp.buf.rename()<CR>
+				noremap ,fd :lua vim.lsp.buf.definition()<CR>
+				noremap ,ft :lua vim.lsp.buf.type_definition()<CR>
+				noremap ,fr :lua vim.lsp.buf.references()<CR>
+				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
+				noremap ,oe :lua vim.diagnostic.open_float()<CR>
+				noremap ,fe :lua vim.diagnostic.setqflist()<CR>
+			]]
+		end
+	},
+	{ 'dcampos/nvim-snippy',
+		config = function()
+			require'snippy'.setup{ enable_auto = true, }
+			vim.cmd [[
+				imap <expr> <c-l> '<Plug>(snippy-next)'
+				imap <expr> <c-k> '<Plug>(snippy-previous)'
+				smap <expr> <c-l> '<Plug>(snippy-next)'
+				smap <expr> <c-k> '<Plug>(snippy-previous)'
+				xmap <Tab> <Plug>(snippy-cut-text)
+			]]
 
-				vim.api.nvim_create_user_command(
-					'S',
-					function ()
-						---@type string
-						local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
+			vim.api.nvim_create_user_command(
+				'S',
+				function ()
+					---@type string
+					local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
 
-						if not file_exists(snippets_path) then
-							local file = io.open( snippets_path, 'w' )
-								assert(
-									file ~= nil,
-									("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
-									"Make sure the snippets folder in the above path exists."
-								)
-							file:close()
-							print('created file: ', snippets_path)
-						end
+					if not file_exists(snippets_path) then
+						local file = io.open( snippets_path, 'w' )
+							assert(
+								file ~= nil,
+								("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
+								"Make sure the snippets folder in the above path exists."
+							)
+						file:close()
+						print('created file: ', snippets_path)
+					end
 
-						vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
+					vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
+				end,
+				{ nargs = 0 }
+			)
+		end
+	},
+	{ 'hrsh7th/nvim-cmp',
+		dependencies = {
+			'hrsh7th/cmp-nvim-lsp',
+			'hrsh7th/cmp-buffer',
+			'hrsh7th/cmp-path',
+			'dcampos/nvim-snippy',
+			'dcampos/cmp-snippy',
+		},
+		config = function()
+			local cmp = require'cmp'
+			cmp.setup{
+				snippet = {
+					expand = function(args)
+						require'snippy'.expand_snippet(args.body)
 					end,
-					{ nargs = 0 }
-				)
-			end
-		},
-	}
-)
+				},
+				mapping = {
+					['<C-y>'] = cmp.mapping.confirm{ select = true },
+					['<C-n>'] = cmp.mapping.select_next_item(),
+					['<C-p>'] = cmp.mapping.select_prev_item(),
+				},
+				sources = cmp.config.sources{
+					{ name = 'snippy' },
+					{ name = 'nvim_lsp' },
+					{ name = 'buffer' },
+					{ name = 'path' },
+				},
+			}
+		end,
+	},
+}
+
