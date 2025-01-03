@@ -19,11 +19,15 @@ vim.cmd [[
 
 	nnoremap ,co :copen<CR>
 	nnoremap ,cc :cclose<CR>
+	nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
+	nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
 	nnoremap ,cf :cfirst<CR>
 	nnoremap ,cl :clast<CR>
-	nnoremap ,cn :cnext<CR>
-	nnoremap ,cp :cprevious<CR>
+	nnoremap <c-n> :cnext<CR>
+	nnoremap <c-p> :cprevious<CR>
 	nnoremap ,cd :cd %:p:h<CR>
+	nnoremap ,cu :colder<CR>
+	nnoremap ,cr :cnewer<CR>
 
 	tnoremap <esc> <c-\><c-n>
 	autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif 
@@ -274,6 +278,15 @@ require'lazy'.setup{
 		tag = '0.1.8',
 		dependencies = { 'nvim-lua/plenary.nvim', },
 		config = function()
+			local a = require'telescope.actions'
+			require'telescope'.setup{
+				defaults = {
+					mappings = {
+						i = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, },
+						n = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, },
+					}
+				}
+			}
 			vim.cmd [[
 				noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
 				noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
@@ -354,12 +367,14 @@ require'lazy'.setup{
 					['<C-n>'] = cmp.mapping.select_next_item(),
 					['<C-p>'] = cmp.mapping.select_prev_item(),
 				},
-				sources = cmp.config.sources{
-					{ name = 'snippy' },
-					{ name = 'nvim_lsp' },
-					{ name = 'buffer' },
-					{ name = 'path' },
-				},
+				sources = cmp.config.sources(
+					{
+						{ name = 'snippy', priority = 100000000000000000000 },
+						{ name = 'nvim_lsp', priority = 100},
+						{ name = 'path', priority = 1},
+					}
+				),
+				preselect = cmp.PreselectMode.None,
 			}
 		end,
 	},
