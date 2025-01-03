@@ -75,147 +75,6 @@ local function file_exists(name)
 	end
 end
 
-do -- split line
-	local SPLIT_WHITESPACE = '	'
-	local SPLIT_DELIMETERS = { -- single characters only
-		[','] = true,
-		[';'] = true,
-	}
-	local SPLIT_BETWEEN = { -- single characters only
-		['('] = ')',
-		['['] = ']',
-		['{'] = '}',
-	}
-	local SPLIT_IGNORE_BETWEEN = { --single characters only
-		['"'] = '"',
-		["'"] = "'",
-	}
-
-	local split_line = function()
-		local line = vim.api.nvim_get_current_line()
-		local _, col =  unpack(vim.api.nvim_win_get_cursor(0))
-		col = col + 1 -- Doing this to make it 1-indexed
-
-		---@type integer?
-		local first_bracket_i = nil
-		for i = col, #line do
-			local char = line:sub(i, i)
-			if SPLIT_BETWEEN[char] ~= nil then
-				first_bracket_i = i
-				break
-			end
-		end
-
-		if not first_bracket_i then
-			print('No opening brackets found after cursor on this line.')
-			return
-		end
-
-		---@type integer[]
-		local split_indexes = {} -- Populate this array
-		---@type integer?
-		local last_bracket_i = nil -- And find this index
-
-		do
-			---@type string[]
-			local closing_bracket_stack = {}
-			local icon_to_close_ignore = ''
-			local in_ignore = false
-
-			for i = first_bracket_i, #line do
-				local char = line:sub(i,i)
-
-				if in_ignore then
-					in_ignore = not (char == icon_to_close_ignore)
-					goto continue
-				end
-
-				if SPLIT_IGNORE_BETWEEN[char] ~= nil then
-					icon_to_close_ignore = SPLIT_IGNORE_BETWEEN[char]
-					in_ignore = true
-					goto continue
-				end
-				-- string handling complete
-
-				if SPLIT_BETWEEN[char] ~= nil then
-					table.insert(
-						closing_bracket_stack,
-						SPLIT_BETWEEN[char]
-					)
-				end
-
-				if char == closing_bracket_stack[#closing_bracket_stack] then
-					table.remove(closing_bracket_stack)
-				end
-
-				if #closing_bracket_stack == 1 and SPLIT_DELIMETERS[char] then
-					table.insert(split_indexes, i)
-				end
-
-				if #closing_bracket_stack == 0 then
-					last_bracket_i = i
-					break
-				end
-				::continue::
-			end
-		end
-
-		if not last_bracket_i then
-			print("The first opening bracket found after the cursor was not closed on this line.")
-			return
-		end
-		if #split_indexes == 0 then
-			print('No comma separated items within brackets that were opened and closed after the cursor.')
-			return
-		end
-
-		---@type string
-		local leading_whitespace = string.match(line, "^%s*")
-		local first_line = line:sub(1, first_bracket_i)
-		local last_line = leading_whitespace .. line:sub(last_bracket_i, #line)
-
-		local middle_lines = {}
-		table.insert(
-			middle_lines,
-			line:sub(first_bracket_i+1, split_indexes[1])
-		)
-		for i = 1, #split_indexes-1 do
-			table.insert(
-				middle_lines,
-				line:sub(split_indexes[i], split_indexes[i+1])
-			)
-		end
-		table.insert(
-			middle_lines,
-			line:sub(split_indexes[#split_indexes], last_bracket_i-1)
-		)
-
-		local leading_pattern = "^[%s"
-		for k, _ in pairs(SPLIT_DELIMETERS) do
-			leading_pattern = leading_pattern .. k
-		end
-		leading_pattern = leading_pattern .. "]*"
-
-		-- Cleanup step
-		for i, middle_line in ipairs(middle_lines) do
-			middle_line = middle_line:gsub(leading_pattern, leading_whitespace .. SPLIT_WHITESPACE, 1)
-			middle_line = middle_line:gsub("[%s]*$", '', 1)
-			middle_lines[i] = middle_line
-		end
-
-		local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
-		vim.api.nvim_buf_set_lines(0, row-1, row, false, {first_line})
-		vim.api.nvim_buf_set_lines(0, row, row, false, {last_line})
-		vim.api.nvim_buf_set_lines(0, row, row, false, middle_lines)
-	end
-
-	vim.keymap.set(
-		'n',
-		",s",
-		split_line,
-		{ silent = true }
-	)
-end
 
 -- LAZY.NVIM BOOTSTRAP
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -380,3 +239,144 @@ require'lazy'.setup{
 	},
 }
 
+do -- split line
+	local SPLIT_WHITESPACE = '	'
+	local SPLIT_DELIMETERS = { -- single characters only
+		[','] = true,
+		[';'] = true,
+	}
+	local SPLIT_BETWEEN = { -- single characters only
+		['('] = ')',
+		['['] = ']',
+		['{'] = '}',
+	}
+	local SPLIT_IGNORE_BETWEEN = { --single characters only
+		['"'] = '"',
+		["'"] = "'",
+	}
+
+	local split_line = function()
+		local line = vim.api.nvim_get_current_line()
+		local _, col =  unpack(vim.api.nvim_win_get_cursor(0))
+		col = col + 1 -- Doing this to make it 1-indexed
+
+		---@type integer?
+		local first_bracket_i = nil
+		for i = col, #line do
+			local char = line:sub(i, i)
+			if SPLIT_BETWEEN[char] ~= nil then
+				first_bracket_i = i
+				break
+			end
+		end
+
+		if not first_bracket_i then
+			print('No opening brackets found after cursor on this line.')
+			return
+		end
+
+		---@type integer[]
+		local split_indexes = {} -- Populate this array
+		---@type integer?
+		local last_bracket_i = nil -- And find this index
+
+		do
+			---@type string[]
+			local closing_bracket_stack = {}
+			local icon_to_close_ignore = ''
+			local in_ignore = false
+
+			for i = first_bracket_i, #line do
+				local char = line:sub(i,i)
+
+				if in_ignore then
+					in_ignore = not (char == icon_to_close_ignore)
+					goto continue
+				end
+
+				if SPLIT_IGNORE_BETWEEN[char] ~= nil then
+					icon_to_close_ignore = SPLIT_IGNORE_BETWEEN[char]
+					in_ignore = true
+					goto continue
+				end
+				-- string handling complete
+
+				if SPLIT_BETWEEN[char] ~= nil then
+					table.insert(
+						closing_bracket_stack,
+						SPLIT_BETWEEN[char]
+					)
+				end
+
+				if char == closing_bracket_stack[#closing_bracket_stack] then
+					table.remove(closing_bracket_stack)
+				end
+
+				if #closing_bracket_stack == 1 and SPLIT_DELIMETERS[char] then
+					table.insert(split_indexes, i)
+				end
+
+				if #closing_bracket_stack == 0 then
+					last_bracket_i = i
+					break
+				end
+				::continue::
+			end
+		end
+
+		if not last_bracket_i then
+			print("The first opening bracket found after the cursor was not closed on this line.")
+			return
+		end
+		if #split_indexes == 0 then
+			print('No comma separated items within brackets that were opened and closed after the cursor.')
+			return
+		end
+
+		---@type string
+		local leading_whitespace = string.match(line, "^%s*")
+		local first_line = line:sub(1, first_bracket_i)
+		local last_line = leading_whitespace .. line:sub(last_bracket_i, #line)
+
+		local middle_lines = {}
+		table.insert(
+			middle_lines,
+			line:sub(first_bracket_i+1, split_indexes[1])
+		)
+		for i = 1, #split_indexes-1 do
+			table.insert(
+				middle_lines,
+				line:sub(split_indexes[i], split_indexes[i+1])
+			)
+		end
+		table.insert(
+			middle_lines,
+			line:sub(split_indexes[#split_indexes], last_bracket_i-1)
+		)
+
+		local leading_pattern = "^[%s"
+		for k, _ in pairs(SPLIT_DELIMETERS) do
+			leading_pattern = leading_pattern .. k
+		end
+		leading_pattern = leading_pattern .. "]*"
+
+		-- Cleanup step
+		for i, middle_line in ipairs(middle_lines) do
+			middle_line = middle_line:gsub(leading_pattern, leading_whitespace .. SPLIT_WHITESPACE, 1)
+			middle_line = middle_line:gsub("[%s]*$", '', 1)
+			middle_lines[i] = middle_line
+		end
+
+		local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+		vim.api.nvim_buf_set_lines(0, row-1, row, false, {first_line})
+		vim.api.nvim_buf_set_lines(0, row, row, false, {last_line})
+		vim.api.nvim_buf_set_lines(0, row, row, false, middle_lines)
+	end
+
+	vim.keymap.set(
+		'n',
+		",s",
+		split_line,
+		{ silent = true }
+	)
+end
