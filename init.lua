@@ -161,6 +161,7 @@ require'lazy'.setup{
 			require'lspconfig'.gopls.setup{}
 			require'lspconfig'.rust_analyzer.setup{}
 			require'lspconfig'.gdscript.setup{}
+			require'lspconfig'.clangd.setup{}
 			vim.cmd [[
 				noremap ,rn :lua vim.lsp.buf.rename()<CR>
 				noremap ,fd :lua vim.lsp.buf.definition()<CR>
