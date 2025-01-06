@@ -36,11 +36,6 @@ vim.cmd [[
 	autocmd BufWinLeave *.* silent! mkview 
 	autocmd BufWinEnter *.* silent! loadview 
 
-	nnoremap ,bh :let buf=bufnr('%')<CR><c-w>h:buffer <c-r>=buf<CR><CR>
-	nnoremap ,bj :let buf=bufnr('%')<CR><c-w>j:buffer <c-r>=buf<CR><CR>
-	nnoremap ,bk :let buf=bufnr('%')<CR><c-w>k:buffer <c-r>=buf<CR><CR>
-	nnoremap ,bl :let buf=bufnr('%')<CR><c-w>l:buffer <c-r>=buf<CR><CR>
-
 	nnoremap <c-h> <c-w>h
 	nnoremap <c-j> <c-w>j
 	nnoremap <c-k> <c-w>k
@@ -171,6 +166,30 @@ require'lazy'.setup{
 				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
 				noremap ,oe :lua vim.diagnostic.open_float()<CR>
 				"noremap ,fe :lua vim.diagnostic.setqflist()<CR>
+			]]
+		end
+	},
+	{ 'mfussenegger/nvim-dap',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+			'theHamsta/nvim-dap-virtual-text',
+			'leoluz/nvim-dap-go',
+		},
+
+		config = function()
+			require'nvim-dap-virtual-text'.setup{ commented = true, }
+			require'dap-go'.setup()
+			local dap = require'dap'
+			dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
+			dap.configurations.gdscript = { type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}", }
+			vim.cmd [[
+				nnoremap ,b :DapToggleBreakpoint<CR>
+				nnoremap ,B :DapClearBreakpoints<CR>
+				nnoremap <B :DapClearBreakpoints<CR>
+				nnoremap ,db :DapContinue<CR>
+				nnoremap <Down> :DapStepInto<CR>
+				nnoremap <UP> :DapStepOut<CR>
+				nnoremap <Right> :DapStepOver<CR>
 			]]
 		end
 	},
