@@ -153,6 +153,7 @@ require'lazy'.setup{
 				noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
 				noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
 				noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
+				noremap ,fe :lua require'telescope.builtin'.diagnostics()<CR>
 			]]
 		end,
 	},
@@ -169,7 +170,7 @@ require'lazy'.setup{
 				noremap ,fr :lua vim.lsp.buf.references()<CR>
 				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
 				noremap ,oe :lua vim.diagnostic.open_float()<CR>
-				noremap ,fe :lua vim.diagnostic.setqflist()<CR>
+				"noremap ,fe :lua vim.diagnostic.setqflist()<CR>
 			]]
 		end
 	},
