@@ -149,6 +149,7 @@ require'lazy'.setup{
 				noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
 				noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
 				noremap ,fe :lua require'telescope.builtin'.diagnostics()<CR>
+				noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
 			]]
 		end,
 	},
@@ -166,7 +167,6 @@ require'lazy'.setup{
 				noremap ,fr :lua vim.lsp.buf.references()<CR>
 				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
 				noremap ,oe :lua vim.diagnostic.open_float()<CR>
-				"noremap ,fe :lua vim.diagnostic.setqflist()<CR>
 			]]
 		end
 	},
@@ -391,6 +391,10 @@ do -- split line
 			middle_line = middle_line:gsub(leading_pattern, leading_whitespace .. SPLIT_WHITESPACE, 1)
 			middle_line = middle_line:gsub("[%s]*$", '', 1)
 			middle_lines[i] = middle_line
+		end
+
+		if middle_lines[#middle_lines]:match("^%s*$") ~= nil then
+			table.remove(middle_lines)
 		end
 
 		local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
