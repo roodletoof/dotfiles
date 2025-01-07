@@ -158,6 +158,7 @@ require'lazy'.setup{
 			require'lspconfig'.rust_analyzer.setup{}
 			require'lspconfig'.gdscript.setup{}
 			require'lspconfig'.clangd.setup{}
+			require'lspconfig'.pyright.setup{}
 			vim.cmd [[
 				noremap ,rn :lua vim.lsp.buf.rename()<CR>
 				noremap ,fd :lua vim.lsp.buf.definition()<CR>
@@ -174,11 +175,14 @@ require'lazy'.setup{
 			'nvim-treesitter/nvim-treesitter',
 			'theHamsta/nvim-dap-virtual-text',
 			'leoluz/nvim-dap-go',
+			'mfussenegger/nvim-dap-python'
 		},
 
 		config = function()
 			require'nvim-dap-virtual-text'.setup{ commented = true, }
 			require'dap-go'.setup()
+			require'dap-python'.setup(vim.fn.stdpath('config') .. '/.venv/bin/python')
+
 			local dap = require'dap'
 			dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
 			dap.configurations.gdscript = { type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}", }
