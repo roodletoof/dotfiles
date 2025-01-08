@@ -186,6 +186,8 @@ require'lazy'.setup{
 			local dap = require'dap'
 			dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
 			dap.configurations.gdscript = { type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}", }
+			dap.adapters.codelldb = { type = 'executable', command = 'codelldb', }
+
 			vim.cmd [[
 				nnoremap ,b :DapToggleBreakpoint<CR>
 				nnoremap ,B :DapClearBreakpoints<CR>
