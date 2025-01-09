@@ -16,6 +16,7 @@ vim.o.secure = true -- Disable potentially unsafe commands in .nvimrc
 
 vim.cmd [[
 	set clipboard=unnamedplus
+	set cursorline
 
 	nnoremap ,co :copen<CR>
 	nnoremap ,cc :cclose<CR>
@@ -88,6 +89,14 @@ vim.opt.rtp:prepend(lazypath)
 require'lazy'.setup{
 	{ 'justinmk/vim-sneak', },
 	{ 'michaeljsmith/vim-indent-object', },
+	{ 'Asheq/close-buffers.vim',
+		config = function()
+			vim.cmd [[
+				nnoremap <c-w>o <c-w>o:Bdelete other<CR>
+				nnoremap <c-w><c-o> <c-w><c-o>:Bdelete other<CR>
+			]]
+		end
+	},
 	{ 'kylechui/nvim-surround',
 		version = '*', -- Use for stability; omit to use `main` branch for the latest features
 		event = 'VeryLazy',
@@ -175,7 +184,7 @@ require'lazy'.setup{
 			'nvim-treesitter/nvim-treesitter',
 			'theHamsta/nvim-dap-virtual-text',
 			'leoluz/nvim-dap-go',
-			'mfussenegger/nvim-dap-python'
+			'mfussenegger/nvim-dap-python',
 		},
 
 		config = function()
@@ -185,8 +194,7 @@ require'lazy'.setup{
 
 			local dap = require'dap'
 			dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
-			dap.configurations.gdscript = { type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}", }
-			dap.adapters.codelldb = { type = 'executable', command = 'codelldb', }
+			dap.configurations.gdscript = { {type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}",} }
 
 			vim.cmd [[
 				nnoremap ,b :DapToggleBreakpoint<CR>
