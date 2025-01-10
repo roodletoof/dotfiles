@@ -157,8 +157,13 @@ require'lazy'.setup{
 				noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
 				noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
 				noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
-				noremap ,fe :lua require'telescope.builtin'.diagnostics()<CR>
 				noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
+
+                                noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
+				noremap ,fee :lua require'telescope.builtin'.diagnostics{severity="ERROR"}<CR>
+				noremap ,few :lua require'telescope.builtin'.diagnostics{severity="WARN"}<CR>
+				noremap ,fei :lua require'telescope.builtin'.diagnostics{severity="INFO"}<CR>
+				noremap ,feh :lua require'telescope.builtin'.diagnostics{severity="HINT"}<CR>
 			]]
 		end,
 	},
@@ -176,6 +181,11 @@ require'lazy'.setup{
 				noremap ,fr :lua vim.lsp.buf.references()<CR>
 				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
 				noremap ,oe :lua vim.diagnostic.open_float()<CR>
+				noremap ,ea :lua vim.diagnostic.setqflist()<CR>
+				noremap ,ee :lua vim.diagnostic.setqflist{severity="ERROR"}<CR>
+				noremap ,ew :lua vim.diagnostic.setqflist{severity="WARN"}<CR>
+				noremap ,ei :lua vim.diagnostic.setqflist{severity="INFO"}<CR>
+				noremap ,eh :lua vim.diagnostic.setqflist{severity="HINT"}<CR>
 			]]
 		end
 	},
