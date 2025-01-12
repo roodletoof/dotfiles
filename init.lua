@@ -159,7 +159,9 @@ require'lazy'.setup{
 				noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
 				noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
 
-                                noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
+				noremap ,fct :lua require'telescope.builtin'.tags()<CR>
+
+				noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
 				noremap ,fee :lua require'telescope.builtin'.diagnostics{severity="ERROR"}<CR>
 				noremap ,few :lua require'telescope.builtin'.diagnostics{severity="WARN"}<CR>
 				noremap ,fei :lua require'telescope.builtin'.diagnostics{severity="INFO"}<CR>
