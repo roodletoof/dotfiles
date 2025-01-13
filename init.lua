@@ -145,8 +145,14 @@ require'lazy'.setup{
 			require'telescope'.setup{
 				defaults = {
 					mappings = {
-						i = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, },
-						n = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, },
+						i = {
+							["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist,
+							["<C-j>"] = a.select_default,
+						},
+						n = {
+							["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist,
+							["<C-j>"] = a.select_default,
+						},
 					}
 				}
 			}
