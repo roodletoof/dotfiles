@@ -30,6 +30,8 @@ vim.cmd [[
 	nnoremap ,cu :colder<CR>
 	nnoremap ,cr :cnewer<CR>
 
+	nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
+
 	tnoremap <esc> <c-\><c-n>
 	autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif 
 	nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
@@ -89,14 +91,6 @@ vim.opt.rtp:prepend(lazypath)
 require'lazy'.setup{
 	{ 'justinmk/vim-sneak', },
 	{ 'michaeljsmith/vim-indent-object', },
-	{ 'Asheq/close-buffers.vim',
-		config = function()
-			vim.cmd [[
-				nnoremap <c-w>o <c-w>o:Bdelete other<CR>
-				nnoremap <c-w><c-o> <c-w><c-o>:Bdelete other<CR>
-			]]
-		end
-	},
 	{ 'kylechui/nvim-surround',
 		version = '*', -- Use for stability; omit to use `main` branch for the latest features
 		event = 'VeryLazy',
@@ -139,22 +133,20 @@ require'lazy'.setup{
 	},
 	{ 'nvim-telescope/telescope.nvim',
 		tag = '0.1.8',
-		dependencies = { 'nvim-lua/plenary.nvim', },
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'nvim-telescope/telescope-ui-select.nvim',
+		},
 		config = function()
 			local a = require'telescope.actions'
 			require'telescope'.setup{
 				defaults = {
 					mappings = {
-						i = {
-							["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist,
-							["<C-j>"] = a.select_default,
-						},
-						n = {
-							["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist,
-							["<C-j>"] = a.select_default,
-						},
+						i = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, ["<C-j>"] = a.select_default, },
+						n = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, ["<C-j>"] = a.select_default, },
 					}
-				}
+				},
+				extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
 			}
 			vim.cmd [[
 				noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
@@ -173,6 +165,8 @@ require'lazy'.setup{
 				noremap ,fei :lua require'telescope.builtin'.diagnostics{severity="INFO"}<CR>
 				noremap ,feh :lua require'telescope.builtin'.diagnostics{severity="HINT"}<CR>
 			]]
+
+			require'telescope'.load_extension'ui-select'
 		end,
 	},
 	{ 'neovim/nvim-lspconfig',
