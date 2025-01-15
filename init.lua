@@ -154,7 +154,7 @@ require'lazy'.setup{
 				noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
 				noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
 				noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
-				noremap ,fm :lua require'telescope.builtin'.man_pages()<CR>
+				noremap ,fm :lua require'telescope.builtin'.marks()<CR>
 				noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
 
 				noremap ,fct :lua require'telescope.builtin'.tags()<CR>
@@ -176,6 +176,7 @@ require'lazy'.setup{
 			require'lspconfig'.gdscript.setup{}
 			require'lspconfig'.clangd.setup{}
 			require'lspconfig'.pyright.setup{}
+			require'lspconfig'.ts_ls.setup{}
 			vim.cmd [[
 				noremap ,rn :lua vim.lsp.buf.rename()<CR>
 				noremap ,fd :lua vim.lsp.buf.definition()<CR>
