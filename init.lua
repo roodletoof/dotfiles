@@ -299,6 +299,7 @@ do -- split line
 		['('] = ')',
 		['['] = ']',
 		['{'] = '}',
+		['<'] = '>',
 	}
 	local SPLIT_IGNORE_BETWEEN = { --single characters only
 		['"'] = '"',
