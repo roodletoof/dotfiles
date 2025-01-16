@@ -1,4 +1,4 @@
-#| vim:foldmethod=marker
+;; vim:foldmethod=marker
 
 (defcfg ;;{{{1
   process-unmapped-keys yes
