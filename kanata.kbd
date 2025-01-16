@@ -51,10 +51,10 @@ configuration entries.
 )
 
 (defalias
-  cap (tap-hold-press 200 200 esc lctl)
-  shsp (tap-hold-press 200 200 spc lsft)
-  zl (tap-hold-press 200 200 z (layer-while-held symbols))
-  /l (tap-hold-press 200 200 / (layer-while-held symbols))
+  cap (tap-hold-press 0 200 esc lctl)
+  shsp (tap-hold-press 0 200 spc lsft)
+  zl (tap-hold-press 0 200 z (layer-while-held symbols))
+  /l (tap-hold-press 0 200 / (layer-while-held symbols))
   bl S-9
   br S-0
   { (macro S-[)
