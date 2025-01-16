@@ -1,3 +1,4 @@
+-- vim:foldmethod=indent
 -- GENERAL SETTINGS
 
 vim.opt.tabstop = 8
