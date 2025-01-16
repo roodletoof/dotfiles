@@ -1,5 +1,5 @@
--- vim:foldmethod=indent
--- GENERAL SETTINGS
+-- vim:foldmethod=marker
+-- GENERAL SETTINGS {{{1
 
 vim.opt.tabstop = 8
 vim.opt.shiftwidth = 0
@@ -64,7 +64,7 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
 	searchpair_timeout = 300,
 }
 
-local function file_exists(name)
+local function file_exists(name) --{{{1
 	local f = io.open(name,"r")
 	if f~=nil then
 		f:close()
@@ -75,7 +75,7 @@ local function file_exists(name)
 end
 
 
--- LAZY.NVIM BOOTSTRAP
+-- LAZY.NVIM BOOTSTRAP {{{1
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
@@ -89,17 +89,19 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require'lazy'.setup{
-	{ 'justinmk/vim-sneak', },
-	{ 'michaeljsmith/vim-indent-object', },
-	{ 'kylechui/nvim-surround',
+require'lazy'.setup{ --{{{1
+	{ 'justinmk/vim-sneak', --{{{2
+	},
+	{ 'michaeljsmith/vim-indent-object', --{{{2
+	},
+	{ 'kylechui/nvim-surround', --{{{2
 		version = '*', -- Use for stability; omit to use `main` branch for the latest features
 		event = 'VeryLazy',
 		config = function()
 			require('nvim-surround').setup{}
 		end
 	},
-	{ 'sainnhe/everforest',
+	{ 'sainnhe/everforest', --{{{2
 		lazy = false,
 		priority = 1000,
 		config = function()
@@ -108,7 +110,7 @@ require'lazy'.setup{
 			vim.cmd.colorscheme('everforest')
 		end,
 	},
-	{ 'folke/zen-mode.nvim',
+	{ 'folke/zen-mode.nvim', --{{{2
 		config = function ()
 			vim.keymap.set(
 				'n',
@@ -118,7 +120,7 @@ require'lazy'.setup{
 			)
 		end
 	},
-	{ 'stevearc/oil.nvim',
+	{ 'stevearc/oil.nvim', --{{{2
 		dependencies = { 'nvim-tree/nvim-web-devicons', },
 		config = function ()
 			local oil = require('oil')
@@ -132,7 +134,124 @@ require'lazy'.setup{
 			vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
 		end,
 	},
-	{ 'nvim-telescope/telescope.nvim',
+	{ 'neovim/nvim-lspconfig', --{{{2
+		config = function()
+			require'lspconfig'.gopls.setup{}
+			require'lspconfig'.rust_analyzer.setup{}
+			require'lspconfig'.gdscript.setup{}
+			require'lspconfig'.clangd.setup{}
+			require'lspconfig'.pyright.setup{}
+			require'lspconfig'.ts_ls.setup{}
+			vim.cmd [[
+				noremap ,rn :lua vim.lsp.buf.rename()<CR>
+				noremap ,fd :lua vim.lsp.buf.definition()<CR>
+				noremap ,ft :lua vim.lsp.buf.type_definition()<CR>
+				noremap ,fr :lua vim.lsp.buf.references()<CR>
+				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
+				noremap ,oe :lua vim.diagnostic.open_float()<CR>
+				noremap ,ea :lua vim.diagnostic.setqflist()<CR>
+				noremap ,ee :lua vim.diagnostic.setqflist{severity="ERROR"}<CR>
+				noremap ,ew :lua vim.diagnostic.setqflist{severity="WARN"}<CR>
+				noremap ,ei :lua vim.diagnostic.setqflist{severity="INFO"}<CR>
+				noremap ,eh :lua vim.diagnostic.setqflist{severity="HINT"}<CR>
+			]]
+		end
+	},
+	{ 'mfussenegger/nvim-dap', --{{{2
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+			'theHamsta/nvim-dap-virtual-text',
+			'leoluz/nvim-dap-go',
+			'mfussenegger/nvim-dap-python',
+		},
+
+		config = function()
+			require'nvim-dap-virtual-text'.setup{ commented = true, }
+			require'dap-go'.setup()
+			require'dap-python'.setup(vim.fn.stdpath('config') .. '/.venv/bin/python')
+
+			local dap = require'dap'
+			dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
+			dap.configurations.gdscript = { {type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}",} }
+
+			vim.cmd [[
+				nnoremap ,b :DapToggleBreakpoint<CR>
+				nnoremap ,B :DapClearBreakpoints<CR>
+				nnoremap <B :DapClearBreakpoints<CR>
+				nnoremap ,db :DapContinue<CR>
+				nnoremap <Down> :DapStepInto<CR>
+				nnoremap <UP> :DapStepOut<CR>
+				nnoremap <Right> :DapStepOver<CR>
+			]]
+		end
+	},
+	{ 'dcampos/nvim-snippy', --{{{2
+		config = function()
+			require'snippy'.setup{ enable_auto = true, }
+			vim.cmd [[
+				imap <expr> <c-l> '<Plug>(snippy-next)'
+				imap <expr> <c-k> '<Plug>(snippy-previous)'
+				smap <expr> <c-l> '<Plug>(snippy-next)'
+				smap <expr> <c-k> '<Plug>(snippy-previous)'
+				xmap <Tab> <Plug>(snippy-cut-text)
+			]]
+
+			vim.api.nvim_create_user_command(
+				'S',
+				function ()
+					---@type string
+					local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
+
+					if not file_exists(snippets_path) then
+						local file = io.open( snippets_path, 'w' )
+							assert(
+								file ~= nil,
+								("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
+								"Make sure the snippets folder in the above path exists."
+							)
+						file:close()
+						print('created file: ', snippets_path)
+					end
+
+					vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
+				end,
+				{ nargs = 0 }
+			)
+		end
+	},
+	{ 'hrsh7th/nvim-cmp', --{{{2
+		dependencies = {
+			'hrsh7th/cmp-nvim-lsp',
+			'hrsh7th/cmp-buffer',
+			'hrsh7th/cmp-path',
+			'dcampos/nvim-snippy',
+			'dcampos/cmp-snippy',
+		},
+		config = function()
+			local cmp = require'cmp'
+			cmp.setup{
+				snippet = {
+					expand = function(args)
+						require'snippy'.expand_snippet(args.body)
+					end,
+				},
+				mapping = {
+					['<C-y>'] = cmp.mapping.confirm{ select = true },
+					['<C-n>'] = cmp.mapping.select_next_item(),
+					['<C-p>'] = cmp.mapping.select_prev_item(),
+				},
+				sources = cmp.config.sources(
+					{
+						{ name = 'snippy', priority = 100000000000000000000 },
+						{ name = 'nvim_lsp', priority = 100},
+						{ name = 'path', priority = 1},
+					}
+				),
+				preselect = cmp.PreselectMode.None,
+			}
+		end,
+	},
+	{ 'nvim-telescope/telescope.nvim', --{{{2
 		tag = '0.1.8',
 		dependencies = {
 			'nvim-lua/plenary.nvim',
@@ -170,126 +289,9 @@ require'lazy'.setup{
 			require'telescope'.load_extension'ui-select'
 		end,
 	},
-	{ 'neovim/nvim-lspconfig',
-		config = function()
-			require'lspconfig'.gopls.setup{}
-			require'lspconfig'.rust_analyzer.setup{}
-			require'lspconfig'.gdscript.setup{}
-			require'lspconfig'.clangd.setup{}
-			require'lspconfig'.pyright.setup{}
-			require'lspconfig'.ts_ls.setup{}
-			vim.cmd [[
-				noremap ,rn :lua vim.lsp.buf.rename()<CR>
-				noremap ,fd :lua vim.lsp.buf.definition()<CR>
-				noremap ,ft :lua vim.lsp.buf.type_definition()<CR>
-				noremap ,fr :lua vim.lsp.buf.references()<CR>
-				noremap ,ca :lua vim.lsp.buf.code_action()<CR>
-				noremap ,oe :lua vim.diagnostic.open_float()<CR>
-				noremap ,ea :lua vim.diagnostic.setqflist()<CR>
-				noremap ,ee :lua vim.diagnostic.setqflist{severity="ERROR"}<CR>
-				noremap ,ew :lua vim.diagnostic.setqflist{severity="WARN"}<CR>
-				noremap ,ei :lua vim.diagnostic.setqflist{severity="INFO"}<CR>
-				noremap ,eh :lua vim.diagnostic.setqflist{severity="HINT"}<CR>
-			]]
-		end
-	},
-	{ 'mfussenegger/nvim-dap',
-		dependencies = {
-			'nvim-treesitter/nvim-treesitter',
-			'theHamsta/nvim-dap-virtual-text',
-			'leoluz/nvim-dap-go',
-			'mfussenegger/nvim-dap-python',
-		},
-
-		config = function()
-			require'nvim-dap-virtual-text'.setup{ commented = true, }
-			require'dap-go'.setup()
-			require'dap-python'.setup(vim.fn.stdpath('config') .. '/.venv/bin/python')
-
-			local dap = require'dap'
-			dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
-			dap.configurations.gdscript = { {type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}",} }
-
-			vim.cmd [[
-				nnoremap ,b :DapToggleBreakpoint<CR>
-				nnoremap ,B :DapClearBreakpoints<CR>
-				nnoremap <B :DapClearBreakpoints<CR>
-				nnoremap ,db :DapContinue<CR>
-				nnoremap <Down> :DapStepInto<CR>
-				nnoremap <UP> :DapStepOut<CR>
-				nnoremap <Right> :DapStepOver<CR>
-			]]
-		end
-	},
-	{ 'dcampos/nvim-snippy',
-		config = function()
-			require'snippy'.setup{ enable_auto = true, }
-			vim.cmd [[
-				imap <expr> <c-l> '<Plug>(snippy-next)'
-				imap <expr> <c-k> '<Plug>(snippy-previous)'
-				smap <expr> <c-l> '<Plug>(snippy-next)'
-				smap <expr> <c-k> '<Plug>(snippy-previous)'
-				xmap <Tab> <Plug>(snippy-cut-text)
-			]]
-
-			vim.api.nvim_create_user_command(
-				'S',
-				function ()
-					---@type string
-					local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
-
-					if not file_exists(snippets_path) then
-						local file = io.open( snippets_path, 'w' )
-							assert(
-								file ~= nil,
-								("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
-								"Make sure the snippets folder in the above path exists."
-							)
-						file:close()
-						print('created file: ', snippets_path)
-					end
-
-					vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
-				end,
-				{ nargs = 0 }
-			)
-		end
-	},
-	{ 'hrsh7th/nvim-cmp',
-		dependencies = {
-			'hrsh7th/cmp-nvim-lsp',
-			'hrsh7th/cmp-buffer',
-			'hrsh7th/cmp-path',
-			'dcampos/nvim-snippy',
-			'dcampos/cmp-snippy',
-		},
-		config = function()
-			local cmp = require'cmp'
-			cmp.setup{
-				snippet = {
-					expand = function(args)
-						require'snippy'.expand_snippet(args.body)
-					end,
-				},
-				mapping = {
-					['<C-y>'] = cmp.mapping.confirm{ select = true },
-					['<C-n>'] = cmp.mapping.select_next_item(),
-					['<C-p>'] = cmp.mapping.select_prev_item(),
-				},
-				sources = cmp.config.sources(
-					{
-						{ name = 'snippy', priority = 100000000000000000000 },
-						{ name = 'nvim_lsp', priority = 100},
-						{ name = 'path', priority = 1},
-					}
-				),
-				preselect = cmp.PreselectMode.None,
-			}
-		end,
-	},
 }
 
-do -- split line
+do -- split line {{{1
 	local SPLIT_WHITESPACE = '	'
 	local SPLIT_DELIMETERS = { -- single characters only
 		[','] = true,
