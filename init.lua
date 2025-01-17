@@ -53,7 +53,8 @@ vim.cmd [[
 	tnoremap <c-w>c <c-\><c-n><c-w>c
 
 	autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=100}
-	autocmd BufWritePost *.rs silent !cargo fmt >/dev/null 2>&1
+
+	let g:rustfmt_autosave = 1
 ]]
 
 vim.g.c_syntax_for_h = 1
