@@ -1,0 +1,27 @@
+set scrolloff=5
+set incsearch
+Plug 'machakann/vim-highlightedyank'
+Plug 'tpope/vim-commentary'
+set surround
+
+set clipboard+=unnamed
+
+let mapleader = ","
+
+map <leader>ff <Action>(SearchEverywhere)
+map <leader>fd <Action>(GotoDeclaration)
+map <leader>ft <Action>(GotoTypeDeclaration)
+
+map <leader>rc <Action>(IdeaVim.ReloadVimRc.reload)
+map <leader>z <Action>(ToggleDistractionFreeMode)
+map <leader>er <Action>(Run) 
+map <leader>a <Action>(ShowIntentionActions)
+map <leader>rn <Action>(RenameElement)
+
+noremap <c-h> <c-w>h
+noremap <c-j> <c-w>j
+noremap <c-k> <c-w>k
+noremap <c-l> <c-w>l
+
+map <leader>m <Action>(EditorDecreaseFontSize)
+map <leader>s <Action>(EditorIncreaseFontSize)
