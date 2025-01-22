@@ -58,7 +58,7 @@
   at (macro S-2)
   ? (macro S-/)
 
-  nor (tap-dance 200 ((unicode æ)(unicode ø)(unicode å)))
+  nor (tap-dance 200 (A-' A-o A-a))
   
   1 (tap-hold-press 0 200 1 lsft)
   2 (tap-hold-press 0 200 2 lsft)
