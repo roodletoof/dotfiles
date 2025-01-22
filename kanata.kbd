@@ -13,26 +13,24 @@
 )
 
 (deflayer default ;;{{{1
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  grv @1   @2   @3   @4   @5   @6   @7   @8   @9   @0    -    =    bspc
   tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
   @cap a    s    d    f    g    h    j    k    l    ;    '    ret
-  lsft @zl  x    c    v    b    n    m    ,    .   @/l   rsft
+  lsft z    x    c    v    b    n    m    ,    .    /    rsft
   lctl lmet lalt         @shsp            ralt rmet rctl
 )
 
 (deflayer symbols ;;{{{1
-  grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
-  tab  @~  @m[  @m]  @&   @|   @^   @_   @m-  @+   @m=   [    ]    lrld
-  @cap @m- @bl  @br  @*   @m\  bspc ret   /   tab   z    '    ret
-  lsft @$  @{   @}   @!   @%    n   @:   @<   @>   @m=   rsft
+  grv @1   @2   @3   @4   @5   @6   @7   @8   @9   @0    _    _    bspc
+  tab  @`  @m[  @m]  @&   @|   @^   @_   @m-  @+   @m= @nor   _    lrld
+  @cap @~  @bl  @br  @*   @m\  bspc ret  @?   tab  @:   S-'   ret
+  lsft @!  @{   @}   @$   @%   @at  @#   @<   @>   @m=   rsft
   lctl lmet lalt         @shsp            ralt rmet rctl
 )
 
 (defalias ;;{{{1
   cap (tap-hold-press 0 200 esc lctl)
-  shsp (tap-hold-press 0 200 spc lsft)
-  zl (tap-hold-press 0 200 z (layer-while-held symbols))
-  /l (tap-hold-press 0 200 / (layer-while-held symbols))
+  shsp (tap-hold-press 0 200 spc (layer-while-held symbols))
   bl S-9
   br S-0
   { (macro S-[)
@@ -44,7 +42,6 @@
   : S-;
   % S-5
   ! S-1
-  $ S-4
   ` grv
   ~ S-grv
   * S-8
@@ -56,4 +53,21 @@
   m- (macro -)
   + (macro S-=)
   m= (macro =)
+  $ (macro S-4)
+  # (macro S-3)
+  at (macro S-2)
+  ? (macro S-/)
+
+  nor (tap-dance 200 ((unicode æ)(unicode ø)(unicode å)))
+  
+  1 (tap-hold-press 0 200 1 lsft)
+  2 (tap-hold-press 0 200 2 lsft)
+  3 (tap-hold-press 0 200 3 lsft)
+  4 (tap-hold-press 0 200 4 lsft)
+  5 (tap-hold-press 0 200 5 lsft)
+  6 (tap-hold-press 0 200 6 lsft)
+  7 (tap-hold-press 0 200 7 lsft)
+  8 (tap-hold-press 0 200 8 lsft)
+  9 (tap-hold-press 0 200 9 lsft)
+  0 (tap-hold-press 0 200 0 lsft)
 )
