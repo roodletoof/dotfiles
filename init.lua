@@ -103,6 +103,12 @@ require'lazy'.setup{ --{{{1
 			require('nvim-surround').setup{}
 		end
 	},
+	{ 'echasnovski/mini.align', --{{{2
+		version = false,
+		config = function()
+			require'mini.align'.setup()
+		end,
+	},
 	{ 'sainnhe/everforest', --{{{2
 		lazy = false,
 		priority = 1000,
@@ -132,6 +138,14 @@ require'lazy'.setup{ --{{{1
 				view_options = {
 					show_hidden = true,
 				},
+				lsp_file_methods = {
+					enables = true,
+					timeout_ms = 1000,
+					autosave_changes = true,
+				},
+				keymaps = {
+					[",cd"] = { "actions.cd", mode = "n" },
+				},
 			}
 			vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
 		end,
@@ -144,6 +158,7 @@ require'lazy'.setup{ --{{{1
 			require'lspconfig'.clangd.setup{}
 			require'lspconfig'.pyright.setup{}
 			require'lspconfig'.ts_ls.setup{}
+			require'lspconfig'.jdtls.setup{}
 			vim.cmd [[
 				noremap ,rn :lua vim.lsp.buf.rename()<CR>
 				noremap ,fd :lua vim.lsp.buf.definition()<CR>
