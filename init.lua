@@ -158,6 +158,10 @@ require'lazy'.setup{ --{{{1
             require'lspconfig'.pyright.setup{}
             require'lspconfig'.ts_ls.setup{}
             require'lspconfig'.jdtls.setup{}
+
+            require'lspconfig'.zls.setup{ enable_autofix = false }
+            vim.g.zig_fmt_autosave = false
+
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
                 noremap ,fd :lua vim.lsp.buf.definition()<CR>
@@ -209,6 +213,7 @@ require'lazy'.setup{ --{{{1
                 imap <expr> <c-k> '<Plug>(snippy-previous)'
                 smap <expr> <c-l> '<Plug>(snippy-next)'
                 smap <expr> <c-k> '<Plug>(snippy-previous)'
+                nmap <Tab> <Plug>(snippy-cut-text)
                 xmap <Tab> <Plug>(snippy-cut-text)
             ]]
 
