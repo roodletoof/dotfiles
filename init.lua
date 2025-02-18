@@ -91,7 +91,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
-    { 'justinmk/vim-sneak', --{{{2
+    { 'unblevable/quick-scope', --{{{2
+        init = function()
+            vim.cmd [[
+                let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+            ]]
+        end,
     },
     { 'michaeljsmith/vim-indent-object', --{{{2
     },
@@ -158,6 +163,7 @@ require'lazy'.setup{ --{{{1
             require'lspconfig'.pyright.setup{}
             require'lspconfig'.ts_ls.setup{}
             require'lspconfig'.jdtls.setup{}
+            require'lspconfig'.csharp_ls.setup{}
 
             require'lspconfig'.zls.setup{ enable_autofix = false }
             vim.g.zig_fmt_autosave = false
@@ -176,6 +182,19 @@ require'lazy'.setup{ --{{{1
                 noremap ,eh :lua vim.diagnostic.setqflist{severity="HINT"}<CR>
             ]]
         end
+    },
+    { 'nvim-treesitter/nvim-treesitter', --{{{2
+        config = function()
+            require'nvim-treesitter.configs'.setup{
+                ensure_installed = "all",
+                sync_install = false,
+                auto_install = true,
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+            }
+        end,
     },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
@@ -213,8 +232,8 @@ require'lazy'.setup{ --{{{1
                 imap <expr> <c-k> '<Plug>(snippy-previous)'
                 smap <expr> <c-l> '<Plug>(snippy-next)'
                 smap <expr> <c-k> '<Plug>(snippy-previous)'
-                nmap <Tab> <Plug>(snippy-cut-text)
-                xmap <Tab> <Plug>(snippy-cut-text)
+                nmap g; <Plug>(snippy-cut-text)
+                xmap g; <Plug>(snippy-cut-text)
             ]]
 
             vim.api.nvim_create_user_command(

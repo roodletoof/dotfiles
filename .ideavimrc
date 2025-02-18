@@ -12,6 +12,9 @@ set clipboard+=unnamed
 
 let mapleader = ","
 
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+set quickscope
+
 map <leader>ff <Action>(SearchEverywhere)
 map <leader>fd <Action>(GotoDeclaration)
 map <leader>ft <Action>(GotoTypeDeclaration)
