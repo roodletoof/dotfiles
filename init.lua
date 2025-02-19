@@ -1,10 +1,17 @@
 -- vim:foldmethod=marker
+local function get_python_venv_path() --{{{1
+    return vim.fn.stdpath('config') .. '/.venv/bin/python'
+end
+
+do
+    vim.g.python3_host_prog = get_python_venv_path()
+end
+
 -- GENERAL SETTINGS {{{1
 
-vim.o.exrc = true   -- Enable local project configuration files
-vim.o.secure = true -- Disable potentially unsafe commands in .nvimrc
-
 vim.cmd [[
+    set exrc
+    set secure
     set clipboard=unnamedplus
     set cursorline
     set tabstop=4
@@ -74,7 +81,6 @@ local function file_exists(name) --{{{1
         return false
     end
 end
-
 
 -- LAZY.NVIM BOOTSTRAP {{{1
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -154,6 +160,76 @@ require'lazy'.setup{ --{{{1
             vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
         end,
     },
+    { 'Williamboman/mason.nvim', --{{{3
+        config = function()
+            require'mason'.setup {
+                registries = {
+                    'github:mason-org/mason-registry',
+                    'github:crashdummyy/mason-registry',
+                },
+            }
+        end,
+    },
+    { 'seblyng/roslyn.nvim', --{{{2
+        --WARN: requires html-lsp, roslyn and rzls installed via Mason
+        --TODO: something is wrong. razor pages arent understood by the lsp
+        dependencies = { 'tris203/rzls.nvim', },
+        ft = 'cs',
+        config = function()
+            require'rzls'.setup{}
+            require'roslyn'.setup{
+                args = {
+                    '--stdio',
+                    '--logLevel=Information',
+                    '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
+                    '--razorSourceGenerator=' .. vim.fs.joinpath(
+                        vim.fn.stdpath'data',
+                        'mason',
+                        'packages',
+                        'roslyn',
+                        'libexec',
+                        'Microsoft.CodeAnalysis.Razor.Compiler.dll'
+                    ),
+                    '--razorDesignTimePath=' .. vim.fs.joinpath(
+                        vim.fn.stdpath'data',
+                        'mason',
+                        'packages',
+                        'rzls',
+                        'libexec',
+                        'Targets',
+                        'Microsoft.NET.Sdk.Razor.DesignTime.targets'
+                    ),
+                },
+                config = {
+                    handlers = require 'rzls.roslyn_handlers',
+                    ['csharp|code_lens'] = {
+                        dotnet_enable_references_code_lens = true,
+                    }
+                },
+            }
+        end,
+        init = function()
+            vim.filetype.add{
+                extension = {
+                    razor = 'razor',
+                    cshtml = 'razor'
+                }
+            }
+        end,
+        opts = {
+            exe = {
+                'dotnet',
+                vim.fs.joinpath(
+                    vim.fn.stdpath'data',
+                    'mason',
+                    'packages',
+                    'roslyn',
+                    'libexec',
+                    'Microsoft.CodeAnalysis.LanguageServer.dll'
+                )
+            },
+        },
+    },
     { 'neovim/nvim-lspconfig', --{{{2
         config = function()
             require'lspconfig'.gopls.setup{}
@@ -163,7 +239,6 @@ require'lazy'.setup{ --{{{1
             require'lspconfig'.pyright.setup{}
             require'lspconfig'.ts_ls.setup{}
             require'lspconfig'.jdtls.setup{}
-            require'lspconfig'.csharp_ls.setup{}
 
             require'lspconfig'.zls.setup{ enable_autofix = false }
             vim.g.zig_fmt_autosave = false
@@ -207,7 +282,7 @@ require'lazy'.setup{ --{{{1
         config = function()
             require'nvim-dap-virtual-text'.setup{ commented = true, }
             require'dap-go'.setup()
-            require'dap-python'.setup(vim.fn.stdpath('config') .. '/.venv/bin/python')
+            require'dap-python'.setup(get_python_venv_path())
 
             local dap = require'dap'
             dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
