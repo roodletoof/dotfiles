@@ -172,7 +172,6 @@ require'lazy'.setup{ --{{{1
     },
     { 'seblyng/roslyn.nvim', --{{{2
         --WARN: requires html-lsp, roslyn and rzls installed via Mason
-        --TODO: something is wrong. razor pages arent understood by the lsp
         dependencies = { 'tris203/rzls.nvim', },
         ft = {'cs', 'razor'},
         config = function()
