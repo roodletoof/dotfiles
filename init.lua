@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 -- vim:foldmethod=marker
 local function get_python_venv_path() --{{{1
     return vim.fn.stdpath('config') .. '/.venv/bin/python'
