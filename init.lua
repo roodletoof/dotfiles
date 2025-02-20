@@ -26,6 +26,9 @@ vim.cmd [[
     set incsearch
     set scrolloff=8
 
+    nnoremap <c-d> <c-d>M
+    nnoremap <c-u> <c-u>M
+
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
     nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
@@ -130,6 +133,7 @@ require'lazy'.setup{ --{{{1
         end,
     },
     { 'folke/zen-mode.nvim', --{{{2
+        dependencies = {"folke/twilight.nvim"},
         config = function ()
             vim.keymap.set(
                 'n',
