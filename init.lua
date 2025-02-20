@@ -174,7 +174,7 @@ require'lazy'.setup{ --{{{1
         --WARN: requires html-lsp, roslyn and rzls installed via Mason
         --TODO: something is wrong. razor pages arent understood by the lsp
         dependencies = { 'tris203/rzls.nvim', },
-        ft = 'cs',
+        ft = {'cs', 'razor'},
         config = function()
             require'rzls'.setup{}
             require'roslyn'.setup{
@@ -398,6 +398,7 @@ require'lazy'.setup{ --{{{1
             local a = require'telescope.actions'
             require'telescope'.setup{
                 defaults = {
+                    file_ignore_patterns = {'%__virtual.cs$'},
                     mappings = {
                         i = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, ["<C-j>"] = a.select_default, },
                         n = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, ["<C-j>"] = a.select_default, },
