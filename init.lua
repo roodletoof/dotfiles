@@ -253,6 +253,11 @@ require'lazy'.setup{ --{{{1
                     require'lspconfig'.zls.setup{ enable_autofix = false }
                     vim.g.zig_fmt_autosave = false
                 end,
+                lua_ls = function()
+                    require'lspconfig'.lua_ls.setup{
+                        Lua = { runtime = { version = "LuaJIT" } }
+                    }
+                end
             }
 
             require'lspconfig'.gdscript.setup{}
