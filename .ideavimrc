@@ -2,6 +2,7 @@ set scrolloff=5
 set incsearch
 Plug 'machakann/vim-highlightedyank'
 Plug 'tpope/vim-commentary'
+set ideajoin
 set surround
 set visualbell
 set noerrorbells
@@ -24,6 +25,7 @@ map <leader>z <Action>(ToggleDistractionFreeMode)
 map <leader>er <Action>(Run) 
 map <leader>a <Action>(ShowIntentionActions)
 map <leader>rn <Action>(RenameElement)
+map <leader>fm <Action>(ReformatCode)
 
 noremap <c-h> <c-w>h
 noremap <c-j> <c-w>j
