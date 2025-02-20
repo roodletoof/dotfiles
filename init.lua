@@ -438,8 +438,7 @@ require'lazy'.setup{ --{{{1
 }
 
 do -- split line {{{1
-    -- TODO make this dependant on my tabbin settings
-    local SPLIT_WHITESPACE = '    '
+
     local SPLIT_DELIMETERS = { -- single characters only
         [','] = true,
         [';'] = true,
@@ -456,6 +455,14 @@ do -- split line {{{1
     }
 
     local split_line = function()
+        local SPLIT_WHITESPACE = '	'
+        if vim.o.expandtab then
+            SPLIT_WHITESPACE = ''
+            for _ = 1, vim.o.tabstop do
+                SPLIT_WHITESPACE = SPLIT_WHITESPACE .. ' '
+            end
+        end
+
         local line = vim.api.nvim_get_current_line()
         local _, col =  unpack(vim.api.nvim_win_get_cursor(0))
         col = col + 1 -- Doing this to make it 1-indexed
