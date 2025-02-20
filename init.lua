@@ -160,16 +160,6 @@ require'lazy'.setup{ --{{{1
             vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
         end,
     },
-    { 'Williamboman/mason.nvim', --{{{3
-        config = function()
-            require'mason'.setup {
-                registries = {
-                    'github:mason-org/mason-registry',
-                    'github:crashdummyy/mason-registry',
-                },
-            }
-        end,
-    },
     { 'seblyng/roslyn.nvim', --{{{2
         --WARN: requires html-lsp, roslyn and rzls installed via Mason
         dependencies = { 'tris203/rzls.nvim', },
@@ -182,7 +172,7 @@ require'lazy'.setup{ --{{{1
                     '--logLevel=Information',
                     '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
                     '--razorSourceGenerator=' .. vim.fs.joinpath(
-                        vim.fn.stdpath'data',
+                        vim.fn.stdpath'data' --[[@as string]],
                         'mason',
                         'packages',
                         'roslyn',
@@ -190,7 +180,7 @@ require'lazy'.setup{ --{{{1
                         'Microsoft.CodeAnalysis.Razor.Compiler.dll'
                     ),
                     '--razorDesignTimePath=' .. vim.fs.joinpath(
-                        vim.fn.stdpath'data',
+                        vim.fn.stdpath'data' --[[@as string]],
                         'mason',
                         'packages',
                         'rzls',
@@ -219,7 +209,7 @@ require'lazy'.setup{ --{{{1
             exe = {
                 'dotnet',
                 vim.fs.joinpath(
-                    vim.fn.stdpath'data',
+                    vim.fn.stdpath'data' --[[@as string]],
                     'mason',
                     'packages',
                     'roslyn',
@@ -229,19 +219,38 @@ require'lazy'.setup{ --{{{1
             },
         },
     },
+    { "folke/lazydev.nvim", --{{{2
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
     { 'neovim/nvim-lspconfig', --{{{2
+        dependencies = {
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+        },
         config = function()
-            require'lspconfig'.gopls.setup{}
-            require'lspconfig'.rust_analyzer.setup{}
+            require'mason'.setup {
+                registries = {
+                    'github:mason-org/mason-registry',
+                    'github:crashdummyy/mason-registry',
+                },
+            }
+            require'mason-lspconfig'.setup()
+            require'mason-lspconfig'.setup_handlers{
+                function (server_name)
+                    require'lspconfig'[server_name].setup{}
+                end,
+                zls = function()
+                    require'lspconfig'.zls.setup{ enable_autofix = false }
+                    vim.g.zig_fmt_autosave = false
+                end,
+            }
+
             require'lspconfig'.gdscript.setup{}
-            require'lspconfig'.clangd.setup{}
-            require'lspconfig'.pyright.setup{}
-            require'lspconfig'.ts_ls.setup{}
-            require'lspconfig'.jdtls.setup{}
-
-            require'lspconfig'.zls.setup{ enable_autofix = false }
-            vim.g.zig_fmt_autosave = false
-
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
                 noremap ,fd :lua vim.lsp.buf.definition()<CR>
@@ -336,7 +345,7 @@ require'lazy'.setup{ --{{{1
                 'S',
                 function ()
                     ---@type string
-                    local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.api.nvim_buf_get_option(0, "filetype") .. '.snippets'
+                    local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.bo.filetype .. '.snippets'
 
                     if not file_exists(snippets_path) then
                         local file = io.open( snippets_path, 'w' )
