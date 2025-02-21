@@ -63,6 +63,7 @@ vim.cmd [[
     tnoremap <c-w>c <c-\><c-n><c-w>c
 
     autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=100}
+    autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 
     let g:rustfmt_autosave = 1
 ]]
