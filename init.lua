@@ -238,12 +238,23 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
-            require'mason'.setup {
+            require'mason'.setup{
                 registries = {
                     'github:mason-org/mason-registry',
                     'github:crashdummyy/mason-registry',
                 },
             }
+
+            do --it seems like mason-lspconfig's ensure_installed field does not work for lsps in 3rd-party registries
+                local is_installed = require'mason-registry'.is_installed
+                local c_sharp_requirements = { 'html-lsp', 'roslyn', 'rzls', }
+                for _, requirement in ipairs(c_sharp_requirements) do
+                    if not is_installed(requirement) then
+                        vim.cmd('MasonInstall '..requirement)
+                    end
+                end
+            end
+
             require'mason-lspconfig'.setup()
             require'mason-lspconfig'.setup_handlers{
                 function (server_name)
@@ -261,6 +272,7 @@ require'lazy'.setup{ --{{{1
             }
 
             require'lspconfig'.gdscript.setup{}
+
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
                 noremap ,fd :lua vim.lsp.buf.definition()<CR>
