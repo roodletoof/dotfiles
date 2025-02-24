@@ -26,8 +26,8 @@ vim.cmd [[
     set incsearch
     set scrolloff=8
 
-    nnoremap <c-d> <c-d>M
-    nnoremap <c-u> <c-u>M
+    nnoremap <c-d> <c-d>zz
+    nnoremap <c-u> <c-u>zz
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
