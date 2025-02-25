@@ -133,12 +133,7 @@ require'lazy'.setup{ --{{{1
         dependencies = {"nvim-tree/nvim-web-devicons"},
         config = function ()
             require'nvim-tree'.setup{
-                update_focused_file = {
-                    enable = true,
-                    update_root = {
-                        enable = true
-                    }
-                }
+                update_focused_file = { enable = true, }
             }
         end
     },
