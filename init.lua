@@ -1,5 +1,8 @@
 ---@diagnostic disable: missing-fields
 -- vim:foldmethod=marker
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 local function get_python_venv_path() --{{{1
     return vim.fn.stdpath('config') .. '/.venv/bin/python'
 end
@@ -26,8 +29,8 @@ vim.cmd [[
     set incsearch
     set scrolloff=8
 
-    nnoremap <c-d> <c-d>M
-    nnoremap <c-u> <c-u>M
+    nnoremap <c-d> <c-d>zz
+    nnoremap <c-u> <c-u>zz
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -47,6 +50,8 @@ vim.cmd [[
     autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif 
     nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
 
+    " Don't include curdir, it just causes pain.
+    set viewoptions=folds,cursor
     autocmd BufWinLeave *.* silent! mkview 
     autocmd BufWinEnter *.* silent! loadview 
 
@@ -124,6 +129,39 @@ require'lazy'.setup{ --{{{1
             require'mini.align'.setup()
         end,
     },
+    { 'nvim-tree/nvim-tree.lua', --{{{2
+        dependencies = {"nvim-tree/nvim-web-devicons"},
+        config = function ()
+
+            local function map_toggle(bufnr)
+                bufnr = bufnr or nil
+                local api = require("nvim-tree.api")
+                vim.keymap.set(
+                    "n", "-", api.tree.toggle,
+                    {
+                        desc = "nvim-tree: Toggle",
+                        buffer = bufnr,
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                )
+            end
+
+            local function my_on_attach(bufnr)
+                local api = require("nvim-tree.api")
+                api.config.mappings.default_on_attach(bufnr)
+                map_toggle(bufnr)
+            end
+
+            require'nvim-tree'.setup{
+                on_attach = my_on_attach,
+                update_focused_file = { enable = true, }
+            }
+
+            map_toggle()
+        end
+    },
     { 'sainnhe/everforest', --{{{2
         lazy = false,
         priority = 1000,
@@ -143,28 +181,6 @@ require'lazy'.setup{ --{{{1
                 { silent = true }
             )
         end
-    },
-    { 'stevearc/oil.nvim', --{{{2
-        dependencies = { 'nvim-tree/nvim-web-devicons', },
-        config = function ()
-            local oil = require('oil')
-            oil.setup{
-                default_file_explorer = true,
-                columns = {'icon'},
-                view_options = {
-                    show_hidden = true,
-                },
-                lsp_file_methods = {
-                    enables = true,
-                    timeout_ms = 1000,
-                    autosave_changes = true,
-                },
-                keymaps = {
-                    [",cd"] = { "actions.cd", mode = "n" },
-                },
-            }
-            vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "Open parent directory" })
-        end,
     },
     { 'seblyng/roslyn.nvim', --{{{2
         --WARN: requires html-lsp, roslyn and rzls installed via Mason
@@ -447,6 +463,7 @@ require'lazy'.setup{ --{{{1
                 noremap ,fm :lua require'telescope.builtin'.marks()<CR>
                 noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
 
+                noremap ,fcm :lua require'telescope.builtin'.commands()<CR>
                 noremap ,fct :lua require'telescope.builtin'.tags()<CR>
 
                 noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
