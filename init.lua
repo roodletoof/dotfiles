@@ -132,9 +132,34 @@ require'lazy'.setup{ --{{{1
     { 'nvim-tree/nvim-tree.lua', --{{{2
         dependencies = {"nvim-tree/nvim-web-devicons"},
         config = function ()
+
+            local function map_toggle(bufnr)
+                bufnr = bufnr or nil
+                local api = require("nvim-tree.api")
+                vim.keymap.set(
+                    "n", "-", api.tree.toggle,
+                    {
+                        desc = "nvim-tree: Toggle",
+                        buffer = bufnr,
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                )
+            end
+
+            local function my_on_attach(bufnr)
+                local api = require("nvim-tree.api")
+                api.config.mappings.default_on_attach(bufnr)
+                map_toggle(bufnr)
+            end
+
             require'nvim-tree'.setup{
+                on_attach = my_on_attach,
                 update_focused_file = { enable = true, }
             }
+
+            map_toggle()
         end
     },
     { 'sainnhe/everforest', --{{{2
@@ -437,6 +462,7 @@ require'lazy'.setup{ --{{{1
                 noremap ,fm :lua require'telescope.builtin'.marks()<CR>
                 noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
 
+                noremap ,fcm :lua require'telescope.builtin'.commands()<CR>
                 noremap ,fct :lua require'telescope.builtin'.tags()<CR>
 
                 noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
