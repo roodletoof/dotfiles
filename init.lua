@@ -46,8 +46,6 @@ vim.cmd [[
 
     nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
 
-    tnoremap <esc> <c-\><c-n>
-    autocmd BufEnter * if &buftype == 'terminal' | :startinsert | endif 
     nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
 
     " Don't include curdir, it just causes pain.
