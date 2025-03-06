@@ -69,17 +69,10 @@ vim.cmd [[
     autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 
     let g:rustfmt_autosave = 1
-]]
 
-vim.g.c_syntax_for_h = 1
-vim.g.python_indent = { -- Fixes retarded default python indentation.
-    open_paren = 'shiftwidth()',
-    nested_paren = 'shiftwidth()',
-    continue = 'shiftwidth()',
-    closed_paren_align_last_line = false,
-    searchpair_timeout = 300,
-}
--- TODO fix all the idiotic default indentation settings
+    " remove annoying and bad indentation
+    autocmd FileType * setlocal indentexpr=
+]]
 
 local function file_exists(name) --{{{1
     local f = io.open(name,"r")
@@ -310,6 +303,9 @@ require'lazy'.setup{ --{{{1
                 ensure_installed = "all",
                 sync_install = false,
                 auto_install = true,
+                indent = {
+                    enable = true,
+                },
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = false,
