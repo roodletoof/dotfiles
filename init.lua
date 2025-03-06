@@ -79,6 +79,8 @@ vim.g.python_indent = { -- Fixes retarded default python indentation.
     closed_paren_align_last_line = false,
     searchpair_timeout = 300,
 }
+-- Fix retarded default indenting for c-like languages
+vim.o.cinoptions = vim.o.cinoptions .. "(s"
 
 local function file_exists(name) --{{{1
     local f = io.open(name,"r")
