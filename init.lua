@@ -316,6 +316,12 @@ require'lazy'.setup{ --{{{1
             }
         end,
     },
+    { "kdheepak/lazygit.nvim", --{{{2
+        lazy = true,
+        cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile", },
+        dependencies = { "nvim-lua/plenary.nvim", },
+        keys = { { ",g", "<cmd>LazyGit<cr>", desc = "LazyGit" }, },
+    },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
             'nvim-treesitter/nvim-treesitter',
