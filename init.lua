@@ -336,7 +336,7 @@ require'lazy'.setup{ --{{{1
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
         },
-
+        keys = {',b', ',db', ',B', '<B'},
         config = function()
             require'nvim-dap-virtual-text'.setup{ commented = true, }
             require'dap-go'.setup()
