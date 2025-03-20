@@ -468,6 +468,7 @@ require'lazy'.setup{ --{{{1
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
         },
+        keys = {",f"},
         config = function()
             local a = require'telescope.actions'
             require'telescope'.setup{
