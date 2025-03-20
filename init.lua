@@ -164,7 +164,7 @@ require'lazy'.setup{ --{{{1
         end,
     },
     { 'folke/zen-mode.nvim', --{{{2
-        dependencies = {"folke/twilight.nvim"},
+        keys = {",z"},
         config = function ()
             vim.keymap.set(
                 'n',
