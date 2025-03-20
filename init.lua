@@ -99,6 +99,17 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
+    { 'f-person/git-blame.nvim', --{{{2
+        keys = {',a'},
+        config = function ()
+            require'gitblame'.setup{
+                enabled = false,
+            }
+            vim.cmd[[
+                nnoremap ,a :GitBlameToggle<CR>
+            ]]
+        end
+    },
     { 'unblevable/quick-scope', --{{{2
         init = function()
             vim.cmd [[
