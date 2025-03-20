@@ -305,7 +305,7 @@ require'lazy'.setup{ --{{{1
                             'html'
                         }
                     }
-                end
+                end,
             }
 
             require'lspconfig'.gdscript.setup{}
