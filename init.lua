@@ -329,15 +329,11 @@ require'lazy'.setup{ --{{{1
 
             require'lspconfig'.gdscript.setup{}
 
-            local function jump_to_definition()
-                -- try to find definition with ctags first
-                local tag_jump_success = pcall(vim.cmd --[[@as fun(...): ...]], "tag " .. vim.fn.expand("<cword>"))
-                -- otherwise, try with lsp
-                if not tag_jump_success then
-                    vim.lsp.buf.definition()
-                end
+            local function jump_to_ctag()
+                pcall(vim.cmd --[[@as fun(...): ...]], "tag " .. vim.fn.expand("<cword>"))
             end
-            vim.keymap.set( 'n', ',fd', jump_to_definition, { noremap = true, })
+            vim.keymap.set( 'n', '<c-]>', jump_to_ctag, { noremap = true, })
+            vim.keymap.set( 'n', ',fd', vim.lsp.buf.definition, { noremap = true, })
 
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
