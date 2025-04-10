@@ -99,6 +99,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
+    { 'github/copilot.vim', --{{{2
+    },
     { 'rafaelsq/nvim-goc.lua', --{{{2
         config = function ()
             local goc = require'nvim-goc'
