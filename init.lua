@@ -329,11 +329,25 @@ require'lazy'.setup{ --{{{1
 
             require'lspconfig'.gdscript.setup{}
 
-            local function jump_to_ctag()
-                pcall(vim.cmd --[[@as fun(...): ...]], "tag " .. vim.fn.expand("<cword>"))
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    vim.bo[args.buf].tagfunc = nil
+                end,
+            })
+
+            -- Honors tags file
+            local function jump_to_definition()
+                local word = vim.fn.expand("<cword>")
+                local success = pcall(vim.cmd --[[@as function]], "tag " .. word)
+                if success then
+                    print("tag found in tags file")
+                else
+                    print("using lsp")
+                    vim.lsp.buf.definition()
+                end
             end
-            vim.keymap.set( 'n', '<c-]>', jump_to_ctag, { noremap = true, })
-            vim.keymap.set( 'n', ',fd', vim.lsp.buf.definition, { noremap = true, })
+
+            vim.keymap.set( 'n', ',fd', jump_to_definition, { noremap = true, silent = true})
 
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
