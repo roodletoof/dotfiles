@@ -335,19 +335,13 @@ require'lazy'.setup{ --{{{1
                 end,
             })
 
-            -- Honors tags file
             local function jump_to_definition()
                 local word = vim.fn.expand("<cword>")
-                local success = pcall(vim.cmd --[[@as function]], "tag " .. word)
-                if success then
-                    print("tag found in tags file")
-                else
-                    print("using lsp")
-                    vim.lsp.buf.definition()
-                end
+                vim.cmd("tag " .. word)
             end
 
-            vim.keymap.set( 'n', ',fd', jump_to_definition, { noremap = true, silent = true})
+            vim.keymap.set( 'n', ',fc', jump_to_definition, { noremap = true, silent = true})
+            vim.keymap.set( 'n', ',fd', vim.lsp.buf.definition, { noremap = true, silent = true})
 
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
@@ -528,9 +522,6 @@ require'lazy'.setup{ --{{{1
                 noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
                 noremap ,fm :lua require'telescope.builtin'.marks()<CR>
                 noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
-
-                noremap ,fcm :lua require'telescope.builtin'.commands()<CR>
-                noremap ,fct :lua require'telescope.builtin'.tags()<CR>
 
                 noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
                 noremap ,fee :lua require'telescope.builtin'.diagnostics{severity="ERROR"}<CR>
