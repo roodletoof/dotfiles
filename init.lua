@@ -74,6 +74,16 @@ vim.cmd [[
     autocmd FileType * setlocal indentexpr=
 ]]
 
+vim.api.nvim_create_autocmd({
+    'BufRead',
+    'BufNewFile'
+}, {
+    pattern = {'*.h'},
+    callback = function()
+        vim.bo.filetype = 'c'
+    end
+})
+
 local function file_exists(name) --{{{1
     local f = io.open(name,"r")
     if f~=nil then
@@ -519,7 +529,7 @@ require'lazy'.setup{ --{{{1
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
             vim.cmd [[
-                noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
+                noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true})<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
                 noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
                 noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
