@@ -400,6 +400,7 @@ require'lazy'.setup{ --{{{1
                 command = vim.fn.exepath('lldb-dap'),
                 name = 'lldb'
             }
+
             dap.configurations.c = {
                 {
                     name = 'Launch',
@@ -410,7 +411,10 @@ require'lazy'.setup{ --{{{1
                     end,
                     cwd = '${workspaceFolder}',
                     stopOnEntry = false,
-                    args = {},
+                    args = function()
+                        local i = vim.fn.input('input args: ')
+                        return vim.fn.split(i)
+                    end,
                     runInTerminal = true,
                 },
             }
