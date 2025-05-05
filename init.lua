@@ -177,13 +177,40 @@ require'lazy'.setup{ --{{{1
         dependencies = {"nvim-tree/nvim-web-devicons"},
         config = function ()
 
-            local function map_toggle(bufnr)
-                bufnr = bufnr or nil
+            ---@param bufnr integer
+            local function always_active_mappings(bufnr)
                 local api = require("nvim-tree.api")
+                api.config.mappings.default_on_attach(bufnr)
                 vim.keymap.set(
                     "n", "-", api.tree.toggle,
                     {
                         desc = "nvim-tree: Toggle",
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                )
+            end
+
+            ---@param bufnr integer
+            local function tree_specific_mappings(bufnr)
+                local api = require'nvim-tree.api'
+
+                vim.keymap.set(
+                    "n", '<CR>', api.node.open.no_window_picker,
+                    {
+                        desc = "nvim-tree: Open",
+                        buffer = bufnr,
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                )
+
+                vim.keymap.set(
+                    "n", '<c-j>', api.node.open.no_window_picker,
+                    {
+                        desc = "nvim-tree: Open",
                         buffer = bufnr,
                         noremap = true,
                         silent = true,
@@ -193,17 +220,28 @@ require'lazy'.setup{ --{{{1
             end
 
             local function my_on_attach(bufnr)
-                local api = require("nvim-tree.api")
-                api.config.mappings.default_on_attach(bufnr)
-                map_toggle(bufnr)
+                always_active_mappings(bufnr)
+                local api = require'nvim-tree.api'
+                local is_tree_buf = api.tree.is_tree_buf(bufnr)
+                if is_tree_buf then
+                    tree_specific_mappings(bufnr)
+                end
+
             end
 
             require'nvim-tree'.setup{
                 on_attach = my_on_attach,
-                update_focused_file = { enable = true, }
+                update_focused_file = { enable = true, },
+                view = {
+                    float = {
+                        enable = true,
+                        open_win_config = {
+                            relative = "win",
+                            border = "rounded",
+                        },
+                    }
+                },
             }
-
-            map_toggle()
         end
     },
     { 'sainnhe/everforest', --{{{2
