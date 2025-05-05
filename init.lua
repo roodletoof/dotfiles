@@ -29,6 +29,7 @@ vim.cmd [[
     set nohlsearch
     set incsearch
     set scrolloff=8
+    set guicursor=n-v-c:block-Cursor
 
     nnoremap <c-d> <c-d>zz
     nnoremap <c-u> <c-u>zz
