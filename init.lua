@@ -14,6 +14,7 @@ end
 -- GENERAL SETTINGS {{{1
 
 vim.cmd [[
+    set nofixeol
     set exrc
     set secure
     set clipboard=unnamedplus
@@ -31,6 +32,8 @@ vim.cmd [[
 
     nnoremap <c-d> <c-d>zz
     nnoremap <c-u> <c-u>zz
+    nnoremap } }zz
+    nnoremap { {zz
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -38,8 +41,8 @@ vim.cmd [[
     nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
     nnoremap ,cf :cfirst<CR>
     nnoremap ,cl :clast<CR>
-    nnoremap <c-n> :cnext<CR>
-    nnoremap <c-p> :cprevious<CR>
+    nnoremap <c-n> :cnext<CR>zz
+    nnoremap <c-p> :cprevious<CR>zz
     nnoremap ,cd :cd %:p:h<CR>
     nnoremap ,cu :colder<CR>
     nnoremap ,cr :cnewer<CR>
@@ -529,7 +532,7 @@ require'lazy'.setup{ --{{{1
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
             vim.cmd [[
-                noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true})<CR>
+                noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
                 noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
                 noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
