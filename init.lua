@@ -115,12 +115,12 @@ vim.opt.rtp:prepend(lazypath)
 require'lazy'.setup{ --{{{1
     { 'github/copilot.vim', --{{{2
         config = function()
-            vim.keymap.set('i', '<c-;>', 'copilot#Accept("\\<CR>")', {
+            vim.keymap.set('i', '<c-m>', 'copilot#Accept("\\<CR>")', {
                 expr = true,
                 replace_keycodes = false,
             })
             vim.g.copilot_no_tab_map = true
-            vim.keymap.set('n', '<c-;>', ':Copilot panel<CR>', { noremap = true, silent = true })
+            vim.keymap.set('n', '<c-m>', ':Copilot panel<CR>', { noremap = true, silent = true })
         end,
     },
     { 'rafaelsq/nvim-goc.lua', --{{{2
@@ -176,17 +176,15 @@ require'lazy'.setup{ --{{{1
     { 'nvim-tree/nvim-tree.lua', --{{{2
         dependencies = {"nvim-tree/nvim-web-devicons"},
         config = function ()
-            ---@param mode 'n'
-            ---@param lhs string
-            ---@param rhs string | function
+
             ---@param bufnr integer
-            ---@param desc string
-            local function map(mode, lhs, rhs, bufnr, desc)
+            local function always_active_mappings(bufnr)
+                local api = require("nvim-tree.api")
+                api.config.mappings.default_on_attach(bufnr)
                 vim.keymap.set(
-                    mode, lhs, rhs,
+                    "n", "-", api.tree.toggle,
                     {
-                        desc = desc,
-                        buffer = bufnr,
+                        desc = "nvim-tree: Toggle",
                         noremap = true,
                         silent = true,
                         nowait = true,
@@ -195,25 +193,38 @@ require'lazy'.setup{ --{{{1
             end
 
             ---@param bufnr integer
-            local function always(bufnr)
-                local api = require("nvim-tree.api")
-                api.config.mappings.default_on_attach(bufnr)
-                map('n', '-', api.tree.toggle, bufnr, 'nvim-tree: Toggle')
-            end
-
-            ---@param bufnr integer
-            local function in_tree(bufnr)
+            local function tree_specific_mappings(bufnr)
                 local api = require'nvim-tree.api'
-                map('n', '<CR>', api.node.open.no_window_picker, bufnr, 'nvim-tree: Open')
-                map('n', '<c-j>', api.node.open.no_window_picker, bufnr, 'nvim-tree: Open')
+
+                vim.keymap.set(
+                    "n", '<CR>', api.node.open.no_window_picker,
+                    {
+                        desc = "nvim-tree: Open",
+                        buffer = bufnr,
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                )
+
+                vim.keymap.set(
+                    "n", '<c-j>', api.node.open.no_window_picker,
+                    {
+                        desc = "nvim-tree: Open",
+                        buffer = bufnr,
+                        noremap = true,
+                        silent = true,
+                        nowait = true,
+                    }
+                )
             end
 
             local function my_on_attach(bufnr)
-                always(bufnr)
+                always_active_mappings(bufnr)
                 local api = require'nvim-tree.api'
                 local is_tree_buf = api.tree.is_tree_buf(bufnr)
                 if is_tree_buf then
-                    in_tree(bufnr)
+                    tree_specific_mappings(bufnr)
                 end
 
             end
