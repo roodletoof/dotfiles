@@ -113,6 +113,14 @@ vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
     { 'github/copilot.vim', --{{{2
+        config = function()
+            vim.keymap.set('i', '<c-m>', 'copilot#Accept("\\<CR>")', {
+                expr = true,
+                replace_keycodes = false,
+            })
+            vim.g.copilot_no_tab_map = true
+            vim.keymap.set('n', '<c-m>', ':Copilot panel<CR>', { noremap = true, silent = true })
+        end,
     },
     { 'rafaelsq/nvim-goc.lua', --{{{2
         config = function ()
