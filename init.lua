@@ -14,6 +14,8 @@ end
 -- GENERAL SETTINGS {{{1
 
 vim.cmd [[
+    colorscheme habamax
+
     set nofixeol
     set exrc
     set secure
@@ -219,15 +221,6 @@ require'lazy'.setup{ --{{{1
                 }
             )
         end
-    },
-    { 'sainnhe/everforest', --{{{2
-        lazy = false,
-        priority = 1000,
-        config = function()
-            vim.o.termguicolors = true
-            vim.g.everforest_enable_italic = true
-            vim.cmd.colorscheme('everforest')
-        end,
     },
     { 'folke/zen-mode.nvim', --{{{2
         keys = {",z"},
