@@ -244,7 +244,9 @@ require'lazy'.setup{ --{{{1
                     border = "rounded",
                 },
             })
-            vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+            local actions = require("oil.actions")
+            vim.keymap.set("n", "-", actions.parent.callback, { desc =  actions.parent.desc })
+            vim.keymap.set("n", "_", actions.open_cwd.callback, { desc = actions.open_cwd.desc })
         end
     },
     { 'github/copilot.vim', --{{{2
