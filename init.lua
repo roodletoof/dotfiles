@@ -411,49 +411,33 @@ require'lazy'.setup{ --{{{1
                 },
             }
 
-            do --it seems like mason-lspconfig's ensure_installed field does not work for lsps in 3rd-party registries
-                local is_installed = require'mason-registry'.is_installed
-                local c_sharp_requirements = { 'html-lsp', 'roslyn', 'rzls', }
-                for _, requirement in ipairs(c_sharp_requirements) do
-                    if not is_installed(requirement) then
-                        vim.cmd('MasonInstall '..requirement)
-                    end
-                end
-            end
-
             require'mason-lspconfig'.setup()
-            require'mason-lspconfig'.setup_handlers{
-                function (server_name)
-                    require'lspconfig'[server_name].setup{}
-                end,
-                zls = function()
-                    require'lspconfig'.zls.setup{ enable_autofix = false }
-                    vim.g.zig_fmt_autosave = false
-                end,
-                lua_ls = function()
-                    require'lspconfig'.lua_ls.setup{
-                        Lua = { runtime = { version = "LuaJIT" } }
-                    }
-                end,
-                gopls = function()
-                    require'lspconfig'.gopls.setup{
-                        settings = {
-                            gopls = {
-                                templateExtensions = {'html', 'gotmpl'}
-                            },
-                        },
-                        filetypes = {
-                            'go',
-                            'gomod',
-                            'gowork',
-                            'gotmpl',
-                            'html'
-                        }
-                    }
+            vim.lsp.config.zls = {
+                before_init = function(_, _)
+                    vim.g.zig_fmt_autosave = false -- may not be needed anymore?
                 end,
             }
+            vim.lsp.config.lua_ls = {
+                settings = {
+                    Lua = { runtime = { version = "LuaJIT" } }
+                }
+            }
+            vim.lsp.config.gopls = {
+                filetypes = { -- unsure if this is entirely correct...
+                    'go',
+                    'gomod',
+                    'gowork',
+                    'gotmpl',
+                    'html'
+                },
+                settings = {
+                    gopls = {
+                        templateExtensions = {'html', 'gotmpl'}
+                    }
+                }
+            }
 
-            require'lspconfig'.gdscript.setup{}
+            vim.lsp.enable('gdscript')
 
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
