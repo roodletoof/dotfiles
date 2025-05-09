@@ -172,11 +172,11 @@ require'lazy'.setup{ --{{{1
                 use_default_keymaps = true,
                 view_options = {
                     show_hidden = true,
-                    is_hidden_file = function(name, bufnr)
+                    is_hidden_file = function(name, _)
                         local m = name:match("^%.")
                         return m ~= nil
                     end,
-                    is_always_hidden = function(name, bufnr)
+                    is_always_hidden = function(_, _)
                         return false
                     end,
                     natural_order = "fast",
@@ -185,7 +185,7 @@ require'lazy'.setup{ --{{{1
                         { "type", "asc" },
                         { "name", "asc" },
                     },
-                    highlight_filename = function(entry, is_hidden, is_link_target, is_link_orphan)
+                    highlight_filename = function(_, _, _, _)
                         return nil
                     end,
                 },
@@ -207,7 +207,7 @@ require'lazy'.setup{ --{{{1
                 preview_win = {
                     update_on_cursor_moved = true,
                     preview_method = "fast_scratch",
-                    disable_preview = function(filename)
+                    disable_preview = function(_)
                         return false
                     end,
                     win_options = {},
