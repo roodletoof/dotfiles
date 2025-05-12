@@ -632,6 +632,7 @@ require'lazy'.setup{ --{{{1
                 noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
                 noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
+                noremap ,fs :lua require'telescope.builtin'.grep_string()<CR>
                 noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
                 noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
                 noremap ,fm :lua require'telescope.builtin'.marks()<CR>
