@@ -42,7 +42,6 @@ vim.cmd [[
     nnoremap ,cl :clast<CR>
     nnoremap <c-n> :cnext<CR>zz
     nnoremap <c-p> :cprevious<CR>zz
-    nnoremap ,cd :cd %:p:h<CR>
     nnoremap ,cu :colder<CR>
     nnoremap ,cr :cnewer<CR>
 
@@ -257,7 +256,9 @@ require'lazy'.setup{ --{{{1
                 replace_keycodes = false,
             })
             vim.g.copilot_no_tab_map = true
-            vim.keymap.set('n', '<c-q>', ':Copilot panel<CR>', { noremap = true, silent = true })
+            vim.keymap.set('n', '<c-q>', ':Copilot panel<CR>', { noremap = true })
+            vim.keymap.set('n', ',cd', ':Copilot disable<CR>', { noremap = true })
+            vim.keymap.set('n', ',ce', ':Copilot disable<CR>', { noremap = true })
         end,
     },
     { 'rafaelsq/nvim-goc.lua', --{{{2
