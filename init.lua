@@ -73,6 +73,8 @@ vim.cmd [[
 
     " remove annoying and bad indentation
     autocmd FileType * setlocal indentexpr=
+
+    set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 ]]
 
 vim.api.nvim_create_autocmd({
