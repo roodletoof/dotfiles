@@ -335,33 +335,27 @@ require'lazy'.setup{ --{{{1
     },
     { 'seblyng/roslyn.nvim', --{{{2
         --WARN: requires html-lsp, roslyn and rzls installed via Mason
-        dependencies = { 'tris203/rzls.nvim', },
+        dependencies = {
+            'tris203/rzls.nvim',
+            config = true,
+        },
         ft = {'cs', 'razor'},
         config = function()
+            local mason_registry = require("mason-registry")
+            local rzls_path = vim.fn.expand("$MASON/packages/rzls/libexec")
+            local cmd = {
+                "roslyn",
+                "--stdio",
+                "--logLevel=Information",
+                "--extensionLogDirectory=" .. vim.fs.dirname(vim.lsp.get_log_path()),
+                "--razorSourceGenerator=" .. vim.fs.joinpath(rzls_path, "Microsoft.CodeAnalysis.Razor.Compiler.dll"),
+                "--razorDesignTimePath=" .. vim.fs.joinpath(rzls_path, "Targets", "Microsoft.NET.Sdk.Razor.DesignTime.targets"),
+                "--extension",
+                vim.fs.joinpath(rzls_path, "RazorExtension", "Microsoft.VisualStudioCode.RazorExtension.dll"),
+            }
             require'rzls'.setup{}
             require'roslyn'.setup{
-                args = {
-                    '--stdio',
-                    '--logLevel=Information',
-                    '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
-                    '--razorSourceGenerator=' .. vim.fs.joinpath(
-                        vim.fn.stdpath'data' --[[@as string]],
-                        'mason',
-                        'packages',
-                        'roslyn',
-                        'libexec',
-                        'Microsoft.CodeAnalysis.Razor.Compiler.dll'
-                    ),
-                    '--razorDesignTimePath=' .. vim.fs.joinpath(
-                        vim.fn.stdpath'data' --[[@as string]],
-                        'mason',
-                        'packages',
-                        'rzls',
-                        'libexec',
-                        'Targets',
-                        'Microsoft.NET.Sdk.Razor.DesignTime.targets'
-                    ),
-                },
+                cmd = cmd,
                 config = {
                     handlers = require 'rzls.roslyn_handlers',
                     ['csharp|code_lens'] = {
@@ -378,19 +372,6 @@ require'lazy'.setup{ --{{{1
                 }
             }
         end,
-        opts = {
-            exe = {
-                'dotnet',
-                vim.fs.joinpath(
-                    vim.fn.stdpath'data' --[[@as string]],
-                    'mason',
-                    'packages',
-                    'roslyn',
-                    'libexec',
-                    'Microsoft.CodeAnalysis.LanguageServer.dll'
-                )
-            },
-        },
     },
     { "folke/lazydev.nvim", --{{{2
         ft = "lua", -- only load on lua files
