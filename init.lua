@@ -26,13 +26,9 @@ vim.cmd [[
     set expandtab
     set nohlsearch
     set incsearch
-    "set scrolloff=8
+    set scrolloff=999
+    set sidescrolloff=999
     set guicursor=n-v-c:block-Cursor
-
-    nnoremap <c-d> <c-d>zz
-    nnoremap <c-u> <c-u>zz
-    nnoremap } }zz
-    nnoremap { {zz
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -40,8 +36,8 @@ vim.cmd [[
     nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
     nnoremap ,cf :cfirst<CR>
     nnoremap ,cl :clast<CR>
-    nnoremap <c-n> :cnext<CR>zz
-    nnoremap <c-p> :cprevious<CR>zz
+    nnoremap <c-n> :cnext<CR>
+    nnoremap <c-p> :cprevious<CR>
     nnoremap ,cu :colder<CR>
     nnoremap ,cr :cnewer<CR>
 
