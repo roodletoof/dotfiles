@@ -55,17 +55,13 @@ vim.cmd [[
     nnoremap <c-k> <c-w>k
     nnoremap <c-l> <c-w>l
     nnoremap ,v <c-w>v
-    tnoremap <c-h> <c-\><c-n><c-w>h
-    tnoremap <c-j> <c-\><c-n><c-w>j
-    tnoremap <c-k> <c-\><c-n><c-w>k
-    tnoremap <c-l> <c-\><c-n><c-w>l
 
     tnoremap <c-w>c <c-\><c-n><c-w>c
 
     autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=100}
     autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 
-    let g:rustfmt_autosave = 1
+    let g:rustfmt_autosave = 0
 
     " remove annoying and bad indentation
     autocmd FileType * setlocal indentexpr=
