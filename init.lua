@@ -630,6 +630,7 @@ do -- split line {{{1
     local SPLIT_DELIMETERS = { -- single characters only
         [','] = true,
         [';'] = true,
+        ['|'] = true,
     }
     local SPLIT_BETWEEN = { -- single characters only
         ['('] = ')',
