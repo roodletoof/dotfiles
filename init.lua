@@ -488,7 +488,7 @@ require'lazy'.setup{ --{{{1
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
             vim.cmd [[
-                noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
+                noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true})<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
                 noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
                 noremap ,fs :lua require'telescope.builtin'.grep_string()<CR>
