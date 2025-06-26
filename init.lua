@@ -196,6 +196,44 @@ require'lazy'.setup{ --{{{1
             vim.cmd.colorscheme('everforest')
         end,
     },
+    { 'fabridamicelli/cronex.nvim', --{{{2
+        opts = {},
+        config = function()
+            require'cronex'.setup{
+                -- The plugin will automatically start (with autocommand) for these types of files.
+                -- User can manually on any filetype turn explanations on(off) with the commands CronExplainedEnable(CronExplainedDisable)
+                file_patterns = { "*.yaml", "*.yml", "*.tf", "*.cfg", "*.config", "*.conf", "*.cs", "*.go", "*.sh", "*.bash", "*.py" },
+                extractor = { -- Configuration on how to extract cron expressions goes here:
+                    -- cron_from_line: Function to search cron expression in line 
+                    cron_from_line = require("cronex.cron_from_line").cron_from_line,
+                    -- extract: Function returning a table with pairs (line_number, cron)
+                    extract = require("cronex.extract").extract,
+                    },
+                explainer = { -- Configuration on how to explain one cron expression goes here
+                    -- Command to call an external program that will translate the cron expression
+                    -- eg: "* * * * *" -> Every minute
+                    -- Any command that is available in your command line can be used here.
+                    -- examples:
+                    -- "/path/to/miniconda3/envs/neovim/bin/cronstrue" (point to a conda virtualenv)
+                    -- "python explainer.py" (assuming you have such a python script available)
+                    cmd = "cronstrue",  -- or a table, eg: cmd = {"bash", "./my-cron-script.sh"}
+                    -- Optional arguments to pass to the command
+                    -- eg: "/path/to/a/go/binary"  (assuming you have a go binary)
+                    -- args = { "-print-all" }  (assuming the program understands the flag 'print-all')
+                    args = {},
+                    --Timeout in milliseconds to wait for the command to finish.
+                    -- Cronex will throw a notification message if you run into a timeout.
+                    timeout = 10000,
+                },
+                -- Configure the post-processing of the explanation string.
+                -- eg: transform "* * * * *": Every minute --to--> Every minute
+                -- using require("cronex.format").all_after_colon,
+                format = function(s)
+                    return s
+                end
+            }
+        end,
+    },
     { 'folke/zen-mode.nvim', --{{{2
         keys = {",z"},
         config = function ()
