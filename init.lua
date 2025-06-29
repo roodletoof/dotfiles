@@ -334,6 +334,10 @@ require'lazy'.setup{ --{{{1
             }
 
             vim.lsp.enable('gdscript')
+            vim.lsp.config('hls', {
+                filetypes = { 'haskell', 'lhaskell', 'cabal' },
+            })
+            vim.lsp.enable('hls')
 
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(args)
