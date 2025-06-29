@@ -17,10 +17,13 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 set quickscope
 
 map <leader>ff <Action>(SearchEverywhere)
+map <leader>fg <Action>(FindInPath)
 map <leader>fd <Action>(GotoDeclaration)
 map <leader>ft <Action>(GotoTypeDeclaration)
-nnoremap gn :action GotoNextError<CR>
-nnoremap gp :action GotoPreviousError<CR>
+
+map <c-n> <Action>(List-selectNextRow)
+nnoremap <c-n> :action GotoNextError<CR>
+nnoremap <c-p> :action GotoPreviousError<CR>
 
 map <leader>rc <Action>(IdeaVim.ReloadVimRc.reload)
 map <leader>z <Action>(ToggleDistractionFreeMode)
