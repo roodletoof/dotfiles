@@ -1,4 +1,4 @@
-set scrolloff=5
+set scrolloff=1000
 set incsearch
 Plug 'machakann/vim-highlightedyank'
 Plug 'tpope/vim-commentary'
@@ -9,14 +9,17 @@ set noerrorbells
 set rnu
 set nu
 
-set clipboard+=unnamed
+set clipboard+=unnamedplus
 
 let mapleader = ","
 
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 set quickscope
 
-map <leader>ff <Action>(SearchEverywhere)
+map <leader>fa <Action>(GotoAction)
+map <leader>fc <Action>(GotoClass)
+map <leader>fe <Action>(SearchEverywhere)
+map <leader>ff <Action>(GotoFile)
 map <leader>fg <Action>(FindInPath)
 map <leader>fd <Action>(GotoDeclaration)
 map <leader>ft <Action>(GotoTypeDeclaration)
