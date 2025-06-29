@@ -202,7 +202,7 @@ require'lazy'.setup{ --{{{1
             require'cronex'.setup{
                 -- The plugin will automatically start (with autocommand) for these types of files.
                 -- User can manually on any filetype turn explanations on(off) with the commands CronExplainedEnable(CronExplainedDisable)
-                file_patterns = { "*.yaml", "*.yml", "*.tf", "*.cfg", "*.config", "*.conf", "*.cs", "*.go", "*.sh", "*.bash", "*.py" },
+                file_patterns = { "*.lua", "*.py", "*.c", "*.cpp", "*.hpp", "*.cs", "*.java", "*.go", "*.zig", "*.rust", "*.bash", "*.sh", "*.yaml", "*.yml", "*.json", "*.toml", },
                 extractor = { -- Configuration on how to extract cron expressions goes here:
                     -- cron_from_line: Function to search cron expression in line 
                     cron_from_line = require("cronex.cron_from_line").cron_from_line,
