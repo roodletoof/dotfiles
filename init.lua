@@ -15,6 +15,9 @@ end
 -- GENERAL SETTINGS {{{1
 
 vim.cmd [[
+    set list
+    set showbreak=↪\ 
+    set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
     set nofixeol
     set exrc
     set secure
