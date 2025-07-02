@@ -83,6 +83,18 @@ vim.api.nvim_create_autocmd({
     end
 })
 
+vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function()
+        local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+        if line then
+            local first_two = line:sub(1, 2)
+            if first_two == '#!' then
+                vim.bo.makeprg = './%'
+            end
+        end
+    end,
+})
+
 local function file_exists(name) --{{{1
     local f = io.open(name,"r")
     if f~=nil then
