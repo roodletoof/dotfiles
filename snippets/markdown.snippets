@@ -1,0 +1,480 @@
+snippet link
+	[${1:$VISUAL}](${2:$VISUAL})
+snippet XML
+	\`\`\`XML
+	${0:$VISUAL}
+	\`\`\`
+snippet <! "" Ai
+	<!-- ${1:$VISUAL} -->
+snippet <> "" i
+	<${1:$VISUAL}>
+		$0
+	</${1:$VISUAL}>
+	
+snippet FIFO
+	**First In, First Out** (FIFO)
+snippet DAC
+	'DefaultAzureCredential'
+snippet runarroll
+	![runarroll.gif](runarroll.gif)
+snippet runarapprove
+	![runarapprove.gif](runarapprove.gif)
+snippet runarangry
+	![runarangry.gif](runarangry.gif)
+snippet runarshrug
+	![runarshrug.png](runarshrug.png)
+snippet image
+	![$1]($1)
+snippet note
+	> **Note**
+	> $0
+snippet code
+	\`\`\`${1:c}
+	${0:$VISUAL}
+	\`\`\`
+
+snippet haskell
+	\`\`\`haskell
+	${0:$VISUAL}
+	\`\`\`
+
+snippet c
+	\`\`\`c
+	${0:$VISUAL}
+	\`\`\`
+
+snippet bash
+	\`\`\`Bash
+	${0:$VISUAL}
+	\`\`\`
+
+snippet json
+	\`\`\`JSON
+	${0:$VISUAL}
+	\`\`\`
+
+snippet cs
+	\`\`\`cs
+	${0:$VISUAL}
+	\`\`\`
+
+snippet cpp
+	\`\`\`cpp
+	${0:$VISUAL}
+	\`\`\`
+
+snippet py "Python"
+	\`\`\`py
+	$0
+	\`\`\`
+
+snippet bullet "Bullet item"
+	- **${1:...}** - 
+
+snippet check "Checklist item"
+	- [ ] ${0:...}
+
+snippet i "Italic"
+	*${1:$VISUAL}*$0
+
+snippet b "Bold"
+	**${1:$VISUAL}**$0
+
+snippet ib "Italic Bold"
+	***${1:$VISUAL}***$0
+
+snippet bi "Bold Italic"
+	***${1:...}***$0
+
+
+snippet pagebreak "Force a pagebreak for when the document is converted to a pdf."
+	<div style="page-break-after: always;"></div>
+
+
+snippet equation
+	\begin{equation*}
+		$0
+	\end{equation*}
+
+snippet aligned
+	\begin{aligned}
+		$0
+	\end{aligned}
+
+snippet matrix
+	\begin{bmatrix*}[r]
+		$0
+	\end{bmatrix*}
+
+snippet detMatrix
+	\begin{vmatrix*}[r]
+		$0
+	\end{vmatrix*}
+
+snippet row2matrix
+	${1:a} & ${2:b} \\\\
+
+snippet row3matrix
+	${1:a} & ${2:b} & ${3:c} \\\\
+
+snippet row4matrix
+	${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+
+snippet row5matrix
+	${1:a} & ${2:b} & ${3:c} & ${4:d} & ${5:e} \\\\
+
+snippet row6matrix
+	${1:a} & ${2:b} & ${3:c} & ${4:d} & ${5:e} & ${6:f}\\\\
+
+snippet matI2
+	\begin{bmatrix*}[r]
+		1 & 0 \\\\
+		0 & 1 \\\\
+	\end{bmatrix*}
+
+snippet mat22
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} \\\\
+		${3:c} & ${4:d} \\\\
+	\end{bmatrix*}
+
+snippet mat23
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} \\\\
+		${4:d} & ${5:e} & ${6:f} \\\\
+	\end{bmatrix*}
+
+snippet mat24
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} & ${7:g} & ${8:h} \\\\
+	\end{bmatrix*}
+
+snippet matI3
+	\begin{bmatrix*}[r]
+		1 & 0 & 0 \\\\
+		0 & 1 & 0 \\\\
+		0 & 0 & 1 \\\\
+	\end{bmatrix*}
+
+snippet mat32
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} \\\\
+		${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} \\\\
+	\end{bmatrix*}
+
+snippet mat33
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} \\\\
+		${4:d} & ${5:e} & ${6:f} \\\\
+		${7:g} & ${8:h} & ${9:i} \\\\
+	\end{bmatrix*}
+
+snippet mat34
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} & ${7:g} & ${8:h} \\\\
+		${9:i} & ${10:j} & ${11:k} & ${12:l} \\\\
+	\end{bmatrix*}
+
+snippet matI4
+	\begin{bmatrix*}[r]
+		1 & 0 & 0 & 0 \\\\
+		0 & 1 & 0 & 0 \\\\
+		0 & 0 & 1 & 0 \\\\
+		0 & 0 & 0 & 1 \\\\
+	\end{bmatrix*}
+
+snippet mat42
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} \\\\
+		${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} \\\\
+		${7:g} & ${8:h} \\\\
+	\end{bmatrix*}
+
+snippet mat43
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} \\\\
+		${4:d} & ${5:e} & ${6:f} \\\\
+		${7:g} & ${8:h} & ${9:i} \\\\
+		${10:j} & ${11:k} & ${12:l} \\\\
+	\end{bmatrix*}
+
+snippet mat44
+	\begin{bmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} & ${7:g} & ${8:h} \\\\
+		${9:i} & ${10:j} & ${11:k} & ${12:l} \\\\
+		${13:m} & ${14:n} & ${15:o} & ${16:p} \\\\
+	\end{bmatrix*}
+
+snippet detI2
+	\begin{vmatrix*}[r]
+		1 & 0 \\\\
+		0 & 1 \\\\
+	\end{vmatrix*}
+
+snippet det22
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} \\\\
+		${3:c} & ${4:d} \\\\
+	\end{vmatrix*}
+
+snippet det23
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} \\\\
+		${4:d} & ${5:e} & ${6:f} \\\\
+	\end{vmatrix*}
+
+snippet det24
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} & ${7:g} & ${8:h} \\\\
+	\end{vmatrix*}
+
+snippet detI3
+	\begin{vmatrix*}[r]
+		1 & 0 & 0 \\\\
+		0 & 1 & 0 \\\\
+		0 & 0 & 1 \\\\
+	\end{vmatrix*}
+
+snippet det32
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} \\\\
+		${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} \\\\
+	\end{vmatrix*}
+
+snippet det33
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} \\\\
+		${4:d} & ${5:e} & ${6:f} \\\\
+		${7:g} & ${8:h} & ${9:i} \\\\
+	\end{vmatrix*}
+
+snippet det34
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} & ${7:g} & ${8:h} \\\\
+		${9:i} & ${10:j} & ${11:k} & ${12:l} \\\\
+	\end{vmatrix*}
+
+snippet detI4
+	\begin{vmatrix*}[r]
+		1 & 0 & 0 & 0 \\\\
+		0 & 1 & 0 & 0 \\\\
+		0 & 0 & 1 & 0 \\\\
+		0 & 0 & 0 & 1 \\\\
+	\end{vmatrix*}
+
+snippet det42
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} \\\\
+		${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} \\\\
+		${7:g} & ${8:h} \\\\
+	\end{vmatrix*}
+
+snippet det43
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} \\\\
+		${4:d} & ${5:e} & ${6:f} \\\\
+		${7:g} & ${8:h} & ${9:i} \\\\
+		${10:j} & ${11:k} & ${12:l} \\\\
+	\end{vmatrix*}
+
+snippet det44
+	\begin{vmatrix*}[r]
+		${1:a} & ${2:b} & ${3:c} & ${4:d} \\\\
+		${5:e} & ${6:f} & ${7:g} & ${8:h} \\\\
+		${9:i} & ${10:j} & ${11:k} & ${12:l} \\\\
+		${13:m} & ${14:n} & ${15:o} & ${16:p} \\\\
+	\end{vmatrix*}
+
+snippet pi
+	\pi
+
+snippet infinity
+	\infty
+
+snippet sum
+	\sum_{i=${1:1}}^{${2:\\infty}}
+
+snippet fraction
+	\frac{${1:a}}{${2:b}}
+
+snippet flexbrace
+	\left($1\right)
+
+snippet text
+	\text{$1}
+
+snippet Z
+	\mathbb{Z}
+
+snippet Z+
+	\mathbb{Z}^{+}
+
+snippet Z+0
+	\mathbb{Z}^{+}_{0}
+
+snippet Z-
+	\mathbb{Z}^{-}
+
+snippet Z-0
+	\mathbb{Z}^{-}_0
+
+snippet N
+	\mathbb{N}
+
+snippet R
+	\mathbb{R}
+
+snippet Rn
+	\mathbb{R}^n
+
+snippet Rm
+	\mathbb{R}^m
+
+snippet lambda
+	\lambda
+
+snippet my
+	\mu
+
+snippet bigVec
+	\overrightarrow{$1}
+
+snippet vec
+	\vec{$1}
+
+snippet colvec2
+	\begin{bmatrix*}[r]
+		${1:x_1} \\\\
+		${2:x_2} \\\\
+	\end{bmatrix*}
+
+snippet colvec3
+	\begin{bmatrix*}[r]
+		${1:x_1} \\\\
+		${2:x_2} \\\\
+		${3:x_3} \\\\
+	\end{bmatrix*}
+
+snippet colvec4
+	\begin{bmatrix*}[r]
+		${1:x_1} \\\\
+		${2:x_2} \\\\
+		${3:x_3} \\\\
+		${4:x_4} \\\\
+	\end{bmatrix*}
+
+snippet colvec5
+	\begin{bmatrix*}[r]
+		${1:x_1} \\\\
+		${2:x_2} \\\\
+		${3:x_3} \\\\
+		${4:x_4} \\\\
+		${5:x_5} \\\\
+	\end{bmatrix*}
+
+snippet +-
+	\pm
+
+snippet sqrt
+	\sqrt{$1}
+
+snippet nsqrt
+	\sqrt[$1]{$2}
+
+snippet abc
+	${1:x} = \frac{-${3:b} \pm \sqrt{ ${3:b}^2 - 4 * ${4:c} * ${2:a} } }{ 2 * ${2:a} }$0
+
+snippet ul
+	\underline{$1}
+
+snippet ulul
+	\underline{\underline{$1}}$0
+
+snippet boldText
+	\textbf{$1}
+
+snippet italicText
+	\emph{$1}
+
+snippet section
+	\section{$1}$0
+
+snippet subsection
+	\subsection{$1}$0
+
+snippet subsubsection
+	\subsubsection{$1}$0
+
+snippet enumerate
+	\begin{enumerate}
+		$0
+	\end{enumerate}
+
+snippet item
+	\item $1
+
+snippet transformation
+	T : \mathbb{R}^${1:n} \to \mathbb{R}^${2:m}
+
+snippet pow
+	${1:a}^{${2:n}}$0
+
+snippet inverse
+	^{-1}
+
+snippet transposed
+	^{T}
+
+snippet nxn
+	${1:n} \times ${1:n}
+
+snippet nxm
+	${1:n} \times ${2:m}
+
+snippet adj
+	\text{adj}
+
+snippet span
+	\text{Span}
+
+snippet squigles
+	\\{$1\\}$0
+
+snippet vecu
+	\vec{u}
+
+snippet vecv
+	\vec{v}
+
+snippet vecx
+	\vec{x}
+
+snippet vecb
+	\vec{b}
+
+snippet vecw
+	\vec{w}
+
+snippet u "Underscore"
+	_{$1}$0
+
+snippet dots "... in math mode"
+	\dots
+
+snippet nbasis
+	B = \{\vec b_1, \dots, \vec b_n \\}
+
+snippet dim
+	\\text{dim }
+
+snippet dot
+	\\cdot

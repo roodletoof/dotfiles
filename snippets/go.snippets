@@ -1,0 +1,118 @@
+snippet tryget
+	if ${2:val}, ok := $1; ok {
+		$0
+	}
+
+snippet dontimes
+	for range $1 {
+		$0
+	}
+
+snippet handlefunc
+	router.HandleFunc("$1", func( w http.ResponseWriter, r *http.Request,) {
+		$0
+	})
+
+snippet !! "" Ai
+	!=
+
+snippet :: "" Ai
+	:=
+
+snippet ,,n "" Ai
+	\n
+snippet <<< "" Ai
+	<-
+snippet ts
+	type $1 struct {
+		$0
+	}
+
+snippet main
+	package main
+
+	func main() {
+		$0
+	}
+
+snippet gofunc
+	go func() {
+		$0
+	}()
+
+snippet afunc
+	func($1) $2 {
+		$0
+	}
+
+snippet func
+	func ${1:foo}($2) $3 {
+		$0
+	}
+
+snippet meth
+	func (${1:rec}) ${2:foo}($3) $4 {
+		$0
+	}
+
+snippet err
+	if err != nil { return err }$0
+
+snippet {
+	{
+		$1
+	}$0
+
+snippet [
+	[
+		$1
+	]$0
+
+snippet (
+	(
+		$1
+	)$0
+
+snippet }
+	{ $1 }$0
+
+snippet ]
+	[ $1 ]$0
+
+snippet )
+	( $1 )$0
+
+snippet fori
+	for ${1:i} := ${2:0}; ${1:i} < ${3:upper}; ${1:i}++ {
+		$0
+	}
+snippet retSeq1
+	return func(yield func(${1:V}) bool) {
+		for /*TODO*/ {
+			if !yield( /*${1:V}*/ ) {
+				return
+			}
+		}
+	}
+
+snippet retSeq2
+	return func(yield func(${1:K}, ${2:V}) bool) {
+		for /*TODO*/ {
+			if !yield( /*${1:K},${2:V}*/ ) {
+				return
+			}
+		}
+	}
+
+snippet printif
+	if !isZeroVal($1) { fmt.Println("$1 =", $1) }
+
+snippet impl
+	var _ ${1:INTERFACE} = (*${2:CONCRETE_TYPE})(nil)
+
+snippet implstr
+	var _ ${1:INTERFACE} = (*${2:CONCRETE_TYPE})(nil)
+	type ${2:CONCRETE_TYPE} ${3:UNDERLYING_TYPE}
+
+snippet append
+	${1:slice} = append( ${1:slice}, ${2:value} )

@@ -1,0 +1,14 @@
+snippet raylib
+	${2:game}: ${1:main.c}
+		cc ${1:main.c} -o ${2:game} -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+
+	clean:
+		rm ./${2:game}
+
+	run: ${2:game}
+		./${2:game}
+
+snippet test
+	test: test.c
+		@cc -o test test.c
+		@./test || (rm -f test && $(MAKE) --no-print-directory clean && exit 1)
