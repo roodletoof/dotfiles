@@ -376,7 +376,7 @@ require'lazy'.setup{ --{{{1
             }
         end,
     },
-    { 'folke/zen-mode.nvim', --{{{2
+    { 'roodletoof/zen-mode.nvim', --{{{2
         keys = {",z"},
         config = function ()
             vim.keymap.set(
