@@ -92,16 +92,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end,
 })
 
-local function file_exists(name) --{{{1
-    local f = io.open(name,"r")
-    if f~=nil then
-        f:close()
-        return true
-    else
-        return false
-    end
-end
-
 -- LAZY.NVIM BOOTSTRAP {{{1
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -595,6 +585,16 @@ require'lazy'.setup{ --{{{1
                 nmap g; <Plug>(snippy-cut-text)
                 xmap g; <Plug>(snippy-cut-text)
             ]]
+
+            local function file_exists(name)
+                local f = io.open(name,"r")
+                if f~=nil then
+                    f:close()
+                    return true
+                else
+                    return false
+                end
+            end
 
             vim.api.nvim_create_user_command(
                 'S',
