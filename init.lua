@@ -12,10 +12,6 @@ end
 -- GENERAL SETTINGS {{{1
 
 vim.cmd [[
-    set list
-    set showbreak=↪\ 
-    set listchars=tab:→\ ,eol:↲,nbsp:␣,trail:•,extends:⟩,precedes:⟨
-    set nofixeol
     set exrc
     set secure
     set clipboard=unnamedplus
@@ -29,7 +25,6 @@ vim.cmd [[
     set nohlsearch
     set incsearch
     set scrolloff=999
-    set sidescrolloff=999
     set guicursor=n-v-c:block-Cursor
 
     nnoremap ,co :copen<CR>
