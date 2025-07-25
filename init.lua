@@ -370,10 +370,27 @@ require'lazy'.setup{ --{{{1
     { 'roodletoof/zen-mode.nvim', --{{{2
         keys = {",z"},
         config = function ()
+            local zen_mode = require'zen-mode'
+            zen_mode.setup{}
             vim.keymap.set(
                 'n',
                 ",z",
-                vim.cmd.ZenMode,
+                function()
+                    zen_mode.toggle{
+                        window = {
+                            width = 80,
+                            options = {
+                                signcolumn = "no", -- disable signcolumn
+                                number = false, -- disable number column
+                                relativenumber = false, -- disable relative numbers
+                                cursorline = false, -- disable cursorline
+                                cursorcolumn = false, -- disable cursor column
+                                foldcolumn = "0", -- disable fold column
+                                list = false, -- disable whitespace characters
+                            }
+                        },
+                    }
+                end,
                 { silent = true }
             )
         end
@@ -695,7 +712,6 @@ require'lazy'.setup{ --{{{1
 }
 
 do -- split line {{{1
-
     local SPLIT_DELIMETERS = { -- single characters only
         [','] = true,
         [';'] = true,
