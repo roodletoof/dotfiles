@@ -22,6 +22,7 @@ map <leader>fe <Action>(SearchEverywhere)
 map <leader>ff <Action>(GotoFile)
 map <leader>fg <Action>(FindInPath)
 map <leader>fd <Action>(GotoDeclaration)
+map <leader>fr <Action>(FindUsages)
 map <leader>ft <Action>(GotoTypeDeclaration)
 
 map <c-n> <Action>(List-selectNextRow)
@@ -30,6 +31,7 @@ nnoremap <c-p> :action GotoPreviousError<CR>
 
 map <leader>rc <Action>(IdeaVim.ReloadVimRc.reload)
 map <leader>z <Action>(ToggleDistractionFreeMode)
+map <leader>b <Action>(ToggleLineBreakpoint)
 map <leader>er <Action>(Run) 
 map <leader>ca <Action>(ShowIntentionActions)
 map <leader>oe <Action>(ShowErrorDescription)
