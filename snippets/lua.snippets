@@ -1,0 +1,105 @@
+snippet as
+	--[[@as $1]]
+
+snippet anon
+	function($1)
+		$0
+	end
+snippet ) "" i
+	( $1 )
+
+snippet ] "" i
+	[ $1 ]
+
+snippet } "" i
+	{ $1 }
+
+snippet ( "" i
+	(
+		$1
+	)
+
+snippet [ "" i
+	[
+		$1
+	]
+
+snippet { "" i
+	{
+		$1
+	}
+
+snippet ltag ""
+	local ${0:$VISUAL} = '${0:$VISUAL}'
+
+snippet tag
+	${0:$VISUAL} = '${0:$VISUAL}'
+
+snippet != "" Ai
+	~=
+
+snippet ne "" i
+	~=
+
+snippet --[[ "" i
+	--[[
+	$0
+	--]]
+
+snippet wopen
+	do
+		local file = io.open( $1, $2 )
+		assert( file ~= nil, ("io.open('%s', '%s' returned nil."):format($1, $2))
+
+		${0:$VISUAL}
+
+		file:close()
+	end
+
+snippet wshader
+	local previous_shader = love.graphics.getShader()
+	love.graphics.setShader( $1 )
+		${0:$VISUAL}
+	love.graphics.setShader( previous_shader )
+
+snippet wcanvas
+	local previous_canvas = love.graphics.getCanvas()
+	love.graphics.setCanvas( $1 )
+		${0:$VISUAL}
+	love.graphics.setCanvas( previous_canvas )
+
+snippet wcolor
+	local previous_color = { love.graphics.getColor() }
+	love.graphics.setColor( $1 )
+		${0:$VISUAL}
+	love.graphics.setColor( previous_color )
+
+snippet uvec
+	${1:$VISUAL}.x, ${1:$VISUAL}.y$0
+
+snippet urec
+	${1:$VISUAL}.x, ${1:$VISUAL}.y, ${1:$VISUAL}.w, ${1:$VISUAL}.h$0
+
+snippet swap
+	$1, $2 = $2, $1$0
+
+snippet add ""
+	${1:$VISUAL} = ${1:$VISUAL} + $2
+
+snippet sub
+	${1:$VISUAL} = ${1:$VISUAL} - $2
+
+snippet mul
+	${1:$VISUAL} = ${1:$VISUAL} * $2
+
+snippet div
+	${1:$VISUAL} = ${1:$VISUAL} / $2
+
+snippet conc
+	${1:$VISUAL} = ${1:$VISUAL} .. $2
+
+snippet inc
+	${1:$VISUAL} = ${1:$VISUAL} + 1$0
+
+snippet dec
+	${1:$VISUAL} = ${1:$VISUAL} - 1$0

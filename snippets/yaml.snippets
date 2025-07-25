@@ -1,0 +1,16 @@
+snippet backfill
+	- name: Backfill ${1:$VISUAL} once a day for the last 5 days (gap filling)
+		functionExternalId: icapi_datapoints_extractor
+		cronExpression: "47 0 * * *"
+		data:
+			backfill: True
+			sites:
+				- ${1:$VISUAL}
+	
+snippet singleHeader
+	CompileFlags:
+		Add: 
+			- -D${1:SOME_IMPL_MACRO}
+	Diagnostics:
+		Suppress: 
+			- misc-definitions-in-headers

@@ -1,9 +1,6 @@
 ---@diagnostic disable: missing-fields
 -- vim:foldmethod=marker
 
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 local function get_python_venv_path() --{{{1
     return vim.fn.stdpath('config') .. '/.venv/bin/python'
 end
@@ -52,8 +49,8 @@ vim.cmd [[
 
     " Don't include curdir, it just causes pain.
     set viewoptions=folds,cursor
-    autocmd BufWinLeave *.* silent! mkview 
-    autocmd BufWinEnter *.* silent! loadview 
+    autocmd BufWinLeave,BufLeave *.* silent! mkview 
+    autocmd BufWinEnter,BufEnter *.* silent! loadview 
 
     nnoremap <c-h> <c-w>h
     nnoremap <c-j> <c-w>j
@@ -95,16 +92,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end,
 })
 
-local function file_exists(name) --{{{1
-    local f = io.open(name,"r")
-    if f~=nil then
-        f:close()
-        return true
-    else
-        return false
-    end
-end
-
 -- LAZY.NVIM BOOTSTRAP {{{1
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -120,27 +107,155 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
-    { 'nvim-tree/nvim-tree.lua', --{{{2
-        dependencies = {
-            'nvim-tree/nvim-web-devicons',
-        },
-        config = function()
-            local api = require "nvim-tree.api"
-            local function my_on_attach(bufnr)
-                local function opts(desc) return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true } end
-                api.config.mappings.default_on_attach(bufnr)
-                vim.keymap.set('n', '-', api.tree.toggle,        opts('Up'))
-            end
-            local function opts(desc) return { desc = "nvim-tree: " .. desc, noremap = true, silent = true, nowait = true } end
-            vim.keymap.set('n', '-', api.tree.toggle,        opts('Up'))
-
-            require("nvim-tree").setup {
-                on_attach = my_on_attach,
-                update_focused_file = {
-                    enable = true,
+    { 'stevearc/oil.nvim', --{{{2
+        ---@module 'oil'
+        ---@type oil.SetupOpts
+        opts = {},
+        dependencies = { { "echasnovski/mini.icons", opts = {} } },
+        lazy = false,
+        config = function ()
+            require("oil").setup({
+                default_file_explorer = true,
+                columns = {
+                    "icon",
+                    "permissions",
+                    "size",
+                    "mtime",
                 },
-            }
-        end,
+                buf_options = {
+                    buflisted = false,
+                    bufhidden = "hide",
+                },
+                win_options = {
+                    wrap = false,
+                    signcolumn = "no",
+                    cursorcolumn = false,
+                    foldcolumn = "0",
+                    spell = false,
+                    list = false,
+                    conceallevel = 3,
+                    concealcursor = "nvic",
+                },
+                delete_to_trash = false,
+                skip_confirm_for_simple_edits = false,
+                prompt_save_on_select_new_entry = true,
+                cleanup_delay_ms = 2000,
+                lsp_file_methods = {
+                    enabled = true,
+                    timeout_ms = 1000,
+                    autosave_changes = false,
+                },
+                constrain_cursor = "editable",
+                watch_for_changes = false,
+                keymaps = {
+                    ["g?"] = { "actions.show_help", mode = "n" },
+                    ["<CR>"] = "actions.select",
+                    ["<C-j>"] = "actions.select",
+                    ["<C-s>"] = { "actions.select", opts = { vertical = true } },
+                    ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
+                    ["<C-t>"] = { "actions.select", opts = { tab = true } },
+                    ["<C-p>"] = "actions.preview",
+                    ["<C-c>"] = { "actions.close", mode = "n" },
+                    ["<C-l>"] = "actions.refresh",
+                    ["-"] = { "actions.parent", mode = "n" },
+                    ["_"] = { "actions.open_cwd", mode = "n" },
+                    ["`"] = { "actions.cd", mode = "n" },
+                    ["~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
+                    ["gs"] = { "actions.change_sort", mode = "n" },
+                    ["gx"] = "actions.open_external",
+                    ["g."] = { "actions.toggle_hidden", mode = "n" },
+                    ["g\\"] = { "actions.toggle_trash", mode = "n" },
+                },
+                use_default_keymaps = true,
+                view_options = {
+                    show_hidden = true,
+                    is_hidden_file = function(name, _)
+                        local m = name:match("^%.")
+                        return m ~= nil
+                    end,
+                    is_always_hidden = function(_, _)
+                        return false
+                    end,
+                    natural_order = "fast",
+                    case_insensitive = false,
+                    sort = {
+                        { "type", "asc" },
+                        { "name", "asc" },
+                    },
+                    highlight_filename = function(_, _, _, _)
+                        return nil
+                    end,
+                },
+                extra_scp_args = {},
+                float = {
+                    padding = 2,
+                    max_width = 0,
+                    max_height = 0,
+                    border = "rounded",
+                    win_options = {
+                        winblend = 0,
+                    },
+                    get_win_title = nil,
+                    preview_split = "auto",
+                    override = function(conf)
+                        return conf
+                    end,
+                },
+                preview_win = {
+                    update_on_cursor_moved = true,
+                    preview_method = "fast_scratch",
+                    disable_preview = function(_)
+                        return false
+                    end,
+                    win_options = {},
+                },
+                confirmation = {
+                    max_width = 0.9,
+                    min_width = { 40, 0.4 },
+                    width = nil,
+                    max_height = 0.9,
+                    min_height = { 5, 0.1 },
+                    height = nil,
+                    border = "rounded",
+                    win_options = {
+                        winblend = 0,
+                    },
+                },
+                progress = {
+                    max_width = 0.9,
+                    min_width = { 40, 0.4 },
+                    width = nil,
+                    max_height = { 10, 0.9 },
+                    min_height = { 5, 0.1 },
+                    height = nil,
+                    border = "rounded",
+                    minimized_border = "none",
+                    win_options = {
+                        winblend = 0,
+                    },
+                },
+                ssh = {
+                    border = "rounded",
+                },
+                keymaps_help = {
+                    border = "rounded",
+                },
+            })
+
+            -- oil fix relative path
+            vim.api.nvim_create_augroup('OilRelPathFix', {})
+            vim.api.nvim_create_autocmd("BufLeave", {
+                group = 'OilRelPathFix',
+                pattern  = "oil:///*",
+                callback = function ()
+                    vim.cmd("cd .")
+                end
+            })
+
+            local actions = require("oil.actions")
+            vim.keymap.set("n", "-", actions.parent.callback, { desc =  actions.parent.desc })
+            vim.keymap.set("n", "_", actions.open_cwd.callback, { desc = actions.open_cwd.desc })
+        end
     },
     { 'github/copilot.vim', --{{{2
         config = function()
@@ -252,7 +367,7 @@ require'lazy'.setup{ --{{{1
             }
         end,
     },
-    { 'folke/zen-mode.nvim', --{{{2
+    { 'roodletoof/zen-mode.nvim', --{{{2
         keys = {",z"},
         config = function ()
             vim.keymap.set(
@@ -472,6 +587,16 @@ require'lazy'.setup{ --{{{1
                 xmap g; <Plug>(snippy-cut-text)
             ]]
 
+            local function file_exists(name)
+                local f = io.open(name,"r")
+                if f~=nil then
+                    f:close()
+                    return true
+                else
+                    return false
+                end
+            end
+
             vim.api.nvim_create_user_command(
                 'S',
                 function ()
@@ -547,7 +672,8 @@ require'lazy'.setup{ --{{{1
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
             vim.cmd [[
-                noremap ,ff :lua require'telescope.builtin'.find_files({hidden=true})<CR>
+                noremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
+                noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
                 noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
                 noremap ,fs :lua require'telescope.builtin'.grep_string()<CR>

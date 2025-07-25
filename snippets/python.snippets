@@ -1,0 +1,28 @@
+snippet main
+	def main():
+		${0:$VISUAL}
+
+	if __name__ == '__main__':
+		main()
+
+snippet mainargs
+	from sys import argv
+
+	def main( me: str, args: list[str] ):
+		${0:$VISUAL}
+
+	if __name__ == '__main__':
+		main(argv[0], argv[1:])
+
+snippet tag
+	$1 = '$1'
+
+snippet assign
+	self.$1 = $1
+
+snippet ignore
+	#pyright: ignore
+snippet ''' "" Ai
+	'''
+	$0
+	'''

@@ -1,0 +1,432 @@
+snippet taggedUnion
+	#define ${1/.*/\U\0/g}_FIELDS \
+		X(${0:foo})
+
+	#define X(NAME, ...) ${1:union}_type_##NAME,
+	typedef enum ${1:union}_type {
+		${1/.*/\U\0/g}_FIELDS
+		count_${1:union}_type_t
+	} ${1:union}_type_t;
+	#undef X
+
+	#define X(NAME, ...) typedef struct NAME {__VA_ARGS__} NAME##_t;
+	${1/.*/\U\0/g}_FIELDS
+	#undef X
+
+	#define X(NAME, ...) NAME##_t NAME;
+	typedef struct ${1:union} {
+		${1:union}_type_t type;
+		union {
+			${1/.*/\U\0/g}_FIELDS
+		};
+	} ${1:union}_t;
+	#undef X
+
+	#define X(NAME, ...) static inline ${1:union}_t ${1:union}_of_##NAME(NAME##_t NAME) { \
+		${1:union}_t ${1:union} = (${1:union}_t){}; \
+		${1:union}.type = ${1:union}_type_##NAME; \
+		${1:union}.NAME = NAME; \
+		return ${1:union}; \
+	}
+	${1/.*/\U\0/g}_FIELDS
+	#undef X
+
+snippet tccRaylib
+	#!/bin/tcc -run -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+
+snippet ,fl "" Ai
+	, __FILE__, __LINE__
+snippet scriptgcc
+	#if 0
+		SCRIPT_NAME=$(echo "$0" | tr '/' '_' | tr '.' '_').o
+		EXEC=/tmp/$SCRIPT_NAME
+		if [ ! -x "$EXEC" ] || [ "$0" -nt "$EXEC" ]; then
+			gcc "$0" -o "$EXEC"
+		fi
+		exec "$EXEC"
+	#endif
+
+snippet func
+	${1:void} ${2:foo}( ${3:void} ) {
+		${0:fprintf(stderr, __FILE__ ":%d: todo!", __LINE__); exit(1);}
+	}
+
+snippet region
+	WITH_MEMORY_REGION(${1:region}) { // Don't return memory owned by ${1:region}.
+		${0:$VISUAL}
+	} while (0);
+
+snippet regionDef
+	#include <stdio.h>
+	#include <stdlib.h>
+
+	typedef struct AllocationHeader {
+		struct AllocationHeader *next;
+		union {
+			long double _only_;
+			long long _for_;
+			void *_alignment_;
+		} data[];
+	} AllocationHeader;
+
+	typedef AllocationHeader* MemoryRegion;
+
+	void *MemoryRegionMalloc(MemoryRegion *region, size_t size, char *file, size_t line) {
+		AllocationHeader *bytes = malloc(sizeof(AllocationHeader) + size);
+		if (bytes == NULL) {
+			fprintf(stderr, "%s:%zu: unable to allocate %zu bytes\n", file, line, size);
+			exit(1);
+		}
+		bytes->next = *region;
+		*region = bytes;
+		printf("allocated %zu bytes at %p\n", size, bytes);
+		return &bytes->data;
+	}
+	#define MemoryRegionMalloc(region, size) MemoryRegionMalloc(region, size, __FILE__, __LINE__)
+
+	void MemoryRegionFree(MemoryRegion *region) {
+		AllocationHeader *curr = *region;
+		while (curr != NULL) {
+			AllocationHeader *next = curr->next;
+			free(curr);
+			printf("freed %p\n", curr);
+			curr = next;
+		}
+		*region = NULL;
+	}
+
+	#define WITH_MEMORY_REGION(NAME) for (MemoryRegion NAME = NULL; !NAME; NAME = (MemoryRegionFree(&NAME), (MemoryRegion) 1)) do
+snippet scopeMalloc
+	{
+		${1:int} *${2:var} = malloc(${3:size});
+		if (${2:var} == NULL) {
+			${4:fprintf(stderr, "%s:%d: malloc returned NULL!\\n", __FILE__, __LINE__); exit(1);}
+		}
+	// working area ////////////////////////////////////////////////////////////////
+		$0
+	////////////////////////////////////////////////////////////////////////////////
+		free(${2:var});
+	}
+snippet defer
+	${1:initialize}; {
+		$0
+	} ${2:deinitialize};
+snippet camera
+	void camera_update(Camera2D *camera) {
+		float wheel = GetMouseWheelMove();
+		if (wheel != 0.0f) {
+			Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), *camera);
+			camera->offset = GetMousePosition();
+			camera->target = mouseWorldPos;
+			float scale_factor = 1.0f + (0.25f*fabsf(wheel));
+			if (wheel < 0) scale_factor = 1.0f/scale_factor;
+			camera->zoom = Clamp(camera->zoom*scale_factor, 0.125f, 64.0f);
+		}
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+			Vector2 delta = GetMouseDelta();
+			delta = Vector2Scale(delta, -1.0f/camera->zoom);
+			camera->target = Vector2Add(camera->target, delta);
+		}
+	}
+	#define camera_new ((Camera2D) { .zoom = 1.0f, .target = (Vector2) {0.0f, 0.0f}, .offset = (Vector2) {0.0f, 0.0f}, .rotation = 0.0f })
+
+snippet tenum
+	typedef enum ${1:name} {
+		$0
+		count_${1:name}_t
+	} ${1:name}_t;
+
+snippet aunion
+	union {
+		$0
+	};
+
+snippet astruct
+	struct {
+		$0
+	};
+
+snippet tunion
+	typedef union ${1:name} {
+		$0
+	} ${1:name}_t;
+
+snippet tstruct
+	typedef struct ${1:name} {
+		$0
+	} ${1:name}_t;
+
+snippet class
+	typedef struct ${1:name} {
+		$0
+	} ${1:name};
+snippet printf
+	printf("$1\n"$2);
+snippet ,,n "" Ai
+	\n
+
+snippet foreacharr
+	for (${1:type} *${2:item} = ${3:array}; ${2:item} < &${3:array}[${4:size}]; ${2:item}++) {
+		$0
+	}
+snippet flags
+	#include <_static_assert.h>
+	#include <string.h>
+	#include <stdint.h>
+	#include <stdio.h>
+
+	#define FLAGS \
+		X(SOLID) \
+		X(DAMAGING) \
+		X(WATER) \
+		X(ENEMY)
+
+	typedef enum ordinal_flags {
+		#define X(name) ORDINAL_FLAG_##name,
+		FLAGS
+		#undef X
+		count_ordinal_flags
+	} ordinal_flags_t;
+	static_assert(count_ordinal_flags <= 64, "Too many flags!");
+
+	typedef enum flag : uint64_t{
+		#define X(name) FLAG_##name = ((uint64_t)1) << ORDINAL_FLAG_##name,
+		FLAGS
+		#undef X
+	} flag_t;
+
+	void flag_print(flag_t f) {
+		printf("FLAGS: { ");
+		#define X(name) if (f & FLAG_##name) printf(#name" ");
+		FLAGS
+		#undef X
+		printf("}\n");
+	}
+
+	flag_t flag_parse(char *str) {
+		flag_t f = 0;
+		#define X(name) if (strstr(str, " "#name" ")) f |= FLAG_##name;
+		FLAGS
+		#undef X
+		return f;
+	}
+
+snippet test
+	#include <stdbool.h>
+	#include <stdio.h>
+
+	int tests_total = 0;
+	int tests_passed = 0;
+	typedef enum {Success, Failure} Result;
+
+	Result assert(bool condition, char *condition_text, char *file, int line) {
+		tests_total++;
+		Result result;
+		if (condition) {
+			tests_passed++;
+			result = Success;
+		} else {
+			printf("%s:%d: error: Assertion failed: %s\n", file, line, condition_text);
+			result = Failure;
+		}
+		fflush(stdout);
+		return result;
+	}
+
+	#define assert(condition) assert(condition, #condition, __FILE__, __LINE__)
+
+	int main(int arg_count, char *args[]) {
+
+		{ // TEST HERE
+			$0
+		}
+
+		if (tests_total == tests_passed) {
+			return 0;
+		} else {
+			return tests_total - tests_passed;
+		}
+	}
+
+snippet unpackRect
+	$1.x, $1.y, $1.width, $1.height 
+
+snippet unpackRectInt
+	((int) $1.x), ((int) $1.y), ((int) $1.width), ((int) $1.height) 
+
+snippet rect
+	(Rectangle) {$1}
+
+snippet forxy
+	for ( int y = 0; y < ${1:HEIGHT}; y++ ) {
+		for ( int x = 0; x < ${2:WIDTH}; x++ ) {
+			$0
+		}
+	}
+
+snippet constAssign
+	*((${1:int} *) &${2:const}) = ${3:val};
+
+snippet colorToVec4
+	Vector4 ${1:color}_v = (Vector4) {
+		.x = (float) ${1:color}.r,
+		.y = (float) ${1:color}.g,
+		.z = (float) ${1:color}.b,
+		.w = (float) ${1:color}.a
+	};
+
+snippet cast
+	(($1) ${2:$VISUAL})
+
+snippet appendDefine
+	#define append(arr, val, size, capacity) \
+		do { \
+			assert(size < capacity); \
+			arr[size] = val; \
+			size++; \
+		} while (0)
+
+snippet popDefine
+	#define pop(recipient, arr, size) \
+		do { \
+			assert(0 < size); \
+			size--; \
+			recipient = arr[size]; \
+		} while (0)
+
+snippet pop
+	assert(0 < ${3:size});
+	${3:size}--;
+	${2:recipient} = ${1:$VISUAL}[${3:size}];
+
+snippet append
+	${1:arr}[${3:size}++] = ${2:value};
+
+snippet )
+	( $1 )
+
+snippet ]
+	[ $1 ]
+
+snippet }
+	{ $1 }
+
+snippet (
+	(
+		$1
+	)
+
+snippet [
+	[
+		$1
+	]
+
+snippet {
+	{
+		$1
+	}
+
+snippet main
+	int main( int arg_count, char *args[] ) {
+		$0
+		return 0;
+	}
+
+snippet fori
+	for ( ${1:size_t} ${2:i} = ${3:0}; ${2:i} < ${4:count}; ${2:i}++ ) {
+		$0
+	}
+
+snippet do
+	do {
+		$0
+	\} while ( ${1:1} );
+
+snippet while
+	while ( ${1:1} ) {
+		$0
+	}
+
+snippet if
+	if ( $1 ) {
+		$0
+	}
+
+snippet includeGuard
+	#ifndef $1
+	#define $1
+
+	$0
+
+	#endif /* $1 */
+
+snippet singleHeaderLib
+	#ifndef $1_HEADER
+	#define $1_HEADER
+
+	$0
+
+	#ifdef $1_IMPL
+
+
+
+	#endif /* $1_IMPL */
+	#endif /* $1_HEADER */
+
+snippet withDrawing
+	BeginDrawing();
+		$0
+	EndDrawing();
+
+snippet withBlendMode
+	BeginBlendMode(${1:int mode});
+		$0
+	EndBlendMode();
+
+snippet withMode2D
+	BeginMode2D(${1:Camera2D camera});
+		$0
+	EndMode2D();
+
+snippet withMode3D
+	BeginMode3D(${1:Camera3D camera});
+		$0
+	EndMode3D();
+
+snippet withShaderMode
+	BeginShaderMode(${1:Shader shader});
+		$0
+	EndShaderMode();
+
+snippet withTextureMode
+	BeginTextureMode(${1:RenderTexture2D target});
+		$0
+	EndTextureMode();
+
+snippet withVrStereoMode
+	BeginVrStereoMode(${1:VrStereoConfig config});
+		$0
+	EndVrStereoMode();
+
+snippet withScissorMode
+	BeginScissorMode(${1:int x}, ${2:int y}, ${3:int width}, ${4:int height});
+		$0
+	EndScissorMode();
+
+snippet gear
+	[GID_${1:TYPE}_${2:IDENTIFIER}] = {
+		.name           = "${3:In game name}",
+		.texture_path   = "assets/player/${4:path/to/image}.png",
+		.type           = GEAR_${1:TYPE},
+		.rating         = ${5:dmg / armor}
+	},
+snippet escape
+	$1 \
+snippet X
+	X( $1 )
+snippet Xdef
+	#define X($1) $2
+	$0
+	#undef X
+snippet todo
+	_Static_assert(false, "TODO");
