@@ -31,8 +31,8 @@ vim.cmd [[
     nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
     nnoremap ,cf :cfirst<CR>
     nnoremap ,cl :clast<CR>
-    nnoremap <c-n> :cnext<CR>
-    nnoremap <c-p> :cprevious<CR>
+    nnoremap <c-n> :cnext<CR>zz
+    nnoremap <c-p> :cprevious<CR>zz
     nnoremap ,cu :colder<CR>
     nnoremap ,cr :cnewer<CR>
     nnoremap H ^
