@@ -375,7 +375,7 @@ require'lazy'.setup{ --{{{1
                 function()
                     zen_mode.toggle{
                         window = {
-                            width = 90,
+                            width = 80,
                             options = {
                                 signcolumn = "no", -- disable signcolumn
                                 cursorline = false, -- disable cursorline
