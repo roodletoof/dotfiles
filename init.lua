@@ -606,38 +606,6 @@ require'lazy'.setup{ --{{{1
                 nmap g; <Plug>(snippy-cut-text)
                 xmap g; <Plug>(snippy-cut-text)
             ]]
-
-            local function file_exists(name)
-                local f = io.open(name,'r')
-                if f~=nil then
-                    f:close()
-                    return true
-                else
-                    return false
-                end
-            end
-
-            vim.api.nvim_create_user_command(
-                'S',
-                function ()
-                    ---@type string
-                    local snippets_path = vim.fn.stdpath('config') .. '/snippets/' .. vim.bo.filetype .. '.snippets'
-
-                    if not file_exists(snippets_path) then
-                        local file = io.open( snippets_path, 'w' )
-                            assert(
-                                file ~= nil,
-                                ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
-                                'Make sure the snippets folder in the above path exists.'
-                            )
-                        file:close()
-                        print('created file: ', snippets_path)
-                    end
-
-                    vim.api.nvim_command(('SnippyEdit %s'):format(snippets_path))
-                end,
-                { nargs = 0 }
-            )
         end
     },
     { 'hrsh7th/nvim-cmp', --{{{2
