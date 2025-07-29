@@ -48,6 +48,11 @@ vim.cmd [[
     autocmd BufWinLeave,BufLeave *.* silent! mkview 
     autocmd BufWinEnter,BufEnter *.* silent! loadview 
 
+    nnoremap <c-h> <c-w>h
+    nnoremap <c-j> <c-w>j
+    nnoremap <c-k> <c-w>k
+    nnoremap <c-l> <c-w>l
+
     tnoremap <c-w>c <c-\><c-n><c-w>c
 
     autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=100}
