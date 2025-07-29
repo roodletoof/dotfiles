@@ -1,4 +1,3 @@
----@diagnostic disable: missing-fields
 -- vim:foldmethod=marker
 
 local function get_python_venv_path() --{{{1
@@ -72,7 +71,7 @@ vim.api.nvim_create_autocmd({
     end
 })
 
-vim.api.nvim_create_autocmd("BufEnter", {
+vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
         local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
         if line then
@@ -85,14 +84,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 -- LAZY.NVIM BOOTSTRAP {{{1
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
     lazypath,
   })
 end
@@ -103,30 +102,30 @@ require'lazy'.setup{ --{{{1
         ---@module 'oil'
         ---@type oil.SetupOpts
         opts = {},
-        dependencies = { { "echasnovski/mini.icons", opts = {} } },
+        dependencies = { { 'echasnovski/mini.icons', opts = {} } },
         lazy = false,
         config = function ()
-            require("oil").setup({
+            require('oil').setup({
                 default_file_explorer = true,
                 columns = {
-                    "icon",
-                    "permissions",
-                    "size",
-                    "mtime",
+                    'icon',
+                    'permissions',
+                    'size',
+                    'mtime',
                 },
                 buf_options = {
                     buflisted = false,
-                    bufhidden = "hide",
+                    bufhidden = 'hide',
                 },
                 win_options = {
                     wrap = false,
-                    signcolumn = "no",
+                    signcolumn = 'no',
                     cursorcolumn = false,
-                    foldcolumn = "0",
+                    foldcolumn = '0',
                     spell = false,
                     list = false,
                     conceallevel = 3,
-                    concealcursor = "nvic",
+                    concealcursor = 'nvic',
                 },
                 delete_to_trash = false,
                 skip_confirm_for_simple_edits = false,
@@ -137,42 +136,42 @@ require'lazy'.setup{ --{{{1
                     timeout_ms = 1000,
                     autosave_changes = false,
                 },
-                constrain_cursor = "editable",
+                constrain_cursor = 'editable',
                 watch_for_changes = false,
                 keymaps = {
-                    ["g?"] = { "actions.show_help", mode = "n" },
-                    ["<CR>"] = "actions.select",
-                    ["<C-j>"] = "actions.select",
-                    ["<C-s>"] = { "actions.select", opts = { vertical = true } },
-                    ["<C-h>"] = { "actions.select", opts = { horizontal = true } },
-                    ["<C-t>"] = { "actions.select", opts = { tab = true } },
-                    ["<C-p>"] = "actions.preview",
-                    ["<C-c>"] = { "actions.close", mode = "n" },
-                    ["<C-l>"] = "actions.refresh",
-                    ["-"] = { "actions.parent", mode = "n" },
-                    ["_"] = { "actions.open_cwd", mode = "n" },
-                    ["`"] = { "actions.cd", mode = "n" },
-                    ["~"] = { "actions.cd", opts = { scope = "tab" }, mode = "n" },
-                    ["gs"] = { "actions.change_sort", mode = "n" },
-                    ["gx"] = "actions.open_external",
-                    ["g."] = { "actions.toggle_hidden", mode = "n" },
-                    ["g\\"] = { "actions.toggle_trash", mode = "n" },
+                    ['g?'] = { 'actions.show_help', mode = 'n' },
+                    ['<CR>'] = 'actions.select',
+                    ['<C-j>'] = 'actions.select',
+                    ['<C-s>'] = { 'actions.select', opts = { vertical = true } },
+                    ['<C-h>'] = { 'actions.select', opts = { horizontal = true } },
+                    ['<C-t>'] = { 'actions.select', opts = { tab = true } },
+                    ['<C-p>'] = 'actions.preview',
+                    ['<C-c>'] = { 'actions.close', mode = 'n' },
+                    ['<C-l>'] = 'actions.refresh',
+                    ['-'] = { 'actions.parent', mode = 'n' },
+                    ['_'] = { 'actions.open_cwd', mode = 'n' },
+                    ['`'] = { 'actions.cd', mode = 'n' },
+                    ['~'] = { 'actions.cd', opts = { scope = 'tab' }, mode = 'n' },
+                    ['gs'] = { 'actions.change_sort', mode = 'n' },
+                    ['gx'] = 'actions.open_external',
+                    ['g.'] = { 'actions.toggle_hidden', mode = 'n' },
+                    ['g\\'] = { 'actions.toggle_trash', mode = 'n' },
                 },
                 use_default_keymaps = true,
                 view_options = {
                     show_hidden = true,
                     is_hidden_file = function(name, _)
-                        local m = name:match("^%.")
+                        local m = name:match('^%.')
                         return m ~= nil
                     end,
                     is_always_hidden = function(_, _)
                         return false
                     end,
-                    natural_order = "fast",
+                    natural_order = 'fast',
                     case_insensitive = false,
                     sort = {
-                        { "type", "asc" },
-                        { "name", "asc" },
+                        { 'type', 'asc' },
+                        { 'name', 'asc' },
                     },
                     highlight_filename = function(_, _, _, _)
                         return nil
@@ -183,19 +182,19 @@ require'lazy'.setup{ --{{{1
                     padding = 2,
                     max_width = 0,
                     max_height = 0,
-                    border = "rounded",
+                    border = 'rounded',
                     win_options = {
                         winblend = 0,
                     },
                     get_win_title = nil,
-                    preview_split = "auto",
+                    preview_split = 'auto',
                     override = function(conf)
                         return conf
                     end,
                 },
                 preview_win = {
                     update_on_cursor_moved = true,
-                    preview_method = "fast_scratch",
+                    preview_method = 'fast_scratch',
                     disable_preview = function(_)
                         return false
                     end,
@@ -208,7 +207,7 @@ require'lazy'.setup{ --{{{1
                     max_height = 0.9,
                     min_height = { 5, 0.1 },
                     height = nil,
-                    border = "rounded",
+                    border = 'rounded',
                     win_options = {
                         winblend = 0,
                     },
@@ -220,33 +219,33 @@ require'lazy'.setup{ --{{{1
                     max_height = { 10, 0.9 },
                     min_height = { 5, 0.1 },
                     height = nil,
-                    border = "rounded",
-                    minimized_border = "none",
+                    border = 'rounded',
+                    minimized_border = 'none',
                     win_options = {
                         winblend = 0,
                     },
                 },
                 ssh = {
-                    border = "rounded",
+                    border = 'rounded',
                 },
                 keymaps_help = {
-                    border = "rounded",
+                    border = 'rounded',
                 },
             })
 
             -- oil fix relative path
             vim.api.nvim_create_augroup('OilRelPathFix', {})
-            vim.api.nvim_create_autocmd("BufLeave", {
+            vim.api.nvim_create_autocmd('BufLeave', {
                 group = 'OilRelPathFix',
-                pattern  = "oil:///*",
+                pattern  = 'oil:///*',
                 callback = function ()
-                    vim.cmd("cd .")
+                    vim.cmd('cd .')
                 end
             })
 
-            local actions = require("oil.actions")
-            vim.keymap.set("n", "-", actions.parent.callback, { desc =  actions.parent.desc })
-            vim.keymap.set("n", "_", actions.open_cwd.callback, { desc = actions.open_cwd.desc })
+            local actions = require('oil.actions')
+            vim.keymap.set('n', '-', actions.parent.callback, { desc =  actions.parent.desc })
+            vim.keymap.set('n', '_', actions.open_cwd.callback, { desc = actions.open_cwd.desc })
         end
     },
     { 'github/copilot.vim', --{{{2
@@ -327,12 +326,12 @@ require'lazy'.setup{ --{{{1
             require'cronex'.setup{
                 -- The plugin will automatically start (with autocommand) for these types of files.
                 -- User can manually on any filetype turn explanations on(off) with the commands CronExplainedEnable(CronExplainedDisable)
-                file_patterns = { "*.lua", "*.py", "*.c", "*.cpp", "*.hpp", "*.cs", "*.java", "*.go", "*.zig", "*.rust", "*.bash", "*.sh", "*.yaml", "*.yml", "*.json", "*.toml", },
+                file_patterns = { '*.lua', '*.py', '*.c', '*.cpp', '*.hpp', '*.cs', '*.java', '*.go', '*.zig', '*.rust', '*.bash', '*.sh', '*.yaml', '*.yml', '*.json', '*.toml', },
                 extractor = { -- Configuration on how to extract cron expressions goes here:
                     -- cron_from_line: Function to search cron expression in line 
-                    cron_from_line = require("cronex.cron_from_line").cron_from_line,
+                    cron_from_line = require('cronex.cron_from_line').cron_from_line,
                     -- extract: Function returning a table with pairs (line_number, cron)
-                    extract = require("cronex.extract").extract,
+                    extract = require('cronex.extract').extract,
                     },
                 explainer = { -- Configuration on how to explain one cron expression goes here
                     -- Command to call an external program that will translate the cron expression
@@ -341,7 +340,7 @@ require'lazy'.setup{ --{{{1
                     -- examples:
                     -- "/path/to/miniconda3/envs/neovim/bin/cronstrue" (point to a conda virtualenv)
                     -- "python explainer.py" (assuming you have such a python script available)
-                    cmd = "cronstrue",  -- or a table, eg: cmd = {"bash", "./my-cron-script.sh"}
+                    cmd = 'cronstrue',  -- or a table, eg: cmd = {"bash", "./my-cron-script.sh"}
                     -- Optional arguments to pass to the command
                     -- eg: "/path/to/a/go/binary"  (assuming you have a go binary)
                     -- args = { "-print-all" }  (assuming the program understands the flag 'print-all')
@@ -360,22 +359,22 @@ require'lazy'.setup{ --{{{1
         end,
     },
     { 'roodletoof/zen-mode.nvim', --{{{2
-        keys = {",z"},
+        keys = {',z'},
         config = function ()
             local zen_mode = require'zen-mode'
             zen_mode.setup{}
             vim.keymap.set(
                 'n',
-                ",z",
+                ',z',
                 function()
                     zen_mode.toggle{
                         window = {
                             width = 80,
                             options = {
-                                signcolumn = "no",
+                                signcolumn = 'no',
                                 cursorline = false,
                                 cursorcolumn = false,
-                                foldcolumn = "0",
+                                foldcolumn = '0',
                                 list = false,
                             }
                         },
@@ -393,19 +392,20 @@ require'lazy'.setup{ --{{{1
         },
         ft = {'cs', 'razor'},
         config = function()
-            local mason_registry = require("mason-registry")
-            local rzls_path = vim.fn.expand("$MASON/packages/rzls/libexec")
+            local _ = require('mason-registry') -- TODO, do I even need this line?
+            local rzls_path = vim.fn.expand('$MASON/packages/rzls/libexec')
             local cmd = {
-                "roslyn",
-                "--stdio",
-                "--logLevel=Information",
-                "--extensionLogDirectory=" .. vim.fs.dirname(vim.lsp.get_log_path()),
-                "--razorSourceGenerator=" .. vim.fs.joinpath(rzls_path, "Microsoft.CodeAnalysis.Razor.Compiler.dll"),
-                "--razorDesignTimePath=" .. vim.fs.joinpath(rzls_path, "Targets", "Microsoft.NET.Sdk.Razor.DesignTime.targets"),
-                "--extension",
-                vim.fs.joinpath(rzls_path, "RazorExtension", "Microsoft.VisualStudioCode.RazorExtension.dll"),
+                'roslyn',
+                '--stdio',
+                '--logLevel=Information',
+                '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
+                '--razorSourceGenerator=' .. vim.fs.joinpath(rzls_path, 'Microsoft.CodeAnalysis.Razor.Compiler.dll'),
+                '--razorDesignTimePath=' .. vim.fs.joinpath(rzls_path, 'Targets', 'Microsoft.NET.Sdk.Razor.DesignTime.targets'),
+                '--extension',
+                vim.fs.joinpath(rzls_path, 'RazorExtension', 'Microsoft.VisualStudioCode.RazorExtension.dll'),
             }
-            require'rzls'.setup{}
+            ---@diagnostic disable-next-line: missing-fields
+            require'rzls'.setup{} -- the missing-fields waring is bullshit. the fields are actually optional
             require'roslyn'.setup{
                 cmd = cmd,
                 config = {
@@ -425,12 +425,12 @@ require'lazy'.setup{ --{{{1
             }
         end,
     },
-    { "folke/lazydev.nvim", --{{{2
-        ft = "lua", -- only load on lua files
+    { 'folke/lazydev.nvim', --{{{2
+        ft = 'lua', -- only load on lua files
         opts = {
             library = {
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-                { path = "${3rd}/love2d/library", words = { "love" } },
+                { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+                { path = '${3rd}/love2d/library', words = { 'love' } },
             },
         },
     },
@@ -455,7 +455,7 @@ require'lazy'.setup{ --{{{1
             }
             vim.lsp.config.lua_ls = {
                 settings = {
-                    Lua = { runtime = { version = "LuaJIT" } }
+                    Lua = { runtime = { version = 'LuaJIT' } }
                 }
             }
             vim.lsp.config.gopls = {
@@ -479,15 +479,15 @@ require'lazy'.setup{ --{{{1
             })
             vim.lsp.enable('hls')
 
-            vim.api.nvim_create_autocmd("LspAttach", {
+            vim.api.nvim_create_autocmd('LspAttach', {
                 callback = function(args)
                     vim.bo[args.buf].tagfunc = nil
                 end,
             })
 
             local function jump_to_definition()
-                local word = vim.fn.expand("<cword>")
-                vim.cmd("tag " .. word)
+                local word = vim.fn.expand('<cword>')
+                vim.cmd('tag ' .. word)
             end
 
             vim.keymap.set( 'n', ',fc', jump_to_definition, { noremap = true, silent = true})
@@ -500,16 +500,20 @@ require'lazy'.setup{ --{{{1
                 noremap ,ca :lua vim.lsp.buf.code_action()<CR>
                 noremap ,oe :lua vim.diagnostic.open_float()<CR>
                 noremap ,ea :lua vim.diagnostic.setqflist()<CR>
-                noremap ,ee :lua vim.diagnostic.setqflist{severity="ERROR"}<CR>
-                noremap ,ew :lua vim.diagnostic.setqflist{severity="WARN"}<CR>
-                noremap ,ei :lua vim.diagnostic.setqflist{severity="INFO"}<CR>
-                noremap ,eh :lua vim.diagnostic.setqflist{severity="HINT"}<CR>
+                noremap ,ee :lua vim.diagnostic.setqflist{severity='ERROR'}<CR>
+                noremap ,ew :lua vim.diagnostic.setqflist{severity='WARN'}<CR>
+                noremap ,ei :lua vim.diagnostic.setqflist{severity='INFO'}<CR>
+                noremap ,eh :lua vim.diagnostic.setqflist{severity='HINT'}<CR>
             ]]
         end
     },
     { 'nvim-treesitter/nvim-treesitter', --{{{2
         config = function()
             require'nvim-treesitter.configs'.setup{
+                modules = {},
+                ensure_installed = {},
+                ignore_install = {},
+                parser_install_dir = nil,
                 sync_install = false,
                 auto_install = true,
                 indent = {
@@ -522,11 +526,11 @@ require'lazy'.setup{ --{{{1
             }
         end,
     },
-    { "kdheepak/lazygit.nvim", --{{{2
+    { 'kdheepak/lazygit.nvim', --{{{2
         lazy = true,
-        cmd = { "LazyGit", "LazyGitConfig", "LazyGitCurrentFile", "LazyGitFilter", "LazyGitFilterCurrentFile", },
-        dependencies = { "nvim-lua/plenary.nvim", },
-        keys = { { ",g", "<cmd>LazyGit<cr>", desc = "LazyGit" }, },
+        cmd = { 'LazyGit', 'LazyGitConfig', 'LazyGitCurrentFile', 'LazyGitFilter', 'LazyGitFilterCurrentFile', },
+        dependencies = { 'nvim-lua/plenary.nvim', },
+        keys = { { ',g', '<cmd>LazyGit<cr>', desc = 'LazyGit' }, },
     },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
@@ -543,7 +547,7 @@ require'lazy'.setup{ --{{{1
 
             local dap = require'dap'
             dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
-            dap.configurations.gdscript = { {type = 'godot', request = 'launch', name = 'Launch scene', project = "${workspaceFolder}",} }
+            dap.configurations.gdscript = { {type = 'godot', request = 'launch', name = 'Launch scene', project = '${workspaceFolder}',} }
 
             dap.adapters.lldb = {
                 type = 'executable',
@@ -595,7 +599,7 @@ require'lazy'.setup{ --{{{1
             ]]
 
             local function file_exists(name)
-                local f = io.open(name,"r")
+                local f = io.open(name,'r')
                 if f~=nil then
                     f:close()
                     return true
@@ -615,7 +619,7 @@ require'lazy'.setup{ --{{{1
                             assert(
                                 file ~= nil,
                                 ("io.open('%s', 'w') returned nil.\n"):format(snippets_path) ..
-                                "Make sure the snippets folder in the above path exists."
+                                'Make sure the snippets folder in the above path exists.'
                             )
                         file:close()
                         print('created file: ', snippets_path)
@@ -672,8 +676,8 @@ require'lazy'.setup{ --{{{1
                 defaults = {
                     file_ignore_patterns = {'%__virtual.cs$'},
                     mappings = {
-                        i = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, ["<C-j>"] = a.select_default, },
-                        n = { ["<C-Q>"] = a.smart_send_to_qflist + a.open_qflist, ["<C-j>"] = a.select_default, },
+                        i = { ['<C-Q>'] = a.smart_send_to_qflist + a.open_qflist, ['<C-j>'] = a.select_default, },
+                        n = { ['<C-Q>'] = a.smart_send_to_qflist + a.open_qflist, ['<C-j>'] = a.select_default, },
                     }
                 },
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
@@ -690,10 +694,10 @@ require'lazy'.setup{ --{{{1
                 noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
 
                 noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
-                noremap ,fee :lua require'telescope.builtin'.diagnostics{severity="ERROR"}<CR>
-                noremap ,few :lua require'telescope.builtin'.diagnostics{severity="WARN"}<CR>
-                noremap ,fei :lua require'telescope.builtin'.diagnostics{severity="INFO"}<CR>
-                noremap ,feh :lua require'telescope.builtin'.diagnostics{severity="HINT"}<CR>
+                noremap ,fee :lua require'telescope.builtin'.diagnostics{severity='ERROR'}<CR>
+                noremap ,few :lua require'telescope.builtin'.diagnostics{severity='WARN'}<CR>
+                noremap ,fei :lua require'telescope.builtin'.diagnostics{severity='INFO'}<CR>
+                noremap ,feh :lua require'telescope.builtin'.diagnostics{severity='HINT'}<CR>
             ]]
 
             require'telescope'.load_extension'ui-select'
@@ -796,25 +800,25 @@ do -- split line {{{1
         end
 
         if not last_bracket_i then
-            print("The first opening bracket found after the cursor was not closed on this line.")
+            print('The first opening bracket found after the cursor was not closed on this line.')
             return
         end
 
         ---@type string
-        local leading_whitespace = string.match(line, "^%s*")
+        local leading_whitespace = string.match(line, '^%s*')
         local first_line = line:sub(1, first_bracket_i)
         local last_line = leading_whitespace .. line:sub(last_bracket_i, #line)
         if #split_indexes == 0 then
             if (last_bracket_i - first_bracket_i == 1) then return end
             local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
             line = line:sub(first_bracket_i+1, last_bracket_i-1)
-            local leading_pattern = "^[%s"
+            local leading_pattern = '^[%s'
             for k, _ in pairs(SPLIT_DELIMETERS) do
                 leading_pattern = leading_pattern .. k
             end
-            leading_pattern = leading_pattern .. "]*"
+            leading_pattern = leading_pattern .. ']*'
             line = line:gsub(leading_pattern, leading_whitespace .. SPLIT_WHITESPACE, 1)
-            line = line:gsub("[%s]*$", '', 1)
+            line = line:gsub('[%s]*$', '', 1)
             vim.api.nvim_buf_set_lines(0, row-1, row, false, {first_line})
             vim.api.nvim_buf_set_lines(0, row, row, false, {last_line})
             vim.api.nvim_buf_set_lines(0, row, row, false, {line})
@@ -837,20 +841,20 @@ do -- split line {{{1
             line:sub(split_indexes[#split_indexes], last_bracket_i-1)
         )
 
-        local leading_pattern = "^[%s"
+        local leading_pattern = '^[%s'
         for k, _ in pairs(SPLIT_DELIMETERS) do
             leading_pattern = leading_pattern .. k
         end
-        leading_pattern = leading_pattern .. "]*"
+        leading_pattern = leading_pattern .. ']*'
 
         -- Cleanup step
         for i, middle_line in ipairs(middle_lines) do
             middle_line = middle_line:gsub(leading_pattern, leading_whitespace .. SPLIT_WHITESPACE, 1)
-            middle_line = middle_line:gsub("[%s]*$", '', 1)
+            middle_line = middle_line:gsub('[%s]*$', '', 1)
             middle_lines[i] = middle_line
         end
 
-        if middle_lines[#middle_lines]:match("^%s*$") ~= nil then
+        if middle_lines[#middle_lines]:match('^%s*$') ~= nil then
             table.remove(middle_lines)
         end
 
@@ -862,7 +866,7 @@ do -- split line {{{1
 
     vim.keymap.set(
         'n',
-        ",s",
+        ',s',
         split_line,
         { silent = true }
     )
