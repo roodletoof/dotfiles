@@ -35,6 +35,8 @@ vim.cmd [[
     nnoremap <c-p> :cprevious<CR>zz
     nnoremap ,cu :colder<CR>
     nnoremap ,cr :cnewer<CR>
+    nnoremap ,h H
+    nnoremap ,l L
     nnoremap H ^
     nnoremap L $
 
