@@ -23,7 +23,6 @@ vim.cmd [[
     set expandtab
     set nohlsearch
     set incsearch
-    set scrolloff=999
     set guicursor=n-v-c:block-Cursor
 
     nnoremap ,co :copen<CR>
@@ -52,6 +51,9 @@ vim.cmd [[
     nnoremap <c-j> <c-w>j
     nnoremap <c-k> <c-w>k
     nnoremap <c-l> <c-w>l
+
+    nnoremap <c-d> <c-d>zz
+    nnoremap <c-u> <c-u>zz
 
     tnoremap <c-w>c <c-\><c-n><c-w>c
 
@@ -522,7 +524,7 @@ require'lazy'.setup{ --{{{1
                 sync_install = false,
                 auto_install = true,
                 indent = {
-                    enable = false,
+                    enable = true,
                 },
                 highlight = {
                     enable = true,
