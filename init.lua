@@ -49,11 +49,6 @@ vim.cmd [[
     autocmd BufWinLeave,BufLeave *.* silent! mkview 
     autocmd BufWinEnter,BufEnter *.* silent! loadview 
 
-    nnoremap <c-h> <c-w>h
-    nnoremap <c-j> <c-w>j
-    nnoremap <c-k> <c-w>k
-    nnoremap <c-l> <c-w>l
-
     tnoremap <c-w>c <c-\><c-n><c-w>c
 
     autocmd TextYankPost * silent! lua vim.highlight.on_yank {higroup='Visual', timeout=100}
@@ -377,11 +372,11 @@ require'lazy'.setup{ --{{{1
                         window = {
                             width = 80,
                             options = {
-                                signcolumn = "no", -- disable signcolumn
-                                cursorline = false, -- disable cursorline
-                                cursorcolumn = false, -- disable cursor column
-                                foldcolumn = "0", -- disable fold column
-                                list = false, -- disable whitespace characters
+                                signcolumn = "no",
+                                cursorline = false,
+                                cursorcolumn = false,
+                                foldcolumn = "0",
+                                list = false,
                             }
                         },
                     }
