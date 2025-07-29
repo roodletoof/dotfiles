@@ -37,6 +37,8 @@ vim.cmd [[
     nnoremap <c-p> :cprevious<CR>
     nnoremap ,cu :colder<CR>
     nnoremap ,cr :cnewer<CR>
+    nnoremap H ^
+    nnoremap L $
 
     nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
 
