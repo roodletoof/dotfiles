@@ -82,23 +82,48 @@ vim.api.nvim_create_autocmd({
     end
 })
 
+local function has_makefile()
+    local dir = io.popen('ls')
+    if not dir then return false end
+    for file in dir:lines() do
+        if file:lower() == 'makefile' then
+            dir:close()
+            return true
+        end
+    end
+    dir:close()
+    return false
+end
+
 -- set makeprg
 vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
-        local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
-        if line then
-            local first_two = line:sub(1, 2)
-            if first_two == '#!' then
-                vim.bo.makeprg = './%'
-                return
+        do
+            local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+            if line then
+                local first_two = line:sub(1, 2)
+                if first_two == '#!' then
+                    vim.bo.makeprg = './%'
+                    return
+                end
             end
         end
         if vim.bo.filetype == 'go' then
-            vim.bo.makeprg = 'go $*'
+            vim.bo.makeprg = 'go'
             return
         end
         if vim.bo.filetype == 'c' then
+            if not has_makefile() then
+                vim.bo.makeprg = 'tcc -run %'
 
+                for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, 10, false)) do
+                    local start, _ = string.find(line, 'raylib.h', 1, true)
+                    if start ~= nil then
+                        vim.bo.makeprg = 'tcc -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -run %'
+                        break
+                    end
+                end
+            end
         end
     end,
 })
