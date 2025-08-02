@@ -82,6 +82,7 @@ vim.api.nvim_create_autocmd({
     end
 })
 
+-- set makeprg
 vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
         local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
@@ -89,7 +90,15 @@ vim.api.nvim_create_autocmd('BufEnter', {
             local first_two = line:sub(1, 2)
             if first_two == '#!' then
                 vim.bo.makeprg = './%'
+                return
             end
+        end
+        if vim.bo.filetype == 'go' then
+            vim.bo.makeprg = 'go $*'
+            return
+        end
+        if vim.bo.filetype == 'c' then
+
         end
     end,
 })
