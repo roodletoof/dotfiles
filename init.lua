@@ -48,8 +48,8 @@ vim.cmd [[
 
     " Don't include curdir, it just causes pain.
     set viewoptions=folds,cursor
-    autocmd BufWinLeave,BufLeave *.* silent! mkview 
-    autocmd BufWinEnter,BufEnter *.* silent! loadview 
+    autocmd BufWinLeave *.* silent! mkview 
+    autocmd BufWinEnter *.* silent! loadview 
 
     nnoremap <c-h> <c-w>h
     nnoremap <c-j> <c-w>j
