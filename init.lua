@@ -362,10 +362,12 @@ require'lazy'.setup{ --{{{1
         config = function ()
             local zen_mode = require'zen-mode'
             zen_mode.setup{}
+
             vim.keymap.set(
                 'n',
                 ',z',
                 function()
+                    vim.cmd'silent! mkview'
                     zen_mode.toggle{
                         window = {
                             width = 80,
@@ -378,6 +380,7 @@ require'lazy'.setup{ --{{{1
                             }
                         },
                     }
+                    vim.cmd'silent! loadview'
                 end,
                 { silent = true }
             )
