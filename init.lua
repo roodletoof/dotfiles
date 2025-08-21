@@ -115,14 +115,6 @@ vim.api.nvim_create_autocmd('BufEnter', {
         if vim.bo.filetype == 'c' then
             if not has_makefile() then
                 vim.bo.makeprg = 'tcc -run %'
-
-                for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, 10, false)) do
-                    local start, _ = string.find(line, 'raylib.h', 1, true)
-                    if start ~= nil then
-                        vim.bo.makeprg = 'tcc -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -run %'
-                        break
-                    end
-                end
             end
         end
     end,
@@ -478,6 +470,16 @@ require'lazy'.setup{ --{{{1
                         templateExtensions = {'html', 'gotmpl'}
                     }
                 }
+            }
+
+            vim.lsp.config.basedpyright = {
+                settings = {
+                    basedpyright = {
+                        analysis = {
+                            diagnosticMode = 'workspace',
+                        },
+                    },
+                },
             }
 
             vim.lsp.enable('gdscript')
