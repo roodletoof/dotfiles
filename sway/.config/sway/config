@@ -17,6 +17,7 @@ set $right l
 set $term foot
 # Your preferred application launcher
 set $menu wmenu-run
+default_border pixel
 
 ### Output configuration
 #
