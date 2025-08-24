@@ -65,7 +65,6 @@
 		lazygit
 		wget
 		stow
-		st
 
 		go
 		gopls
