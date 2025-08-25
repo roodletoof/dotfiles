@@ -69,6 +69,7 @@
         slurp
         wl-clipboard
         mako
+        unzip
 
 		neovim
 		git
