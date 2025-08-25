@@ -6,7 +6,7 @@
 
 	imports =
 		[
-			/etc/nixos/hardware-configuration.nix
+			./hardware-configuration.nix
 		];
 
 	boot.loader.systemd-boot.enable = true;
@@ -18,6 +18,7 @@
 	time.timeZone = "Europe/Oslo";
 
     services.gnome.gnome-keyring.enable = true;
+	swapDevices = [ {device = "/swapfile"; size = 8192; } ];
 
 	services.pipewire = {
 		enable = true;
@@ -124,4 +125,3 @@
 	system.stateVersion = "25.05"; # dont change ever
 
 }
-
