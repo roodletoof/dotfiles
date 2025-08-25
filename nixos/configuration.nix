@@ -3,6 +3,7 @@
 { config, lib, pkgs, ... }:
 
 {
+
 	imports =
 		[
 			/etc/nixos/hardware-configuration.nix
@@ -64,8 +65,21 @@
             RUNTIME_PM_ON_BAT = "auto";
         };
     };
+    hardware.graphics.enable=true;
+
+    nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
+        "discord"
+        "steam"
+        "steam-unwrapped"
+    ];
+
+    programs.steam.enable = true;
 
 	environment.systemPackages = with pkgs; [
+        xorg.xauth
+
+        discord
+
         networkmanagerapplet
         grim
         slurp
