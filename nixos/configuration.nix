@@ -44,6 +44,7 @@
         enable = true;
         wrapperFeatures.gtk = true;
     };
+    programs.waybar.enable = true;
     services.greetd = {
         enable = true;
         settings = {
