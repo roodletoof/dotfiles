@@ -45,7 +45,6 @@
         enable = true;
         wrapperFeatures.gtk = true;
     };
-    programs.waybar.enable = true;
     services.greetd = {
         enable = true;
         settings = {
@@ -75,6 +74,10 @@
 
     programs.steam.enable = true;
 
+    fonts.packages = [
+        # add specific ones here
+    ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts); # all nerdfonts
+
 	environment.systemPackages = with pkgs; [
         xorg.xauth
 
@@ -97,6 +100,7 @@
 		gopls
 
         fzf
+        waybar
 
 		python313
 		python313Packages.pip
