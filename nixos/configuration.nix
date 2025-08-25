@@ -66,6 +66,7 @@
     };
 
 	environment.systemPackages = with pkgs; [
+        networkmanagerapplet
         grim
         slurp
         wl-clipboard
