@@ -104,34 +104,34 @@
     ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts); # all nerdfonts
 
 	environment.systemPackages = with pkgs; [
-        xorg.xauth
-        discord
-        networkmanagerapplet
-        grim
-        slurp
-        wl-clipboard
-        mako
-        unzip
-		neovim
+		basedpyright
+		cargo
+		clang-tools
+		gcc
 		git
-		lazygit
-		wget
-		stow
 		go
 		gopls
-        fzf
-        waybar
+		lazygit
+		neovim
+		poetry
 		python313
 		python313Packages.pip
 		python313Packages.pipx
-		poetry
-		basedpyright
 		rustc
-		cargo
-		gcc
-		clang-tools
-        godot
+		stow
+		wget
         alacritty
+        discord
+        fzf
+        godot
+        grim
+        mako
+        networkmanagerapplet
+        slurp
+        unzip
+        waybar
+        wl-clipboard
+        xorg.xauth
 	];
 
 	programs.mtr.enable = true;
