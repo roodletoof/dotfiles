@@ -105,41 +105,33 @@
 
 	environment.systemPackages = with pkgs; [
         xorg.xauth
-
         discord
-
         networkmanagerapplet
         grim
         slurp
         wl-clipboard
         mako
         unzip
-
 		neovim
 		git
 		lazygit
 		wget
 		stow
-
 		go
 		gopls
-
         fzf
         waybar
-
 		python313
 		python313Packages.pip
 		python313Packages.pipx
 		poetry
 		basedpyright
-
 		rustc
 		cargo
-
 		gcc
 		clang-tools
-
         godot
+        alacritty
 	];
 
 	programs.mtr.enable = true;
