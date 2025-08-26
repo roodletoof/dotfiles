@@ -138,6 +138,8 @@
 
 		gcc
 		clang-tools
+
+        godot
 	];
 
 	programs.mtr.enable = true;
