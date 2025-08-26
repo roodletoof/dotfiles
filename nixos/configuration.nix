@@ -17,6 +17,26 @@
 
 	time.timeZone = "Europe/Oslo";
 
+    services.xserver.videoDrivers = [
+        "nvidia"
+        "amdgpu"
+        "modesetting"
+        "intel"
+    ];
+    hardware.nvidia = {
+        modesetting.enable = true;
+        nvidiaSettings = true;
+        open = false;
+        package = config.boot.kernelPackages.nvidiaPackages.beta;
+        powerManagement.enable = true;
+        powerManagement.finegrained = false;
+        prime = {
+            sync.enable = true;
+            intelBusId = "PCI:0:2:0";
+            nvidiaBusId = "PCI:1:0:0";
+        };
+    };
+
     services.gnome.gnome-keyring.enable = true;
 	swapDevices = [ {device = "/swapfile"; size = 8192; } ];
 
@@ -42,6 +62,7 @@
 	};
 
 	programs.firefox.enable = true;
+
     programs.sway = {
         enable = true;
         wrapperFeatures.gtk = true;
@@ -50,11 +71,12 @@
         enable = true;
         settings = {
             default_session = {
-                command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd sway";
+                command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd \"sway --unsupported-gpu\"";
                 user = "greeter";
             };
         };
     };
+
     services.tlp = {
         enable = true;
         settings = {
@@ -71,6 +93,8 @@
         "discord"
         "steam"
         "steam-unwrapped"
+        "nvidia-x11"
+        "nvidia-settings"
     ];
 
     programs.steam.enable = true;
