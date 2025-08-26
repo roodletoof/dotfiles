@@ -4,18 +4,18 @@
 
 {
 
-	imports =
-		[
-			./hardware-configuration.nix
-		];
+    imports =
+        [
+            ./hardware-configuration.nix
+        ];
 
-	boot.loader.systemd-boot.enable = true;
-	boot.loader.efi.canTouchEfiVariables = true;
+    boot.loader.systemd-boot.enable = true;
+    boot.loader.efi.canTouchEfiVariables = true;
 
-	networking.hostName = "nixos";
-	networking.networkmanager.enable = true;
+    networking.hostName = "nixos";
+    networking.networkmanager.enable = true;
 
-	time.timeZone = "Europe/Oslo";
+    time.timeZone = "Europe/Oslo";
 
     services.xserver.videoDrivers = [
         "nvidia"
@@ -38,30 +38,30 @@
     };
 
     services.gnome.gnome-keyring.enable = true;
-	swapDevices = [ {device = "/swapfile"; size = 8192; } ];
+    swapDevices = [ {device = "/swapfile"; size = 8192; } ];
 
-	services.pipewire = {
-		enable = true;
-		pulse.enable = true;
-	};
-	services.printing.enable = true;
+    services.pipewire = {
+        enable = true;
+        pulse.enable = true;
+    };
+    services.printing.enable = true;
 
-	hardware.uinput.enable = true;
-	services.libinput.enable = true;
-	services.kanata = {
+    hardware.uinput.enable = true;
+    services.libinput.enable = true;
+    services.kanata = {
         enable = true;
         keyboards.default.configFile = "/etc/nixos/kanata.kbd";
-	};
+    };
 
-	users.users.ivar = {
-		isNormalUser = true;
-		extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-		packages = with pkgs; [
-			tree
-		];
-	};
+    users.users.ivar = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+        packages = with pkgs; [
+            tree
+        ];
+    };
 
-	programs.firefox.enable = true;
+    programs.firefox.enable = true;
 
     programs.sway = {
         enable = true;
@@ -103,23 +103,23 @@
         # add specific ones here
     ] ++ builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts); # all nerdfonts
 
-	environment.systemPackages = with pkgs; [
-		basedpyright
-		cargo
-		clang-tools
-		gcc
-		git
-		go
-		gopls
-		lazygit
-		neovim
-		poetry
-		python313
-		python313Packages.pip
-		python313Packages.pipx
-		rustc
-		stow
-		wget
+    environment.systemPackages = with pkgs; [
+        basedpyright
+        cargo
+        clang-tools
+        gcc
+        git
+        go
+        gopls
+        lazygit
+        neovim
+        poetry
+        python313
+        python313Packages.pip
+        python313Packages.pipx
+        rustc
+        stow
+        wget
         alacritty
         discord
         fzf
@@ -132,14 +132,14 @@
         waybar
         wl-clipboard
         xorg.xauth
-	];
+    ];
 
-	programs.mtr.enable = true;
-	programs.gnupg.agent = {
-		enable = true;
-		enableSSHSupport = true;
-	};
+    programs.mtr.enable = true;
+    programs.gnupg.agent = {
+        enable = true;
+        enableSSHSupport = true;
+    };
 
-	system.stateVersion = "25.05"; # dont change ever
+    system.stateVersion = "25.05"; # dont change ever
 
 }
