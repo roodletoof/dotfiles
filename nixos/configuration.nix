@@ -17,24 +17,10 @@
 
     time.timeZone = "Europe/Oslo";
 
-    services.xserver.videoDrivers = [
-        "nvidia"
-        "amdgpu"
-        "modesetting"
-        "intel"
-    ];
-    hardware.nvidia = {
-        modesetting.enable = true;
-        nvidiaSettings = true;
-        open = false;
-        package = config.boot.kernelPackages.nvidiaPackages.beta;
-        powerManagement.enable = true;
-        powerManagement.finegrained = false;
-        prime = {
-            sync.enable = true;
-            intelBusId = "PCI:0:2:0";
-            nvidiaBusId = "PCI:1:0:0";
-        };
+    services.xserver = {
+        enable = true;
+        windowManager.i3.enable = true;
+        displayManager.gdm.enable = true;
     };
 
     services.gnome.gnome-keyring.enable = true;
@@ -63,20 +49,6 @@
 
     programs.firefox.enable = true;
 
-    programs.sway = {
-        enable = true;
-        wrapperFeatures.gtk = true;
-    };
-    services.greetd = {
-        enable = true;
-        settings = {
-            default_session = {
-                command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd \"sway --unsupported-gpu\"";
-                user = "greeter";
-            };
-        };
-    };
-
     services.tlp = {
         enable = true;
         settings = {
@@ -87,14 +59,11 @@
             RUNTIME_PM_ON_BAT = "auto";
         };
     };
-    hardware.graphics.enable=true;
 
     nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
         "discord"
         "steam"
         "steam-unwrapped"
-        "nvidia-x11"
-        "nvidia-settings"
     ];
 
     programs.steam.enable = true;
@@ -124,14 +93,14 @@
         discord
         fzf
         godot
-        grim
         mako
         networkmanagerapplet
-        slurp
         unzip
-        waybar
-        wl-clipboard
         xorg.xauth
+        picom
+        dunst
+        xclip
+        dmenu
     ];
 
     programs.mtr.enable = true;
