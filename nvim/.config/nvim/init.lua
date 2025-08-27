@@ -110,12 +110,12 @@ vim.api.nvim_create_autocmd('BufEnter', {
         end
         if vim.bo.filetype == 'go' then
             vim.bo.makeprg = 'go'
-            return
-        end
-        if vim.bo.filetype == 'c' then
+        elseif vim.bo.filetype == 'c' then
             if not has_makefile() then
                 vim.bo.makeprg = 'tcc -run %'
             end
+        elseif vim.bo.filetype == 'python' then
+            vim.bo.makeprg = 'basedpyright'
         end
     end,
 })
@@ -474,12 +474,11 @@ require'lazy'.setup{ --{{{1
                     }
                 }
             }
-
             vim.lsp.config.basedpyright = {
                 settings = {
                     basedpyright = {
                         analysis = {
-                            diagnosticMode = 'workspace',
+                            useLibraryCodeForTypes = false
                         },
                     },
                 },
