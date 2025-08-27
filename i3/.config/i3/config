@@ -11,6 +11,8 @@ set $term alacritty
 # Window borders
 new_window pixel
 
+exec --no-startup-id nm-applet
+
 # Key bindings
 bindsym $mod+Return exec $term
 bindsym $mod+q kill
