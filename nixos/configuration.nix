@@ -33,7 +33,14 @@
     services.printing.enable = true;
 
     hardware.uinput.enable = true;
-    services.libinput.enable = true;
+    services.libinput = {
+        enable = true;
+        touchpad = {
+            disableWhileTyping = true;
+            tapping = false;
+        };
+    };
+
     services.kanata = {
         enable = true;
         keyboards.default.configFile = "/etc/nixos/kanata.kbd";
