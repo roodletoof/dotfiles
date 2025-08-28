@@ -101,6 +101,7 @@
         dunst
         xclip
         dmenu
+        pulseaudio
     ];
 
     programs.mtr.enable = true;
