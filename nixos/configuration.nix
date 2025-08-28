@@ -110,7 +110,7 @@
         dmenu
         pulseaudio
         brightnessctl
-        posting
+        bruno
         gnumake
     ];
 
