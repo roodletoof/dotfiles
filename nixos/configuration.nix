@@ -102,6 +102,7 @@
         xclip
         dmenu
         pulseaudio
+        brightnessctl
     ];
 
     programs.mtr.enable = true;
