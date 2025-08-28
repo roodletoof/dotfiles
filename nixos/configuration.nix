@@ -111,6 +111,11 @@
         enableSSHSupport = true;
     };
 
+    environment.variables = {
+        GTK_THEME = "Adwaita:dark";
+        QT_QPA_PLATFORMTHEME = "gtk2";
+    };
+
     system.stateVersion = "25.05"; # dont change ever
 
 }
