@@ -11,6 +11,7 @@ set $term alacritty
 # Window borders
 new_window pixel
 
+exec --no-startup-id picom --backend glx --vsync
 exec --no-startup-id nm-applet
 
 # Key bindings
