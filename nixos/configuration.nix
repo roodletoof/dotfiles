@@ -110,6 +110,8 @@
         dmenu
         pulseaudio
         brightnessctl
+        posting
+        gnumake
     ];
 
     programs.mtr.enable = true;
