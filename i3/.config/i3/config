@@ -126,5 +126,5 @@ bindsym Print exec scrot ~/Pictures/screenshot-%Y-%m-%d-%H%M%S.png
 
 # Status bar (use i3bar + i3status)
 bar {
-    status_command i3status
+    status_command i3blocks
 }
