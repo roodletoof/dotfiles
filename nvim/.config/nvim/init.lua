@@ -352,9 +352,9 @@ require'lazy'.setup{ --{{{1
         lazy = false,
         priority = 1000,
         config = function()
-            vim.o.termguicolors = false
-            -- vim.g.everforest_enable_italic = true
-            -- vim.cmd.colorscheme('everforest')
+            vim.o.termguicolors = true
+            vim.g.everforest_enable_italic = true
+            vim.cmd.colorscheme('everforest')
         end,
     },
     { 'roodletoof/zen-mode.nvim', --{{{2
