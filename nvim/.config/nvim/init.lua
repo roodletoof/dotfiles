@@ -489,6 +489,7 @@ require'lazy'.setup{ --{{{1
                 filetypes = { 'haskell', 'lhaskell', 'cabal' },
             })
             vim.lsp.enable('hls')
+            vim.lsp.enable('sourcekit')
 
             vim.api.nvim_create_autocmd('LspAttach', {
                 callback = function(args)
