@@ -116,6 +116,8 @@ vim.api.nvim_create_autocmd('BufEnter', {
             end
         elseif vim.bo.filetype == 'python' then
             vim.bo.makeprg = 'basedpyright'
+        elseif vim.bo.filetype == 'swift' then
+            vim.bo.makeprg = 'swift'
         end
     end,
 })
