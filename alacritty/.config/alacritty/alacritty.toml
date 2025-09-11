@@ -62,7 +62,7 @@ mods = "Command"
 action = "DecreaseFontSize"
 
 [font]
-normal.family = "Comic Code"
+normal.family = "GoMono Nerd Font"
 size=16
 
 #theme 
