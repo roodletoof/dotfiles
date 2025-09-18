@@ -17,7 +17,7 @@ exec --no-startup-id nm-applet
 # Key bindings
 bindsym $mod+Return exec $term
 bindsym $mod+q kill
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id rofi -show drun
 
 # Floating modifier
 floating_modifier $mod
