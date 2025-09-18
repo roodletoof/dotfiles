@@ -2,3 +2,4 @@ lazy-lock.json
 .DS_Store
 gomono/.local/share/fonts/GoMonoNerdFont/.uuid
 mpv/.local/state/mpv/watch_history.jsonl
+mpv/.local/state/mpv/watch_later
