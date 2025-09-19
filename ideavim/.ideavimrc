@@ -29,6 +29,7 @@ map <c-n> <Action>(List-selectNextRow)
 nnoremap <c-n> :action GotoNextError<CR>
 nnoremap <c-p> :action GotoPreviousError<CR>
 
+map <leader>i <Action>(Inline)
 map <leader>rc <Action>(IdeaVim.ReloadVimRc.reload)
 map <leader>z <Action>(ToggleDistractionFreeMode)
 map <leader>b <Action>(ToggleLineBreakpoint)
