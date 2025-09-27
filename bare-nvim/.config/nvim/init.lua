@@ -35,6 +35,7 @@ require'lazy'.setup{
     },
     { 'nvim-treesitter/nvim-treesitter',
         config = function()
+            ---@diagnostic disable-next-line: missing-fields
             require'nvim-treesitter.configs'.setup{
                 sync_install = false,
                 auto_install = true,
