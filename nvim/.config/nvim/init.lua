@@ -84,7 +84,27 @@ local function has_makefile()
     return false
 end
 
--- set makeprg
+-- FILE SPECIFIC AND AUTOCMDS {{{1
+local file_specific = {
+    lua = function ()
+    end,
+    go = function()
+        vim.bo.makeprg = 'go'
+    end,
+    c = function()
+        if not has_makefile() then
+            vim.bo.makeprg = 'tcc -run %'
+        end
+    end,
+    python = function()
+        vim.bo.makeprg = 'basedpyright'
+    end,
+    swift = function()
+        vim.bo.makeprg = 'swift'
+    end
+}
+
+-- buffer specifc config
 vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
         do
@@ -97,17 +117,8 @@ vim.api.nvim_create_autocmd('BufEnter', {
                 end
             end
         end
-        if vim.bo.filetype == 'go' then
-            vim.bo.makeprg = 'go'
-        elseif vim.bo.filetype == 'c' then
-            if not has_makefile() then
-                vim.bo.makeprg = 'tcc -run %'
-            end
-        elseif vim.bo.filetype == 'python' then
-            vim.bo.makeprg = 'basedpyright'
-        elseif vim.bo.filetype == 'swift' then
-            vim.bo.makeprg = 'swift'
-        end
+        local conf = file_specific[vim.bo.filetype]
+        if conf then conf() end
     end,
 })
 
