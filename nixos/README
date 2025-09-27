@@ -1,0 +1,3 @@
+I Tried my best using this, but in the end got way to frustrated when I could
+not for the life of me download the required dependencies in a nix shell file
+to run ebiten, the simple 2d go game library.
