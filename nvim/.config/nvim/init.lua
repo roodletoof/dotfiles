@@ -4,9 +4,7 @@ local function get_python_venv_path() --{{{1
     return vim.fn.stdpath('config') .. '/.venv/bin/python'
 end
 
-do
-    vim.g.python3_host_prog = get_python_venv_path()
-end
+vim.g.python3_host_prog = get_python_venv_path()
 
 -- GENERAL SETTINGS {{{1
 
