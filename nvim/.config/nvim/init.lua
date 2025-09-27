@@ -104,7 +104,6 @@ local file_specific = {
     end
 }
 
--- buffer specifc config
 vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
         do
@@ -179,6 +178,7 @@ require'lazy'.setup{ --{{{1
                 watch_for_changes = false,
                 keymaps = {
                     ['g?'] = { 'actions.show_help', mode = 'n' },
+                    ['<C-y>'] = { 'actions.yank_entry', mode = 'n' },
                     ['<CR>'] = 'actions.select',
                     ['<C-v>'] = { 'actions.select', opts = { vertical = true } },
                     ['<C-s>'] = { 'actions.select', opts = { horizontal = true } },
