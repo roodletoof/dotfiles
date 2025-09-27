@@ -7,40 +7,6 @@ padding.y = 10
 
 decorations = "Buttonless"
 
-# Linux / Windows: Ctrl + Shift + . and Ctrl + Shift + ,
-[[keyboard.bindings]]
-key = "Period"
-mods = "Control|Shift"
-action = "IncreaseFontSize"
-
-[[keyboard.bindings]]
-key = "Comma"
-mods = "Control|Shift"
-action = "DecreaseFontSize"
-
-# macOS: Command + Shift + . and Command + Shift + ,
-[[keyboard.bindings]]
-key = "Period"
-mods = "Command|Shift"
-action = "IncreaseFontSize"
-
-[[keyboard.bindings]]
-key = "Comma"
-mods = "Command|Shift"
-action = "DecreaseFontSize"
-
-# Fallbacks for shifted-key quirk (some versions/layouts expect the shifted symbol as 'key')
-[[keyboard.bindings]]
-key = ">"
-mods = "Control|Shift"
-action = "IncreaseFontSize"
-
-[[keyboard.bindings]]
-key = "<"
-mods = "Control|Shift"
-action = "DecreaseFontSize"
-
-# Also keep the classic = / - shortcuts (often work reliably)
 [[keyboard.bindings]]
 key = "="
 mods = "Control"
@@ -49,21 +15,11 @@ action = "IncreaseFontSize"
 [[keyboard.bindings]]
 key = "-"
 mods = "Control"
-action = "DecreaseFontSize"
-
-[[keyboard.bindings]]
-key = "="
-mods = "Command"
-action = "IncreaseFontSize"
-
-[[keyboard.bindings]]
-key = "-"
-mods = "Command"
 action = "DecreaseFontSize"
 
 [font]
 normal.family = "GoMono Nerd Font"
-size=16
+size=12
 
 [colors.primary]
 background = '#2d353b'
