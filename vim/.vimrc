@@ -7,7 +7,6 @@ set rnu
 set nu
 set nowrap
 set shiftround
-set expandtab
 set nohlsearch
 set incsearch
 set guicursor=n-v-c:block-Cursor
