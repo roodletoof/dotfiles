@@ -12,6 +12,7 @@ set nohlsearch
 set incsearch
 set guicursor=n-v-c:block-Cursor
 set cursorline
+set autoindent
 
 nnoremap ,co :copen<CR>
 nnoremap ,cc :cclose<CR>
