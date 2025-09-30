@@ -1,6 +1,8 @@
 set exrc
 set secure
-set clipboard=unnamedplus
+if has('clipboard')
+  set clipboard^=unnamed,unnamedplus
+endif
 set tabstop=4
 set shiftwidth=0
 set rnu
