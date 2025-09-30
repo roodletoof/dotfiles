@@ -60,3 +60,8 @@ let g:rustfmt_autosave = 0
 autocmd FileType * setlocal indentexpr=
 
 set wildignore=*.o,*.obj,.git/**,tags,*.pyc
+
+" language specific makeprgs
+autocmd FileType python setlocal makeprg=basedpyright expandtab
+autocmd FileType csharp setlocal makeprg=dotnet expandtab
+autocmd FileType yaml setlocal expandtab tabstop=2
