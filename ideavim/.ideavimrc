@@ -23,6 +23,7 @@ map <leader>ff <Action>(GotoFile)
 map <leader>fs <Action>(GotoSymbol)
 map <leader>fg <Action>(FindInPath)
 map <leader>fd <Action>(GotoDeclaration)
+map <leader>fi <Action>(ReSharperGotoImplementation)
 map <leader>fr <Action>(FindUsages)
 map <leader>ft <Action>(GotoTypeDeclaration)
 
