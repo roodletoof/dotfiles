@@ -37,8 +37,8 @@ cmd-j = 'focus down'
 cmd-k = 'focus up'
 cmd-l = 'focus right'
 
-cmd-d = 'exec-and-forget bash /Users/ivar.fatland/bin/open-applicaiton.sh'
-cmd-enter = 'exec-and-forget bash /Users/ivar.fatland/bin/open-terminal.sh'
+cmd-d = 'exec-and-forget bash $HOME/bin/open-applicaiton.sh'
+cmd-enter = 'exec-and-forget bash $HOME/bin/open-terminal.sh'
 
 cmd-shift-h = 'move left'
 cmd-shift-j = 'move down'
