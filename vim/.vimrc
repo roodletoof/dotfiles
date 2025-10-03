@@ -12,10 +12,10 @@ set shiftround
 set nohlsearch
 set incsearch
 set guicursor=n-v-c:block-Cursor
+set cursorline
 set autoindent
 set timeoutlen=100
 syntax on
-colorscheme elflord
 
 nnoremap ,co :copen<CR>
 nnoremap ,cc :cclose<CR>
