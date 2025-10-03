@@ -1,2 +1,4 @@
 CompileFlags:
-  Add: [-xc] # Treat all files as C by default
+  Add:
+  - "-xc" # Treat all files as C by default
+  - "-Wno-initializer-overrides"
