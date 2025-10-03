@@ -28,8 +28,6 @@ vim.cmd [[
     nnoremap ,cc :cclose<CR>
     nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
     nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
-    nnoremap ,cf :cfirst<CR>
-    nnoremap ,cl :clast<CR>
     nnoremap <c-n> :cnext<CR>zz
     nnoremap <c-p> :cprevious<CR>zz
     nnoremap ,cu :colder<CR>
@@ -70,6 +68,30 @@ vim.cmd [[
 
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 ]]
+
+vim.keymap.set('n', ',cf', function()
+    local qf = vim.fn.getqflist()
+    for i, item in ipairs(qf) do
+        if item.valid == 1 then
+            vim.cmd('cc '..i)
+            return
+        end
+    end
+    print('no jumpable items')
+end)
+
+vim.keymap.set('n', ',cl', function()
+    local qf = vim.fn.getqflist()
+    for i = #qf, 1, -1 do
+        local item = qf[i]
+        if item.valid == 1 then
+            vim.cmd('cc '..i)
+            return
+        end
+    end
+    print('no jumpable items')
+end)
+
 
 vim.api.nvim_create_autocmd({
     'BufRead',
