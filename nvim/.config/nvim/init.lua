@@ -71,6 +71,16 @@ vim.cmd [[
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 ]]
 
+vim.api.nvim_create_autocmd({
+    'BufRead',
+    'BufNewFile'
+}, {
+    pattern = {'*.h'},
+    callback = function()
+        vim.bo.filetype = 'c'
+    end
+})
+
 local function has_makefile()
     local dir = io.popen('ls')
     if not dir then return false end
