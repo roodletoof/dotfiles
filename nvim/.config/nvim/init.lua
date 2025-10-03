@@ -67,6 +67,7 @@ vim.cmd [[
     autocmd FileType * setlocal indentexpr=
 
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
+    set errorformat^=[----]\ %f:%l:\ %m
 ]]
 
 vim.keymap.set('n', ',cf', function()
