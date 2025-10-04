@@ -1,3 +1,7 @@
+set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf,/usr/local/opt/fzf,/opt/homebrew/opt/fzf
+nnoremap ,fa :call fzf#run({'sink': 'edit', 'options': '--preview="bat --color=always {}"'})<CR>
+nnoremap ,ff :call fzf#run({'sink': 'edit', 'options': '--preview="bat --color=always {}"', 'source': 'git ls-files'})<CR>
+
 set exrc
 set secure
 if has('clipboard')
