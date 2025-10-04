@@ -5,6 +5,7 @@ if has('clipboard')
 endif
 set tabstop=4
 set shiftwidth=0
+set expandtab
 set rnu
 set nu
 set nowrap
@@ -62,7 +63,11 @@ autocmd FileType * setlocal indentexpr=
 
 set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 
+" for c tests
+set errorformat^=[----]\ %f:%l:\ %m
+
 " language specific makeprgs
-autocmd FileType python setlocal makeprg=basedpyright expandtab
-autocmd FileType csharp setlocal makeprg=dotnet expandtab
-autocmd FileType yaml setlocal expandtab tabstop=2
+autocmd FileType python setlocal makeprg=basedpyright
+autocmd FileType go setlocal makeprg=go noexpandtab
+autocmd FileType csharp setlocal makeprg=dotnet
+autocmd FileType yaml setlocal tabstop=2
