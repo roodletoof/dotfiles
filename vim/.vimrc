@@ -6,6 +6,7 @@ autocmd FileType * setlocal indentexpr=
 autocmd FileType c setlocal path+=/usr/local/include,/usr/include
 autocmd FileType csharp setlocal makeprg=dotnet
 autocmd FileType go setlocal makeprg=go noexpandtab
+autocmd FileType make setlocal noexpandtab
 autocmd FileType python setlocal makeprg=basedpyright
 autocmd FileType yaml setlocal tabstop=2
 let g:rustfmt_autosave = 0
