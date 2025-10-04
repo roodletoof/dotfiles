@@ -14,6 +14,7 @@ set incsearch
 set guicursor=n-v-c:block-Cursor
 set cursorline
 set autoindent
+set ttimeoutlen=50
 syntax on
 
 nnoremap ,co :copen<CR>
