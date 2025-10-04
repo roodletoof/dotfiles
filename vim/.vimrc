@@ -65,8 +65,11 @@ set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 
 " for c tests
 set errorformat^=[----]\ %f:%l:\ %m
+set path=**
 
 " language specific makeprgs
+autocmd BufNewFile,BufRead *.h set filetype=c
+autocmd FileType c setlocal path+=/usr/local/include,/usr/include
 autocmd FileType python setlocal makeprg=basedpyright
 autocmd FileType go setlocal makeprg=go noexpandtab
 autocmd FileType csharp setlocal makeprg=dotnet
