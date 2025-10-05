@@ -26,8 +26,8 @@ nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
 nnoremap <c-k> <c-w>k
 nnoremap <c-l> <c-w>l
-nnoremap <c-n> :cnext<CR>zz
-nnoremap <c-p> :cprevious<CR>zz
+nnoremap <c-n> :cnext<CR>
+nnoremap <c-p> :cprevious<CR>
 nnoremap <c-u> <c-u>zz
 nnoremap H ^
 nnoremap L $
