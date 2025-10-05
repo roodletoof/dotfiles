@@ -3,7 +3,6 @@ autocmd BufNewFile,BufRead *.h set filetype=c
 autocmd BufWinEnter *.* silent! loadview 
 autocmd BufWinLeave *.* silent! mkview 
 autocmd FileType * setlocal indentexpr=
-autocmd FileType c setlocal path+=/usr/local/include,/usr/include
 autocmd FileType csharp setlocal makeprg=dotnet
 autocmd FileType go setlocal makeprg=go noexpandtab
 autocmd FileType make setlocal noexpandtab
@@ -19,8 +18,6 @@ nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
 nnoremap ,cr :cnewer<CR>
 nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
 nnoremap ,cu :colder<CR>
-nnoremap ,fa :call fzf#run({'sink': 'edit', 'options': '--preview="bat --color=always {}"'})<CR>
-nnoremap ,ff :call fzf#run({'sink': 'edit', 'options': '--preview="bat --color=always {}"', 'source': 'git ls-files'})<CR>
 nnoremap ,h H
 nnoremap ,l L
 nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
@@ -46,7 +43,6 @@ set nowrap
 set nu
 set path=**
 set rnu
-set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf,/usr/local/opt/fzf,/opt/homebrew/opt/fzf
 set secure
 set shiftround
 set shiftwidth=0
