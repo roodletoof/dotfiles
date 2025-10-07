@@ -420,47 +420,6 @@ require'lazy'.setup{ --{{{1
             )
         end
     },
-    { 'seblyng/roslyn.nvim', --{{{2
-        --WARN: requires html-lsp, roslyn and rzls installed via Mason
-        dependencies = {
-            'tris203/rzls.nvim',
-            config = true,
-        },
-        ft = {'cs', 'razor'},
-        config = function()
-            local _ = require('mason-registry') -- TODO, do I even need this line?
-            local rzls_path = vim.fn.expand('$MASON/packages/rzls/libexec')
-            local cmd = {
-                'roslyn',
-                '--stdio',
-                '--logLevel=Information',
-                '--extensionLogDirectory=' .. vim.fs.dirname(vim.lsp.get_log_path()),
-                '--razorSourceGenerator=' .. vim.fs.joinpath(rzls_path, 'Microsoft.CodeAnalysis.Razor.Compiler.dll'),
-                '--razorDesignTimePath=' .. vim.fs.joinpath(rzls_path, 'Targets', 'Microsoft.NET.Sdk.Razor.DesignTime.targets'),
-                '--extension',
-                vim.fs.joinpath(rzls_path, 'RazorExtension', 'Microsoft.VisualStudioCode.RazorExtension.dll'),
-            }
-            ---@diagnostic disable-next-line: missing-fields
-            require'rzls'.setup{} -- the missing-fields waring is bullshit. the fields are actually optional
-            require'roslyn'.setup{
-                cmd = cmd,
-                config = {
-                    handlers = require 'rzls.roslyn_handlers',
-                    ['csharp|code_lens'] = {
-                        dotnet_enable_references_code_lens = true,
-                    }
-                },
-            }
-        end,
-        init = function()
-            vim.filetype.add{
-                extension = {
-                    razor = 'razor',
-                    cshtml = 'razor'
-                }
-            }
-        end,
-    },
     { 'folke/lazydev.nvim', --{{{2
         ft = 'lua', -- only load on lua files
         opts = {
@@ -478,8 +437,8 @@ require'lazy'.setup{ --{{{1
         config = function()
             require'mason'.setup{
                 registries = {
-                    'github:mason-org/mason-registry',
-                    'github:crashdummyy/mason-registry',
+                    "github:mason-org/mason-registry",
+                    "github:Crashdummyy/mason-registry",
                 },
             }
 
