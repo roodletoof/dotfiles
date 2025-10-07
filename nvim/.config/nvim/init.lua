@@ -435,12 +435,7 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
-            require'mason'.setup{
-                registries = {
-                    "github:mason-org/mason-registry",
-                    "github:Crashdummyy/mason-registry",
-                },
-            }
+            require'mason'.setup()
 
             require'mason-lspconfig'.setup()
             vim.lsp.config.zls = {
