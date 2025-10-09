@@ -70,6 +70,12 @@ vim.cmd [[
     set errorformat^=[----]\ %f:%l:\ %m
 ]]
 
+vim.o.undofile = true
+vim.o.undodir = vim.fn.expand("~/.vim/neoundodir")
+if vim.fn.isdirectory(vim.o.undodir) == 0 then
+  vim.fn.mkdir(vim.o.undodir, "p")
+end
+
 vim.keymap.set('n', ',cf', function()
     local qf = vim.fn.getqflist()
     for i, item in ipairs(qf) do
