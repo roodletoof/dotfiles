@@ -19,4 +19,4 @@ action = "DecreaseFontSize"
 
 [font]
 normal.family = "GoMono Nerd Font"
-size=12
+size=14
