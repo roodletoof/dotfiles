@@ -70,6 +70,10 @@ vim.cmd [[
     set errorformat^=[----]\ %f:%l:\ %m
 ]]
 
+vim.o.backup = false
+vim.o.writebackup = false
+vim.o.swapfile = false
+vim.o.autoread = true
 vim.o.undofile = true
 vim.o.undodir = vim.fn.expand("~/.vim/neoundodir")
 if vim.fn.isdirectory(vim.o.undodir) == 0 then
