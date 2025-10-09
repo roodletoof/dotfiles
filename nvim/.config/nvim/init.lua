@@ -38,6 +38,10 @@ vim.cmd [[
     nnoremap L $
     xnoremap H ^
     xnoremap L $
+    nnoremap <C-a> <Nop>
+    nnoremap <C-x> <Nop>
+    nnoremap ,a <C-a>
+    nnoremap ,x <C-x>
 
     nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
 
@@ -360,13 +364,13 @@ require'lazy'.setup{ --{{{1
         end,
     },
     { 'f-person/git-blame.nvim', --{{{2
-        keys = {',a'},
+        keys = {',g'},
         config = function ()
             require'gitblame'.setup{
                 enabled = false,
             }
             vim.cmd[[
-                nnoremap ,a :GitBlameToggle<CR>
+                nnoremap ,g :GitBlameToggle<CR>
             ]]
         end
     },
@@ -538,12 +542,6 @@ require'lazy'.setup{ --{{{1
                 },
             }
         end,
-    },
-    { 'kdheepak/lazygit.nvim', --{{{2
-        lazy = true,
-        cmd = { 'LazyGit', 'LazyGitConfig', 'LazyGitCurrentFile', 'LazyGitFilter', 'LazyGitFilterCurrentFile', },
-        dependencies = { 'nvim-lua/plenary.nvim', },
-        keys = { { ',g', '<cmd>LazyGit<cr>', desc = 'LazyGit' }, },
     },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {

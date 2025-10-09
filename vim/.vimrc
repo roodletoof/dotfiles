@@ -31,6 +31,13 @@ nnoremap <c-p> :cprevious<CR>
 nnoremap <c-u> <c-u>zz
 nnoremap H ^
 nnoremap L $
+
+" i use ctrl-a for the tmux prefix key
+nnoremap <C-a> <Nop>
+nnoremap <C-x> <Nop>
+nnoremap ,a <C-a>
+nnoremap ,x <C-x>
+
 set autoindent
 set cursorline
 
