@@ -42,19 +42,6 @@ nnoremap ,x <C-x>
 
 set autoindent
 set cursorline
-
-set nobackup
-set nowritebackup
-set noswapfile
-set autoread
-set undofile
-set undodir=~/.vim/undodir
-if !isdirectory(expand('~/.vim/undodir'))
-    call mkdir(expand('~/.vim/undodir'), 'p')
-endif
-
-set undodir=~/.vim/undodir
-set undofile
 set errorformat^=[----]\ %f:%l:\ %m
 set expandtab
 set exrc
