@@ -23,6 +23,7 @@ nnoremap ,cu :colder<CR>
 nnoremap ,h H
 nnoremap ,l L
 nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
+nnoremap ,rl :checktime<CR>
 nnoremap <c-d> <c-d>zz
 nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j
