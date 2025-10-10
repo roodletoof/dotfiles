@@ -1,3 +1,5 @@
+colorscheme unokai
+
 autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 autocmd BufNewFile,BufRead *.h set filetype=c
 autocmd BufWinEnter *.* silent! loadview 
@@ -31,8 +33,28 @@ nnoremap <c-p> :cprevious<CR>
 nnoremap <c-u> <c-u>zz
 nnoremap H ^
 nnoremap L $
+
+" i use ctrl-a for the tmux prefix key
+nnoremap <C-a> <Nop>
+nnoremap <C-x> <Nop>
+nnoremap ,a <C-a>
+nnoremap ,x <C-x>
+
 set autoindent
 set cursorline
+
+set nobackup
+set nowritebackup
+set noswapfile
+set autoread
+set undofile
+set undodir=~/.vim/undodir
+if !isdirectory(expand('~/.vim/undodir'))
+    call mkdir(expand('~/.vim/undodir'), 'p')
+endif
+
+set undodir=~/.vim/undodir
+set undofile
 set errorformat^=[----]\ %f:%l:\ %m
 set expandtab
 set exrc
@@ -58,3 +80,30 @@ xnoremap L $
 if has('clipboard')
   set clipboard^=unnamed,unnamedplus
 endif
+
+nnoremap 'A 'A'"
+nnoremap 'B 'B'"
+nnoremap 'C 'C'"
+nnoremap 'D 'D'"
+nnoremap 'E 'E'"
+nnoremap 'F 'F'"
+nnoremap 'G 'G'"
+nnoremap 'H 'H'"
+nnoremap 'I 'I'"
+nnoremap 'J 'J'"
+nnoremap 'K 'K'"
+nnoremap 'L 'L'"
+nnoremap 'M 'M'"
+nnoremap 'N 'N'"
+nnoremap 'O 'O'"
+nnoremap 'P 'P'"
+nnoremap 'Q 'Q'"
+nnoremap 'R 'R'"
+nnoremap 'S 'S'"
+nnoremap 'T 'T'"
+nnoremap 'U 'U'"
+nnoremap 'V 'V'"
+nnoremap 'W 'W'"
+nnoremap 'X 'X'"
+nnoremap 'Y 'Y'"
+nnoremap 'Z 'Z'"
