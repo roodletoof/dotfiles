@@ -60,6 +60,7 @@ set tabstop=4
 set ttimeoutlen=50
 set viewoptions=folds,cursor
 set wildignore=*.o,*.obj,.git/**,tags,*.pyc
+set noswapfile
 syntax on
 tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^
