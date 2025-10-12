@@ -9,10 +9,12 @@ set $right l
 set $term alacritty
 
 # Window borders
-new_window pixel
+new_window pixel 0
+gaps inner 10
+gaps outer 5
 
 exec --no-startup-id xset s off -dpms
-exec --no-startup-id picom --backend glx --vsync
+exec --no-startup-id picom --config ~/.config/picom.conf
 exec --no-startup-id nm-applet
 
 # Key bindings
@@ -124,8 +126,3 @@ bindsym --release XF86MonBrightnessUp exec --no-startup-id brightnessctl set 5%+
 
 # Screenshot (use scrot instead of grim)
 bindsym Print exec scrot ~/Pictures/screenshot-%Y-%m-%d-%H%M%S.png
-
-# Status bar (use i3bar + i3status)
-bar {
-    status_command i3status
-}
