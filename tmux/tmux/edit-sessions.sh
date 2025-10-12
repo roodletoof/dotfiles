@@ -12,8 +12,6 @@ fi
 tmux new-session -d -s "$SESSION" -c ~/tmux/ -n "nvim"
 tmux send-keys -t "$SESSION":"nvim" 'nvim .' C-m
 
-tmux new-window -t "$SESSION" -c ~/tmux/
-
 tmux select-window -t "$SESSION":"nvim"
 if [ -n "$TMUX" ]; then
     tmux switch-client -t "$SESSION"
