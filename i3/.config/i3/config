@@ -10,6 +10,8 @@ set $term alacritty
 
 # Window borders
 new_window pixel 0
+gaps inner 10
+gaps outer 5
 
 exec --no-startup-id xset s off -dpms
 exec --no-startup-id picom --config ~/.config/picom.conf
