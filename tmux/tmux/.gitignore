@@ -1,0 +1,2 @@
+*.sh
+!edit-sessions.sh
