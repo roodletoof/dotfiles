@@ -1,11 +1,23 @@
 [env]
 TERM = "xterm-256color"
 
-[window]
-padding.x = 10
-padding.y = 10
+# Force integer scaling (prevents fractional DPI rounding issues)
+WINIT_X11_SCALE_FACTOR = "1.0"
+WINIT_HIDPI_FACTOR = "1.0"
 
+[window]
+dynamic_padding = true
 decorations = "Buttonless"
+
+[font]
+normal.family = "Comic Code Ligatures"
+size = 12
+
+# Subtle positional tuning
+offset.x = 0
+offset.y = 0
+glyph_offset.x = 0
+glyph_offset.y = 0
 
 [[keyboard.bindings]]
 key = "="
@@ -16,7 +28,3 @@ action = "IncreaseFontSize"
 key = "-"
 mods = "Control"
 action = "DecreaseFontSize"
-
-[font]
-normal.family = "GoMono Nerd Font"
-size=14
