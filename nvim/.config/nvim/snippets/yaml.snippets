@@ -25,9 +25,10 @@ snippet testCase
 	- name: ${1:Some sentence describing what you know to be true if the test passes.}
 		timeout_is: ${2|failure,warning|}
 		print_output: ${3|on_failure,on_success,always,never|}
-		disabled: ${4|false,true|}
-		limit: ${5:null}
-		source_limit: ${6:null}
+		output_destination: ${4|stdout,stderr,autopath|}
+		disabled: ${5|false,true|}
+		limit: ${6:null}
+		source_limit: ${7:null}
 		query: |
 			${0:SELECT * FROM table WHERE condition;}
-		expected: {"type": ${7|"exact"\, "n_rows": 0,"minimum"\, "n_rows": 1,"maximum"\, "n_rows": 1,"between"\, "min_rows": 0\, "max_rows": 1|}}
+		expected: {"type": ${8|"exact"\, "n_rows": 0,"minimum"\, "n_rows": 1,"maximum"\, "n_rows": 1,"between"\, "min_rows": 0\, "max_rows": 1|}}

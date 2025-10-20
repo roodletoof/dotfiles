@@ -2,6 +2,12 @@ snippet raylibBuildLinux
 	cc $1.c -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -o $1
 	./$1
 	 
+snippet window
+	tmux new-window -t "$SESSION" -c ${1:[path]} -n "${2:[window name]}"
+
+snippet program
+	tmux send-keys -t "$SESSION":"${1:[window name]}" '${2:[window cmd]}' C-m
+
 snippet session
 	SESSION="${1:[session name]}"
 
@@ -15,9 +21,8 @@ snippet session
 	fi
 
 	tmux new-session -d -s "$SESSION" -c ${2:[path]} -n "${3:[main window name]}"
-	tmux send-keys -t "$SESSION":"$3" '${4:[main window cmd]}' C-m
 
-	tmux new-window -t "$SESSION" -c $2
+	$0
 
 	tmux select-window -t "$SESSION":"$3"
 	if [ -n "$TMUX" ]; then
@@ -25,8 +30,3 @@ snippet session
 	else
 		tmux attach -t "$SESSION"
 	fi
-
-snippet window
-	tmux new-window -t "$SESSION" -c ${1:[path]} -n "${2:[window name]}"
-	tmux send-keys -t "$SESSION":"$2" '${3:[cmd]}' C-m
-	
