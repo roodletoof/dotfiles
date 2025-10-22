@@ -1,3 +1,4 @@
 export GTK_THEME="Adwaita:dark";
 export QT_QPA_PLATFORMTHEME="gtk2";
 export PATH="$HOME/.local/share/JetBrains/Toolbox/scripts:$PATH"
+export PATH=$PATH:/var/lib/flatpak/exports/bin
