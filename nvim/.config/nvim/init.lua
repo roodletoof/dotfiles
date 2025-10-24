@@ -136,7 +136,7 @@ local file_specific = {
         end
     end,
     python = function()
-        vim.bo.makeprg = 'basedpyright'
+        vim.bo.makeprg = 'basedpyright && python3.13 %'
     end,
     swift = function()
         vim.bo.makeprg = 'swift'
