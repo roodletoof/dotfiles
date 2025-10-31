@@ -9,6 +9,7 @@ vim.g.python3_host_prog = get_python_venv_path()
 -- GENERAL SETTINGS {{{1
 
 vim.cmd [[
+    set autowriteall
     set exrc
     set secure
     set clipboard=unnamedplus
@@ -175,8 +176,9 @@ local file_specific = {
         end
     end,
     cs = function()
-        vim.bo.makeprg = "dotnet build"
+        vim.bo.makeprg = "dotnet"
         vim.bo.errorformat = "%f(%l\\,%c):\\ %t%*[^:]:\\ %m"
+        vim.bo.errorformat = vim.bo.errorformat .. ",%\\s%#at\\ %m\\ in\\ %f:line\\ %l"
     end,
     python = function()
         vim.bo.makeprg = 'basedpyright && python3.13 %'
