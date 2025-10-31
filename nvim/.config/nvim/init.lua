@@ -102,29 +102,41 @@ vim.keymap.set('n', ',ct', function()
     vim.fn.system('ctags -R . &')
 end)
 do
-    -- ---@param keymap string
-    -- ---@param search_for fun(): string
-    -- local function search_for_in_same_filetype(keymap, search_for)
-    --     vim.keymap.set('n', keymap, function()
-    --         local extension = vim.fn.expand("%:e")
-    --         vim.cmd("vimgrep \""..search_for().."\" */**."..extension)
-    --     end)
-    -- end
-    -- search_for_in_same_filetype( ',vs', function() return vim.fn.expand("<cword>") end)
-    -- search_for_in_same_filetype( ',vS', function() return vim.fn.expand("<cWORD>") end)
+    local function escaped(text)
+        local _escaped = vim.fn.escape(text, "\\/.*$^~[]")
+        local pattern = "\\V" .. _escaped
+        return pattern
+    end
+    ---@param pattern string
+    local function recursive_literal_vimgrep_in_same_filetype(pattern)
+        local extension = vim.fn.expand("%:e")
+        vim.cmd("vimgrep /" .. pattern .. "/ **/*." .. extension)
+    end
     ---@param keymap string
     ---@param search_for fun(): string
     local function search_for_in_same_filetype(keymap, search_for)
         vim.keymap.set('n', keymap, function()
-            local extension = vim.fn.expand("%:e")
-            local escaped = vim.fn.escape(search_for(), "\\/.*$^~[]")
-            local pattern = "\\V" .. escaped
-            vim.cmd("vimgrep /" .. pattern .. "/ **/*." .. extension)
+            recursive_literal_vimgrep_in_same_filetype(search_for())
         end, { desc = "Search for word under cursor in same filetype" })
     end
 
-    search_for_in_same_filetype(',vs', function() return vim.fn.expand("<cword>") end)
-    search_for_in_same_filetype(',vS', function() return vim.fn.expand("<cWORD>") end)
+    search_for_in_same_filetype(',vs', function() return escaped(vim.fn.expand("<cword>")) end)
+    search_for_in_same_filetype(',vS', function() return escaped(vim.fn.expand("<cWORD>")) end)
+    local file_specific = {
+        odin=function()
+            search_for_in_same_filetype(',vd', function()
+                local word = vim.fn.expand("<cword>")
+                local pattern = "\\v"..word.." *: *[:=]"
+                return pattern
+            end)
+        end
+    }
+    vim.api.nvim_create_autocmd("FileType", {
+        callback=function()
+            local conf = file_specific[vim.bo.filetype]
+            if conf then conf() end
+        end
+    })
 end
 
 vim.api.nvim_create_autocmd({
@@ -161,6 +173,10 @@ local file_specific = {
         if not has_makefile() then
             vim.bo.makeprg = 'tcc -run %'
         end
+    end,
+    cs = function()
+        vim.bo.makeprg = "dotnet build"
+        vim.bo.errorformat = "%f(%l\\,%c):\\ %t%*[^:]:\\ %m"
     end,
     python = function()
         vim.bo.makeprg = 'basedpyright && python3.13 %'
