@@ -173,6 +173,10 @@ local file_specific = {
     end,
     swift = function()
         vim.bo.makeprg = 'swift'
+    end,
+    tsv = function()
+        vim.bo.tabstop = 32
+        vim.bo.expandtab = false
     end
 }
 
