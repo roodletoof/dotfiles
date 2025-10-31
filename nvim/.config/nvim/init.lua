@@ -117,15 +117,9 @@ do
     local function search_for_in_same_filetype(keymap, search_for)
         vim.keymap.set('n', keymap, function()
             local extension = vim.fn.expand("%:e")
-            local term = search_for()
-
-            -- Escape regex and quotes safely
-            local escaped = vim.fn.escape(term, "\\/.*$^~[]")
-
-            -- Use `\V` to disable regex interpretation (very nomagic mode)
+            local escaped = vim.fn.escape(search_for(), "\\/.*$^~[]")
             local pattern = "\\V" .. escaped
-
-            vim.cmd("vimgrep /" .. pattern .. "/j */**." .. extension)
+            vim.cmd("vimgrep /" .. pattern .. "/ **/*." .. extension)
         end, { desc = "Search for word under cursor in same filetype" })
     end
 
