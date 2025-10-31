@@ -28,7 +28,6 @@ vim.cmd [[
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
     nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
-    nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
     nnoremap <c-n> :cnext<CR>zz
     nnoremap <c-p> :cprevious<CR>zz
     nnoremap ,cu :colder<CR>
@@ -99,6 +98,40 @@ vim.keymap.set('n', ',cl', function()
     print('no jumpable items')
 end)
 
+vim.keymap.set('n', ',ct', function()
+    vim.fn.system('ctags -R . &')
+end)
+do
+    -- ---@param keymap string
+    -- ---@param search_for fun(): string
+    -- local function search_for_in_same_filetype(keymap, search_for)
+    --     vim.keymap.set('n', keymap, function()
+    --         local extension = vim.fn.expand("%:e")
+    --         vim.cmd("vimgrep \""..search_for().."\" */**."..extension)
+    --     end)
+    -- end
+    -- search_for_in_same_filetype( ',vs', function() return vim.fn.expand("<cword>") end)
+    -- search_for_in_same_filetype( ',vS', function() return vim.fn.expand("<cWORD>") end)
+    ---@param keymap string
+    ---@param search_for fun(): string
+    local function search_for_in_same_filetype(keymap, search_for)
+        vim.keymap.set('n', keymap, function()
+            local extension = vim.fn.expand("%:e")
+            local term = search_for()
+
+            -- Escape regex and quotes safely
+            local escaped = vim.fn.escape(term, "\\/.*$^~[]")
+
+            -- Use `\V` to disable regex interpretation (very nomagic mode)
+            local pattern = "\\V" .. escaped
+
+            vim.cmd("vimgrep /" .. pattern .. "/j */**." .. extension)
+        end, { desc = "Search for word under cursor in same filetype" })
+    end
+
+    search_for_in_same_filetype(',vs', function() return vim.fn.expand("<cword>") end)
+    search_for_in_same_filetype(',vS', function() return vim.fn.expand("<cWORD>") end)
+end
 
 vim.api.nvim_create_autocmd({
     'BufRead',
@@ -214,11 +247,11 @@ require'lazy'.setup{ --{{{1
                     autosave_changes = false,
                 },
                 constrain_cursor = 'editable',
-                watch_for_changes = false,
+                watch_for_changes = true,
                 keymaps = {
                     ['g?'] = { 'actions.show_help', mode = 'n' },
-                    ['<C-y>'] = { 'actions.yank_entry', mode = 'n' },
-                    ['<CR>'] = 'actions.select',
+                    ['<C-y>'] = { 'actions.yank_entry', opts = { modify=":." }, mode = 'n' }, -- :. makes it a relative path
+                    ['<CR>'] =  'actions.select',
                     ['<C-v>'] = { 'actions.select', opts = { vertical = true } },
                     ['<C-s>'] = { 'actions.select', opts = { horizontal = true } },
                     ['<C-t>'] = { 'actions.select', opts = { tab = true } },
