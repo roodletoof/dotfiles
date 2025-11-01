@@ -1,5 +1,3 @@
-colorscheme unokai
-
 autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 autocmd BufNewFile,BufRead *.h set filetype=c
 autocmd BufWinEnter *.* silent! loadview 
@@ -18,7 +16,7 @@ nnoremap ,cl :clast<CR>
 nnoremap ,co :copen<CR>
 nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
 nnoremap ,cr :cnewer<CR>
-nnoremap ,ct :call setqflist([{'filename': expand('%'), 'lnum': line('.'), 'col': col('.'), 'text': 'TODO'}], 'a')<CR>
+nnoremap ,ct :!ctags -R .<CR>
 nnoremap ,cu :colder<CR>
 nnoremap ,h H
 nnoremap ,l L
