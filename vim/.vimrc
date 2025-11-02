@@ -4,7 +4,8 @@ autocmd BufWinEnter *.* silent! loadview
 autocmd BufWinLeave *.* silent! mkview 
 autocmd FileType * setlocal indentexpr=
 autocmd FileType csharp setlocal makeprg=dotnet
-autocmd FileType go setlocal makeprg=go noexpandtab keywordprg=go\ doc
+autocmd FileType go setlocal makeprg=go noexpandtab
+nnoremap ,rc :source $MYVIMRC<CR>
 autocmd FileType make setlocal noexpandtab
 autocmd FileType python setlocal makeprg=basedpyright
 autocmd FileType yaml setlocal tabstop=2
