@@ -4,7 +4,7 @@ autocmd BufWinEnter *.* silent! loadview
 autocmd BufWinLeave *.* silent! mkview 
 autocmd FileType * setlocal indentexpr=
 autocmd FileType csharp setlocal makeprg=dotnet
-autocmd FileType go setlocal makeprg=go noexpandtab
+autocmd FileType go setlocal makeprg=go noexpandtab keywordprg=go\ doc
 autocmd FileType make setlocal noexpandtab
 autocmd FileType python setlocal makeprg=basedpyright
 autocmd FileType yaml setlocal tabstop=2
@@ -42,6 +42,7 @@ nnoremap ,x <C-x>
 set autoindent
 set cursorline
 set errorformat^=[----]\ %f:%l:\ %m
+set errorformat^=%f:%l\ %m
 set expandtab
 set exrc
 set guicursor=n-v-c:block-Cursor
