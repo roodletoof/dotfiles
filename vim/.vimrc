@@ -25,6 +25,7 @@ nnoremap ,co :copen<CR>
 nnoremap ,cq :call setqflist([])<CR>:cclose<CR>
 nnoremap ,cr :cnewer<CR>
 nnoremap ,cu :colder<CR>
+
 nnoremap ,h H
 nnoremap ,l L
 nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
@@ -48,8 +49,9 @@ nnoremap ,x <C-x>
 
 set autoindent
 set cursorline
+set errorformat^=%f:%l:%c\ -\ %t%*[^:]:\ %m
 set errorformat^=[----]\ %f:%l:\ %m
-set errorformat^=%f:%l\ %m
+set errorformat+=%f:%l\ %m
 set expandtab
 set exrc
 set guicursor=n-v-c:block-Cursor
