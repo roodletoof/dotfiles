@@ -1,4 +1,8 @@
-colorscheme monokai
+try
+  colorscheme unokai
+catch /^Vim\%((\a\+)\)\=:E185/
+  colorscheme monokai
+endtry
 autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 autocmd BufNewFile,BufRead *.h set filetype=c
 autocmd BufWinEnter *.* silent! loadview 
