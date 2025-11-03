@@ -1,3 +1,4 @@
+colorscheme monokai
 autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 autocmd BufNewFile,BufRead *.h set filetype=c
 autocmd BufWinEnter *.* silent! loadview 
