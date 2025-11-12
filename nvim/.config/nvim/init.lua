@@ -682,17 +682,18 @@ require'lazy'.setup{ --{{{1
             'nvim-telescope/telescope-ui-select.nvim',
         },
         config = function()
-            local a = require'telescope.actions'
+            local actions = require'telescope.actions'
             require'telescope'.setup{
                 defaults = {
                     file_ignore_patterns = {'%__virtual.cs$'},
                     mappings = {
-                        i = { ['<C-Q>'] = a.smart_send_to_qflist + a.open_qflist, ['<C-j>'] = a.select_default, },
-                        n = { ['<C-Q>'] = a.smart_send_to_qflist + a.open_qflist, ['<C-j>'] = a.select_default, },
+                        i = { ['<C-Q>'] = actions.smart_send_to_qflist + actions.open_qflist, ['<C-j>'] = actions.select_default, },
+                        n = { ['<C-Q>'] = actions.smart_send_to_qflist + actions.open_qflist, ['<C-j>'] = actions.select_default, },
                     }
                 },
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
+
             vim.cmd [[
                 noremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
                 noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
@@ -703,6 +704,8 @@ require'lazy'.setup{ --{{{1
                 noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
                 noremap ,fm :lua require'telescope.builtin'.marks()<CR>
                 noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
+                noremap ,fc :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cword>")})<CR>
+                noremap ,fC :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cWORD>")})<CR>
 
                 noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
                 noremap ,fee :lua require'telescope.builtin'.diagnostics{severity='ERROR'}<CR>
