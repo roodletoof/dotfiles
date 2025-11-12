@@ -521,6 +521,11 @@ require'lazy'.setup{ --{{{1
             vim.lsp.config.sourcekit = {
                 filetypes = {"swift"}
             }
+            vim.lsp.config.ols = {
+                settings = {
+                    verbose=true,
+                }
+            }
 
             vim.lsp.enable('gdscript')
             vim.lsp.config('hls', {
