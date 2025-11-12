@@ -26,7 +26,7 @@ vim.cmd [[
     set cursorline
     set noswapfile
     colorscheme unokai
-    set notermguicolors
+    set termguicolors
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
