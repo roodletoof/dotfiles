@@ -491,7 +491,6 @@ require'lazy'.setup{ --{{{1
         },
         config = function()
             require'mason'.setup()
-
             require'mason-lspconfig'.setup()
             vim.lsp.config.zls = {
                 before_init = function(_, _)
@@ -543,12 +542,6 @@ require'lazy'.setup{ --{{{1
                 end,
             })
 
-            local function jump_to_definition()
-                local word = vim.fn.expand('<cword>')
-                vim.cmd('tag ' .. word)
-            end
-
-            vim.keymap.set( 'n', ',fc', jump_to_definition, { noremap = true, silent = true})
             vim.keymap.set( 'n', ',fd', vim.lsp.buf.definition, { noremap = true, silent = true})
 
             vim.cmd [[
