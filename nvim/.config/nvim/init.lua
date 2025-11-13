@@ -455,7 +455,7 @@ require'lazy'.setup{ --{{{1
                             width = 80,
                             options = {
                                 signcolumn = 'no',
-                                cursorline = false,
+                                cursorline = true,
                                 cursorcolumn = false,
                                 foldcolumn = '0',
                                 list = false,
