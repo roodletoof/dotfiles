@@ -695,6 +695,7 @@ require'lazy'.setup{ --{{{1
             }
 
             vim.cmd [[
+                noremap ,fw :lua require'telescope.builtin'.lsp_dynamic_workspace_symbols()<CR>
                 noremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
                 noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
