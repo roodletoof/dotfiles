@@ -25,8 +25,6 @@ vim.cmd [[
     set guicursor=n-v-c:block-Cursor
     set cursorline
     set noswapfile
-    colorscheme unokai
-    set termguicolors
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -437,6 +435,15 @@ require'lazy'.setup{ --{{{1
         version = false,
         config = function()
             require'mini.align'.setup()
+        end,
+    },
+    { 'sainnhe/everforest', --{{{2
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.o.termguicolors = true
+            vim.g.everforest_enable_italic = true
+            vim.cmd.colorscheme('everforest')
         end,
     },
     { 'roodletoof/zen-mode.nvim', --{{{2
