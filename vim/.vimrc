@@ -1,4 +1,3 @@
-set termguicolors
 try
   colorscheme unokai
 catch /^Vim\%((\a\+)\)\=:E185/

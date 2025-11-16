@@ -25,8 +25,6 @@ vim.cmd [[
     set guicursor=n-v-c:block-Cursor
     set cursorline
     set noswapfile
-    colorscheme unokai
-    set termguicolors
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -439,6 +437,15 @@ require'lazy'.setup{ --{{{1
             require'mini.align'.setup()
         end,
     },
+    { 'sainnhe/everforest', --{{{2
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.o.termguicolors = true
+            vim.g.everforest_enable_italic = true
+            vim.cmd.colorscheme('everforest')
+        end,
+    },
     { 'roodletoof/zen-mode.nvim', --{{{2
         keys = {',z'},
         config = function ()
@@ -695,6 +702,7 @@ require'lazy'.setup{ --{{{1
             }
 
             vim.cmd [[
+                noremap ,fw :lua require'telescope.builtin'.lsp_dynamic_workspace_symbols()<CR>
                 noremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
                 noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
                 noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
