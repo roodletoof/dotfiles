@@ -25,6 +25,7 @@ vim.cmd [[
     set guicursor=n-v-c:block-Cursor
     set cursorline
     set noswapfile
+    set list
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
