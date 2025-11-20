@@ -101,7 +101,7 @@ vim.keymap.set('n', ',cl', function()
 end)
 
 vim.keymap.set('n', ',ct', function()
-    vim.fn.system('ctags -R . &')
+    vim.fn.system('ctags -R .')
 end)
 do
     local function escaped(text)
