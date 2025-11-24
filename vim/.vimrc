@@ -10,6 +10,7 @@ autocmd BufWinLeave *.* silent! mkview
 autocmd FileType * setlocal indentexpr=
 autocmd FileType csharp setlocal makeprg=dotnet
 autocmd FileType go setlocal makeprg=go noexpandtab
+autocmd FileType lua setlocal noexpandtab
 nnoremap ,ct :!ctags -R .<CR>
 augroup GoCtags
   autocmd!
