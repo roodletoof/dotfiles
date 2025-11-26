@@ -53,6 +53,7 @@ nnoremap <C-x> <Nop>
 nnoremap ,a <C-a>
 nnoremap ,x <C-x>
 
+set autowriteall
 set autoindent
 set cursorline
 set errorformat^=%f:%l:%c\ -\ %t%*[^:]:\ %m
