@@ -190,6 +190,9 @@ local file_specific = {
     tsv = function()
         vim.bo.tabstop = 32
         vim.bo.expandtab = false
+    end,
+    odin = function()
+        vim.bo.expandtab = false
     end
 }
 
