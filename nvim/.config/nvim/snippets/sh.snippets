@@ -3,6 +3,7 @@ snippet raylibBuildLinux
 	./$1
 	 
 snippet window
+	mkdir -p ${1:[path]}
 	tmux new-window -t "$SESSION" -c ${1:[path]} -n "${2:[window name]}"
 
 snippet program
@@ -20,6 +21,7 @@ snippet session
 		exit 0
 	fi
 
+	mkdir -p ${2:[path]}
 	tmux new-session -d -s "$SESSION" -c ${2:[path]} -n "${3:[main window name]}"
 
 	$0

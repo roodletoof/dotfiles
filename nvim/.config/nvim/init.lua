@@ -110,15 +110,14 @@ do
         return pattern
     end
     ---@param pattern string
-    local function recursive_literal_vimgrep_in_same_filetype(pattern)
-        local extension = vim.fn.expand("%:e")
-        vim.cmd("vimgrep /" .. pattern .. "/ **/*." .. extension)
+    local function recursive_literal_vimgrep(pattern)
+        vim.cmd("vimgrep /" .. pattern .. "/ **/*")
     end
     ---@param keymap string
     ---@param search_for fun(): string
     local function search_for_in_same_filetype(keymap, search_for)
         vim.keymap.set('n', keymap, function()
-            recursive_literal_vimgrep_in_same_filetype(search_for())
+            recursive_literal_vimgrep(search_for())
         end, { desc = "Search for word under cursor in same filetype" })
     end
 
