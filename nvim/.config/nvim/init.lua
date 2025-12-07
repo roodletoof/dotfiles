@@ -174,6 +174,7 @@ local file_specific = {
         if not has_makefile() then
             vim.bo.makeprg = 'tcc -run %'
         end
+        vim.bo.expandtab = false
     end,
     cs = function()
         vim.bo.makeprg = "dotnet"

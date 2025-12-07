@@ -80,6 +80,7 @@ syntax on
 tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^
 xnoremap L $
+nnoremap Q @@
 
 if has('clipboard')
   set clipboard^=unnamed,unnamedplus
