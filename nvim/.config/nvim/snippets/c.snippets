@@ -166,7 +166,7 @@ snippet ,,n "" Ai
 	\n
 
 snippet foreacharr
-	for (${1:type} *${2:item} = ${3:array}; ${2:item} < &${3:array}[${4:size}]; ${2:item}++) {
+	for (${1:type} *${2:item} = (${3:array}); ${2:item} < &(${3:array})[${4:size}]; ${2:item}++) {
 		$0
 	}
 snippet flags
@@ -327,7 +327,7 @@ snippet {
 	}
 
 snippet main
-	int main( int arg_count, char *args[] ) {
+	int main(int argc, const char **argv) {
 		$0
 		return 0;
 	}
