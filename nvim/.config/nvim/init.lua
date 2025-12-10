@@ -213,6 +213,55 @@ vim.api.nvim_create_autocmd('BufEnter', {
     end,
 })
 
+-- CENTER TEXT {{{1
+do
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_set_option_value('buftype', 'nofile', {buf = buf})
+    vim.api.nvim_set_option_value('modifiable', false, {buf = buf})
+
+    ---@type [fun(in_zen: boolean): nil]
+    local zen_subscribers = {}
+
+    ---@param f fun(in_zen: boolean): nil
+    local function subscribe(f)
+        table.insert(zen_subscribers, f)
+    end
+
+    local in_zen = false
+    vim.keymap.set('n', ',z', function()
+        in_zen = not in_zen
+        for _, f in ipairs(zen_subscribers) do
+            f(in_zen)
+        end
+    end)
+
+    local win
+    subscribe(function(in_zen)
+        if in_zen then
+            local screen_width = vim.o.columns
+            win = vim.api.nvim_open_win(buf, false, {
+                split = 'left',
+                width = screen_width / 2 - 80 / 2,
+            })
+            vim.api.nvim_create_autocmd('WinEnter', {
+                callback = function()
+                    local curr = vim.api.nvim_get_current_win()
+                    if curr == win then
+                        vim.cmd("wincmd p")
+                    end
+                end
+            })
+            vim.api.nvim_set_option_value('number', false, {win = win})
+            vim.api.nvim_set_option_value('relativenumber', false, {win = win})
+            vim.api.nvim_set_option_value('cursorline', false, {win = win})
+            vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
+            vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
+        else
+            vim.api.nvim_win_close(win, true)
+        end
+    end)
+end
+
 -- LAZY.NVIM BOOTSTRAP {{{1
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -449,35 +498,6 @@ require'lazy'.setup{ --{{{1
             vim.g.everforest_enable_italic = true
             vim.cmd.colorscheme('everforest')
         end,
-    },
-    { 'roodletoof/zen-mode.nvim', --{{{2
-        keys = {',z'},
-        config = function ()
-            local zen_mode = require'zen-mode'
-            zen_mode.setup{}
-
-            vim.keymap.set(
-                'n',
-                ',z',
-                function()
-                    vim.cmd'silent! mkview'
-                    zen_mode.toggle{
-                        window = {
-                            width = 80,
-                            options = {
-                                signcolumn = 'no',
-                                cursorline = true,
-                                cursorcolumn = false,
-                                foldcolumn = '0',
-                                list = false,
-                            }
-                        },
-                    }
-                    vim.cmd'silent! loadview'
-                end,
-                { silent = true }
-            )
-        end
     },
     { 'folke/lazydev.nvim', --{{{2
         ft = 'lua', -- only load on lua files
