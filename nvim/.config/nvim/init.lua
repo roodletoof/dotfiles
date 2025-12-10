@@ -213,35 +213,56 @@ vim.api.nvim_create_autocmd('BufEnter', {
     end,
 })
 
--- CENTER TEXT {{{1
+-- CENTER TEXT "zen mode" {{{1
 do
+    -- one shared statusline looks better for the split.
+    vim.o.laststatus = 3
+
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_set_option_value('buftype', 'nofile', {buf = buf})
     vim.api.nvim_set_option_value('modifiable', false, {buf = buf})
 
-    ---@type [fun(in_zen: boolean): nil]
     local zen_subscribers = {}
-
-    ---@param f fun(in_zen: boolean): nil
     local function subscribe(f)
         table.insert(zen_subscribers, f)
     end
-
     local in_zen = false
-    vim.keymap.set('n', ',z', function()
-        in_zen = not in_zen
+    local function set_zen(val)
+        in_zen = val
         for _, f in ipairs(zen_subscribers) do
-            f(in_zen)
+            f()
         end
+    end
+    vim.keymap.set('n', ',z', function()
+        set_zen(not in_zen)
     end)
 
-    local win
-    subscribe(function(in_zen)
+    local function get_leftmost_window()
+        local windows = vim.api.nvim_list_wins()
+        local leftmost_win = nil
+        local min_col = math.huge
+
+        for _, win in ipairs(windows) do
+            local info = vim.fn.getwininfo(win)[1]
+            if info.wincol < min_col then
+            min_col = info.wincol
+            leftmost_win = win
+            end
+        end
+
+        return leftmost_win
+    end
+
+    local win = nil
+    subscribe(function()
         if in_zen then
             local screen_width = vim.o.columns
+
             win = vim.api.nvim_open_win(buf, false, {
                 split = 'left',
-                width = screen_width / 2 - 80 / 2,
+                win = get_leftmost_window(),
+                -- +4 for about average number column width and border
+                width = math.floor((screen_width / 2 - 84 / 2) + 0.5),
             })
             vim.api.nvim_create_autocmd('WinEnter', {
                 callback = function()
@@ -256,9 +277,11 @@ do
             vim.api.nvim_set_option_value('cursorline', false, {win = win})
             vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
             vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
-            -- TODO somehting with laststatus
         else
-            vim.api.nvim_win_close(win, true)
+            local ok = pcall(vim.api.nvim_win_close, win, true)
+            if not ok then
+                set_zen(true)
+            end
         end
     end)
 end
