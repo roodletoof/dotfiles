@@ -166,7 +166,8 @@ snippet ,,n "" Ai
 	\n
 
 snippet foreacharr
-	for (${1:type} *${2:item} = (${3:array}); ${2:item} < &(${3:array})[${4:size}]; ${2:item}++) {
+	for (${1:type} *${2:item}_ptr = (${3:array}); ${2:item}_ptr < &(${3:array})[${4:size}]; ${2:item}_ptr++) {
+		${1:type} ${2:item} = *${2:item}_ptr;
 		$0
 	}
 snippet flags
