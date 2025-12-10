@@ -256,6 +256,7 @@ do
             vim.api.nvim_set_option_value('cursorline', false, {win = win})
             vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
             vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
+            -- TODO somehting with laststatus
         else
             vim.api.nvim_win_close(win, true)
         end
