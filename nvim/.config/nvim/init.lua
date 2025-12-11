@@ -230,11 +230,12 @@ do
     })
 
     local PADDING_ID = '4f2de2e3-a1bf-481f-919c-7f68ec6511c9'
+    vim.api.nvim_buf_set_var(buf, PADDING_ID, true)
 
     local function get_padding_window()
         local windows = vim.api.nvim_list_wins()
         for _, win in ipairs(windows) do
-            local ok, _ = pcall(vim.api.nvim_win_get_var, win, PADDING_ID)
+            local ok, _ = pcall(vim.api.nvim_buf_get_var, vim.api.nvim_win_get_buf(win), PADDING_ID)
             if ok then
                 return win
             end
@@ -275,7 +276,6 @@ do
             vim.api.nvim_set_option_value('cursorline', false, {win = win})
             vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
             vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
-            vim.api.nvim_win_set_var(win, PADDING_ID, true)
         else
             vim.api.nvim_win_close(padding_window, true)
         end
