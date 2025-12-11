@@ -217,31 +217,35 @@ vim.api.nvim_create_autocmd('BufEnter', {
 do
     -- one shared statusline looks better for the split.
     vim.o.laststatus = 3
-
     local buf = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_set_option_value('buftype', 'nofile', {buf = buf})
     vim.api.nvim_set_option_value('modifiable', false, {buf = buf})
-
-    local zen_subscribers = {}
-    local function subscribe(f)
-        table.insert(zen_subscribers, f)
-    end
-    local in_zen = false
-    local function set_zen(val)
-        in_zen = val
-        for _, f in ipairs(zen_subscribers) do
-            f()
+    vim.api.nvim_create_autocmd('WinEnter', {
+        callback = function()
+            local curr = vim.api.nvim_get_current_buf()
+            if curr == buf then
+                vim.cmd("wincmd p")
+            end
         end
+    })
+
+    local PADDING_ID = '4f2de2e3-a1bf-481f-919c-7f68ec6511c9'
+
+    local function get_padding_window()
+        local windows = vim.api.nvim_list_wins()
+        for _, win in ipairs(windows) do
+            local ok, _ = pcall(vim.api.nvim_win_get_var, win, PADDING_ID)
+            if ok then
+                return win
+            end
+        end
+        return nil
     end
-    vim.keymap.set('n', ',z', function()
-        set_zen(not in_zen)
-    end)
 
     local function get_leftmost_window()
         local windows = vim.api.nvim_list_wins()
         local leftmost_win = nil
         local min_col = math.huge
-
         for _, win in ipairs(windows) do
             local info = vim.fn.getwininfo(win)[1]
             if info.wincol < min_col then
@@ -249,41 +253,34 @@ do
             leftmost_win = win
             end
         end
-
         return leftmost_win
     end
 
-    local win = nil
-    subscribe(function()
-        if in_zen then
+    vim.keymap.set('n', ',z', function()
+        local padding_window = get_padding_window()
+        if padding_window == nil then
             local screen_width = vim.o.columns
+            local padding = math.floor((screen_width / 2 - 84 / 2) + 0.5)
+            if padding <= 0 then
+                return
+            end
 
             win = vim.api.nvim_open_win(buf, false, {
                 split = 'left',
                 win = get_leftmost_window(),
-                -- +4 for about average number column width and border
-                width = math.floor((screen_width / 2 - 84 / 2) + 0.5),
-            })
-            vim.api.nvim_create_autocmd('WinEnter', {
-                callback = function()
-                    local curr = vim.api.nvim_get_current_win()
-                    if curr == win then
-                        vim.cmd("wincmd p")
-                    end
-                end
+                width = padding,
             })
             vim.api.nvim_set_option_value('number', false, {win = win})
             vim.api.nvim_set_option_value('relativenumber', false, {win = win})
             vim.api.nvim_set_option_value('cursorline', false, {win = win})
             vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
             vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
+            vim.api.nvim_win_set_var(win, PADDING_ID, true)
         else
-            local ok = pcall(vim.api.nvim_win_close, win, true)
-            if not ok then
-                set_zen(true)
-            end
+            vim.api.nvim_win_close(padding_window, true)
         end
     end)
+
 end
 
 -- LAZY.NVIM BOOTSTRAP {{{1
