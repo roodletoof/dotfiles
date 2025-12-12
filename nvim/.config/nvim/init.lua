@@ -217,25 +217,28 @@ vim.api.nvim_create_autocmd('BufEnter', {
 do
     -- one shared statusline looks better for the split.
     vim.o.laststatus = 3
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_set_option_value('buftype', 'nofile', {buf = buf})
-    vim.api.nvim_set_option_value('modifiable', false, {buf = buf})
-    vim.api.nvim_create_autocmd('WinEnter', {
-        callback = function()
-            local curr = vim.api.nvim_get_current_buf()
-            if curr == buf then
-                vim.cmd("wincmd p")
+    local ID = '4f2de2e3-a1bf-481f-919c-7f68ec6511c9'
+    local buf = _G[ID]
+    if buf == nil then
+        buf = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_set_option_value('buftype', 'nofile', {buf = buf})
+        vim.api.nvim_set_option_value('modifiable', false, {buf = buf})
+        vim.api.nvim_create_autocmd('WinEnter', {
+            callback = function()
+                local curr = vim.api.nvim_get_current_buf()
+                if curr == buf then
+                    vim.cmd("wincmd p")
+                end
             end
-        end
-    })
-
-    local PADDING_ID = '4f2de2e3-a1bf-481f-919c-7f68ec6511c9'
-    vim.api.nvim_buf_set_var(buf, PADDING_ID, true)
+        })
+        vim.api.nvim_buf_set_var(buf, ID, true)
+        _G[ID] = buf
+    end
 
     local function get_padding_window()
         local windows = vim.api.nvim_list_wins()
         for _, win in ipairs(windows) do
-            local ok, _ = pcall(vim.api.nvim_buf_get_var, vim.api.nvim_win_get_buf(win), PADDING_ID)
+            local ok, _ = pcall(vim.api.nvim_buf_get_var, vim.api.nvim_win_get_buf(win), ID)
             if ok then
                 return win
             end
