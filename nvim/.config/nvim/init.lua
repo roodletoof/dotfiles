@@ -289,7 +289,7 @@ do
         _G[ID] = buf
     end
 
-    vim.keymap.set('n', ',z', function()
+    local function toggle_padding()
         local padding_window = get_padding_window()
         if padding_window == nil then
             local padding = calculate_padding()
@@ -310,7 +310,10 @@ do
         else
             vim.api.nvim_win_close(padding_window, true)
         end
-    end)
+    end
+
+    vim.keymap.set('n', ',z', toggle_padding)
+    toggle_padding()
 
 end
 
