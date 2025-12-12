@@ -217,7 +217,14 @@ vim.api.nvim_create_autocmd('BufEnter', {
 do
     -- one shared statusline looks better for the split.
     vim.o.laststatus = 3
+
     local ID = '4f2de2e3-a1bf-481f-919c-7f68ec6511c9'
+    local function is_padding_window(win)
+        local ok, _ = pcall(vim.api.nvim_buf_get_var, vim.api.nvim_win_get_buf(win), ID)
+        return ok
+    end
+
+
     local buf = _G[ID]
     if buf == nil then
         buf = vim.api.nvim_create_buf(false, true)
@@ -230,7 +237,19 @@ do
                     if #vim.api.nvim_list_wins() == 1 then
                         vim.cmd"q"
                     end
-                    vim.cmd"wincmd p"
+                    local windows = vim.api.nvim_list_wins()
+                    local leftmost_win = nil
+                    local min_col = math.huge
+                    for _, win in ipairs(windows) do
+                        local info = vim.fn.getwininfo(win)[1]
+                        if info.wincol < min_col and not is_padding_window(win) then
+                            min_col = info.wincol
+                            leftmost_win = win
+                        end
+                    end
+                    if leftmost_win ~= nil then
+                        vim.api.nvim_set_current_win(leftmost_win)
+                    end
                 end
             end
         })
@@ -241,8 +260,7 @@ do
     local function get_padding_window()
         local windows = vim.api.nvim_list_wins()
         for _, win in ipairs(windows) do
-            local ok, _ = pcall(vim.api.nvim_buf_get_var, vim.api.nvim_win_get_buf(win), ID)
-            if ok then
+            if is_padding_window(win) then
                 return win
             end
         end
