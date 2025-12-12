@@ -265,6 +265,7 @@ do
             vim.api.nvim_set_option_value('cursorline', false, {win = win})
             vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
             vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
+            vim.cmd"wincmd ="
         else
             vim.api.nvim_win_close(padding_window, true)
         end
@@ -724,13 +725,31 @@ require'lazy'.setup{ --{{{1
         },
         config = function()
             local actions = require'telescope.actions'
+            vim.o.splitright = true
             require'telescope'.setup{
                 defaults = {
                     file_ignore_patterns = {'%__virtual.cs$'},
                     mappings = {
-                        i = { ['<C-Q>'] = actions.smart_send_to_qflist + actions.open_qflist, ['<C-j>'] = actions.select_default, },
-                        n = { ['<C-Q>'] = actions.smart_send_to_qflist + actions.open_qflist, ['<C-j>'] = actions.select_default, },
+                        i = {
+                            ['<C-Q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+                            ['<C-j>'] = actions.select_default,
+                        },
+                        n = {
+                            ['<C-Q>'] = actions.smart_send_to_qflist + actions.open_qflist,
+                            ['<C-j>'] = actions.select_default,
+                        },
                     }
+                },
+                pickers = {
+                    help_tags = {
+                        attach_mappings = function(_, map)
+                            map("i", "<CR>", actions.select_vertical)
+                            map("n", "<CR>", actions.select_vertical)
+                            map("i", "<C-j>", actions.select_vertical)
+                            map("n", "<C-j>", actions.select_vertical)
+                            return true
+                        end,
+                    },
                 },
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
