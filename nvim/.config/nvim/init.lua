@@ -269,7 +269,7 @@ do
                 return
             end
 
-            win = vim.api.nvim_open_win(buf, false, {
+            local win = vim.api.nvim_open_win(buf, false, {
                 split = 'left',
                 win = get_leftmost_window(),
                 width = padding,
