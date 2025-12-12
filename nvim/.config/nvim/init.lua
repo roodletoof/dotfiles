@@ -313,8 +313,6 @@ do
     end
 
     vim.keymap.set('n', ',z', toggle_padding)
-    toggle_padding()
-
 end
 
 -- LAZY.NVIM BOOTSTRAP {{{1
