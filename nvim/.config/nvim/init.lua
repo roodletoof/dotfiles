@@ -224,6 +224,24 @@ do
         return ok
     end
 
+    local function calculate_padding()
+        local screen_width = vim.o.columns
+        local padding = math.floor((screen_width / 2 - 84 / 2) + 0.5)
+        if padding <= 0 then
+            return
+        end
+        return padding
+    end
+
+    local function get_padding_window()
+        local windows = vim.api.nvim_list_wins()
+        for _, win in ipairs(windows) do
+            if is_padding_window(win) then
+                return win
+            end
+        end
+        return nil
+    end
 
     local buf = _G[ID]
     if buf == nil then
@@ -251,31 +269,33 @@ do
                         vim.api.nvim_set_current_win(leftmost_win)
                     end
                 end
-            end
+            end,
+        })
+        vim.api.nvim_create_autocmd('VimResized', {
+            callback = function()
+                local padding_window = get_padding_window()
+                if padding_window ~= nil then
+                    local padding = calculate_padding()
+                    if padding == nil then
+                        vim.api.nvim_win_close(padding_window, true)
+                    else
+                        vim.api.nvim_win_set_width(padding_window, padding)
+                    end
+                end
+                vim.cmd"wincmd ="
+            end,
         })
         vim.api.nvim_buf_set_var(buf, ID, true)
         _G[ID] = buf
     end
 
-    local function get_padding_window()
-        local windows = vim.api.nvim_list_wins()
-        for _, win in ipairs(windows) do
-            if is_padding_window(win) then
-                return win
-            end
-        end
-        return nil
-    end
-
     vim.keymap.set('n', ',z', function()
         local padding_window = get_padding_window()
         if padding_window == nil then
-            local screen_width = vim.o.columns
-            local padding = math.floor((screen_width / 2 - 84 / 2) + 0.5)
-            if padding <= 0 then
+            local padding = calculate_padding()
+            if padding == nil then
                 return
             end
-
             local win = vim.api.nvim_open_win(buf, false, {
                 split = 'left',
                 win = -1,
