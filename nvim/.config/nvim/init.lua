@@ -227,6 +227,9 @@ do
             callback = function()
                 local curr = vim.api.nvim_get_current_buf()
                 if curr == buf then
+                    if #vim.api.nvim_list_wins() == 1 then
+                        vim.cmd("q")
+                    end
                     vim.cmd("wincmd p")
                 end
             end
