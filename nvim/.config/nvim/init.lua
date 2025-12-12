@@ -246,20 +246,6 @@ do
         return nil
     end
 
-    local function get_leftmost_window()
-        local windows = vim.api.nvim_list_wins()
-        local leftmost_win = nil
-        local min_col = math.huge
-        for _, win in ipairs(windows) do
-            local info = vim.fn.getwininfo(win)[1]
-            if info.wincol < min_col then
-            min_col = info.wincol
-            leftmost_win = win
-            end
-        end
-        return leftmost_win
-    end
-
     vim.keymap.set('n', ',z', function()
         local padding_window = get_padding_window()
         if padding_window == nil then
@@ -271,7 +257,7 @@ do
 
             local win = vim.api.nvim_open_win(buf, false, {
                 split = 'left',
-                win = get_leftmost_window(),
+                win = -1,
                 width = padding,
             })
             vim.api.nvim_set_option_value('number', false, {win = win})
