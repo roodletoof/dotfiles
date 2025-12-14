@@ -243,30 +243,30 @@ do
         return nil
     end
 
-    local buf = _G[ID]
-    if buf == nil then
-        buf = vim.api.nvim_create_buf(false, true)
-        vim.api.nvim_set_option_value('buftype', 'nofile', {buf = buf})
-        vim.api.nvim_set_option_value('modifiable', false, {buf = buf})
+    local padding_buffer = _G[ID]
+    if padding_buffer == nil then
+        padding_buffer = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_set_option_value('buftype', 'nofile', {buf = padding_buffer})
+        vim.api.nvim_set_option_value('modifiable', false, {buf = padding_buffer})
         vim.api.nvim_create_autocmd('WinEnter', {
             callback = function()
                 local curr = vim.api.nvim_get_current_buf()
-                if curr == buf then
+                if curr == padding_buffer then
                     if #vim.api.nvim_list_wins() == 1 then
                         vim.cmd"q"
                     end
                     local windows = vim.api.nvim_list_wins()
-                    local leftmost_win = nil
+                    local leftmost_non_padding_window = nil
                     local min_col = math.huge
                     for _, win in ipairs(windows) do
                         local info = vim.fn.getwininfo(win)[1]
                         if info.wincol < min_col and not is_padding_window(win) then
                             min_col = info.wincol
-                            leftmost_win = win
+                            leftmost_non_padding_window = win
                         end
                     end
-                    if leftmost_win ~= nil then
-                        vim.api.nvim_set_current_win(leftmost_win)
+                    if leftmost_non_padding_window ~= nil then
+                        vim.api.nvim_set_current_win(leftmost_non_padding_window)
                     end
                 end
             end,
@@ -285,8 +285,8 @@ do
                 vim.cmd"wincmd ="
             end,
         })
-        vim.api.nvim_buf_set_var(buf, ID, true)
-        _G[ID] = buf
+        vim.api.nvim_buf_set_var(padding_buffer, ID, true)
+        _G[ID] = padding_buffer
     end
 
     local function toggle_padding()
@@ -296,7 +296,7 @@ do
             if padding == nil then
                 return
             end
-            local win = vim.api.nvim_open_win(buf, false, {
+            local win = vim.api.nvim_open_win(padding_buffer, false, {
                 split = 'left',
                 win = -1,
                 width = padding,
