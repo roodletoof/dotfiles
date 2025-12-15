@@ -250,17 +250,27 @@ do
         vim.api.nvim_set_option_value('modifiable', false, {buf = padding_buffer})
         vim.api.nvim_create_autocmd('WinEnter', {
             callback = function()
-                local curr = vim.api.nvim_get_current_buf()
-                if curr == padding_buffer then
+                local curr_buff = vim.api.nvim_get_current_buf()
+                if curr_buff == padding_buffer then
                     if #vim.api.nvim_list_wins() == 1 then
                         vim.cmd"q"
                     end
+                    local padding_window = vim.api.nvim_get_current_win()
+
+                    vim.cmd"wincmd p"
+                    local prev_win = vim.api.nvim_get_current_win()
+                    if padding_window ~= prev_win then
+                        vim.api.nvim_set_current_win(prev_win)
+                        return
+                    end
+
+                    local padding_window_info = vim.fn.getwininfo(padding_window)[1]
                     local windows = vim.api.nvim_list_wins()
                     local leftmost_non_padding_window = nil
                     local min_col = math.huge
                     for _, win in ipairs(windows) do
                         local info = vim.fn.getwininfo(win)[1]
-                        if info.wincol < min_col and not is_padding_window(win) then
+                        if info.wincol < min_col and padding_window_info.wincol < info.wincol then
                             min_col = info.wincol
                             leftmost_non_padding_window = win
                         end
