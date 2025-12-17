@@ -607,7 +607,7 @@ require'lazy'.setup{ --{{{1
                 settings = {
                     basedpyright = {
                         analysis = {
-                            useLibraryCodeForTypes = false
+                            useLibraryCodeForTypes = true
                         },
                     },
                 },
