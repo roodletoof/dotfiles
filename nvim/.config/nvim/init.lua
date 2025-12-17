@@ -259,12 +259,12 @@ do
 
                     vim.cmd"wincmd p"
                     local prev_win = vim.api.nvim_get_current_win()
-                    if padding_window ~= prev_win then
-                        vim.api.nvim_set_current_win(prev_win)
+                    local padding_window_info = vim.fn.getwininfo(padding_window)[1]
+                    local prev_win_info = vim.fn.getwininfo(prev_win)[1]
+                    if padding_window ~= prev_win and padding_window_info.wincol ~= prev_win_info.wincol then
                         return
                     end
 
-                    local padding_window_info = vim.fn.getwininfo(padding_window)[1]
                     local windows = vim.api.nvim_list_wins()
                     local leftmost_non_padding_window = nil
                     local min_col = math.huge
