@@ -639,6 +639,7 @@ require'lazy'.setup{ --{{{1
             vim.cmd [[
                 noremap ,rn :lua vim.lsp.buf.rename()<CR>
                 noremap ,ft :lua vim.lsp.buf.type_definition()<CR>
+                noremap ,fi :lua vim.lsp.buf.implementation()<CR>
                 noremap ,fr :lua vim.lsp.buf.references()<CR>
                 noremap ,ca :lua vim.lsp.buf.code_action()<CR>
                 noremap ,oe :lua vim.diagnostic.open_float()<CR>
