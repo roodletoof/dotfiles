@@ -3,5 +3,14 @@
                                                     (interpreted_string_literal_content)
                                                     @package (#eq? @package
                                                               "C")))) (#set!
-                                                                       injection.language
+
                                                                        "c"))
+
+(call_expression
+    function:
+    (selector_expression
+        field: (field_identifier) @_ident)(#any-of? @_ident "Exec")
+        arguments: (
+            (argument_list (raw_string_literal (raw_string_literal_content) @injection.content)))
+    (#set! injection.language "sql")
+    )
