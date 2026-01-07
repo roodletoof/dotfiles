@@ -652,6 +652,7 @@ require'lazy'.setup{ --{{{1
         end
     },
     { 'nvim-treesitter/nvim-treesitter', --{{{2
+        tag = 'v0.10.0',
         config = function()
             require'nvim-treesitter.configs'.setup{
                 modules = {},
