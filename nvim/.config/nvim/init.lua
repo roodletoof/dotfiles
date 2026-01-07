@@ -75,6 +75,7 @@ vim.cmd [[
 
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
     set errorformat^=[----]\ %f:%l:\ %m
+    set errorformat^=%f\(%l:%c\)\ %m
 ]]
 
 vim.keymap.set('n', ',cf', function()
@@ -193,6 +194,7 @@ local file_specific = {
     end,
     odin = function()
         vim.bo.expandtab = false
+        vim.bo.makeprg = 'odin run .'
     end
 }
 
