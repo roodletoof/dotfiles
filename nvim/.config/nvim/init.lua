@@ -183,7 +183,7 @@ local file_specific = {
         vim.bo.errorformat = vim.bo.errorformat .. ",%\\s%#at\\ %m\\ in\\ %f:line\\ %l"
     end,
     python = function()
-        vim.bo.makeprg = 'basedpyright && python3.13 %'
+        vim.bo.makeprg = 'basedpyright'
     end,
     swift = function()
         vim.bo.makeprg = 'swift'
