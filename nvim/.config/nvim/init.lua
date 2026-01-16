@@ -75,6 +75,7 @@ vim.cmd [[
 
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
     set errorformat^=[----]\ %f:%l:\ %m
+    set errorformat^=%f\(%l:%c\)\ %m
 ]]
 
 vim.keymap.set('n', ',cf', function()
@@ -182,7 +183,7 @@ local file_specific = {
         vim.bo.errorformat = vim.bo.errorformat .. ",%\\s%#at\\ %m\\ in\\ %f:line\\ %l"
     end,
     python = function()
-        vim.bo.makeprg = 'basedpyright && python3.13 %'
+        vim.bo.makeprg = 'basedpyright'
     end,
     swift = function()
         vim.bo.makeprg = 'swift'
@@ -193,6 +194,7 @@ local file_specific = {
     end,
     odin = function()
         vim.bo.expandtab = false
+        vim.bo.makeprg = 'odin run .'
     end
 }
 
