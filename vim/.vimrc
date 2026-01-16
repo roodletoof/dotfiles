@@ -3,20 +3,7 @@ try
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme monokai
 endtry
-autocmd BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
-autocmd BufNewFile,BufRead *.h set filetype=c
-autocmd BufWinEnter *.* silent! loadview 
-autocmd BufWinLeave *.* silent! mkview 
-autocmd FileType * setlocal indentexpr=
-autocmd FileType csharp setlocal makeprg=dotnet
-autocmd FileType go setlocal makeprg=go noexpandtab
-autocmd FileType lua setlocal noexpandtab
-autocmd FileType c setlocal noexpandtab
 nnoremap ,ct :!ctags -R .<CR>
-augroup GoCtags
-  autocmd!
-  autocmd FileType go nnoremap <buffer> ,ct :!ctags -R $(go env GOROOT) .<CR>
-augroup END
 nnoremap ,rc :source $MYVIMRC<CR>
 
 autocmd FileType make setlocal noexpandtab
@@ -112,3 +99,18 @@ nnoremap 'W 'W'"
 nnoremap 'X 'X'"
 nnoremap 'Y 'Y'"
 nnoremap 'Z 'Z'"
+
+
+au FileType cs setlocal makeprg=dotnet errorformat=\ %#%f(%l\\,%c):\ error\ CS%n:\ %m
+au BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
+au BufNewFile,BufRead *.h set filetype=c
+au BufWinEnter *.* silent! loadview 
+au BufWinLeave *.* silent! mkview 
+au FileType * setlocal indentexpr=
+au FileType go setlocal makeprg=go noexpandtab
+au FileType lua setlocal noexpandtab
+au FileType c setlocal noexpandtab
+au GoCtags
+  autocmd!
+  autocmd FileType go nnoremap <buffer> ,ct :!ctags -R $(go env GOROOT) .<CR>
+augroup END
