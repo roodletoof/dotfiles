@@ -110,7 +110,7 @@ au FileType * setlocal indentexpr=
 au FileType go setlocal makeprg=go noexpandtab
 au FileType lua setlocal noexpandtab
 au FileType c setlocal noexpandtab
-au GoCtags
+augroup GoCtags
   autocmd!
   autocmd FileType go nnoremap <buffer> ,ct :!ctags -R $(go env GOROOT) .<CR>
 augroup END
