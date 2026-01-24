@@ -65,9 +65,38 @@ func main() {
 	for seshName := range config {
 		seshNames = append(seshNames, seshName)
 	}
-	i, err := fuzzyfinder.Find(seshNames, func(i int) string {
-		return seshNames[i]
-	})
+	i, err := fuzzyfinder.Find(
+		seshNames,
+		func(i int) string {
+			return seshNames[i]
+		},
+		fuzzyfinder.WithPreviewWindow(
+			func(i, width, height int) string {
+				width = width/2-4
+				if i < 0 {
+					return ""
+				}
+				seshName := seshNames[i]
+				windows, _ := config[seshName]
+				builder := strings.Builder{}
+				for _, window := range windows {
+					if window.Name != "" {
+						fmt.Fprintln(&builder, window.Name)
+					} else {
+						fmt.Fprintln(&builder, "[no name]")
+					}
+					if window.Path != "" {
+						fmt.Fprintf(&builder, "    path: %s\n", window.Path)
+					}
+					if window.Program != "" {
+						fmt.Fprintf(&builder, "    prog: %s\n", window.Program)
+					}
+					fmt.Fprint(&builder, "\n")
+				}
+				return builder.String()
+			},
+		),
+	)
 	if err != nil {
 		return
 	}
