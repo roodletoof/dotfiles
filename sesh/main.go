@@ -125,9 +125,6 @@ func NewWindowInSession(seshName string, window Window) {
 	if window.Name != "" {
 		args = append(args, "-n", window.Name)
 	}
-	if window.Program != "" {
-		args = append(args, window.Program)
-	}
 	cmd := exec.Command(tmux, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -135,6 +132,17 @@ func NewWindowInSession(seshName string, window Window) {
 	err := cmd.Run()
 	if err != nil {
 		panic(err)
+	}
+	if window.Program != "" {
+		var carriageReturn = string([]byte{13})
+		cmd = exec.Command(tmux, "send-keys", "-t", fmt.Sprintf("%s:$", seshName), window.Program, carriageReturn)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		cmd.Stdin = os.Stdin
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
