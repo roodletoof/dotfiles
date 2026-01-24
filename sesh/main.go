@@ -93,17 +93,11 @@ func main() {
 	}
 }
 
-var sessionCache = make(map[string]bool)
 func HasSession(seshName string) bool {
-	has, ok := sessionCache[seshName]
-	if ok {
-		return has
-	}
 	res := exec.Command(tmux, "has-session", "-t", seshName).Run()
-	has = res == nil
-	sessionCache[seshName] = has
-	return has
+	return res == nil
 }
+
 func expandTilde(path string) (string, error) {
 	if !strings.HasPrefix(path, "~") {
 		return path, nil
@@ -134,7 +128,14 @@ func NewWindowInSession(seshName string, window Window) {
 	if window.Program != "" {
 		args = append(args, window.Program)
 	}
-	exec.Command(tmux, args...).Run()
+	cmd := exec.Command(tmux, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
+	err := cmd.Run()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TurnIntoTmux(sessionName string) {
