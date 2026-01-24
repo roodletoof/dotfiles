@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"syscall"
 
 	"github.com/ktr0731/go-fuzzyfinder"
 	"gopkg.in/yaml.v3"
@@ -21,7 +21,7 @@ type Window struct {
 func (w Window) ExpandedPath() string {
 	expanded, err := expandTilde(w.Path)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 	return expanded
 }
@@ -36,29 +36,29 @@ const (
 func main() {
 	_, err := exec.LookPath(tmux)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	_, err = exec.LookPath(mkdir)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	configFilePath := filepath.Join(homeDir, ".sesh.yaml")
 	f, err := os.Open(configFilePath)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	var config Config
 	err = yaml.NewDecoder(f).Decode(&config)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	seshNames := make([]string, 0, len(config))
@@ -74,11 +74,11 @@ func main() {
 
 	seshName := seshNames[i]
 	if HasSession(seshName) {
-		ActivateSession(seshName)
+		TurnIntoTmux(seshName)
 	} else {
 		sesh := config[seshName]
 		if len(sesh) == 0 {
-			log.Println("no windows in session")
+			fmt.Println("no windows in session")
 			return
 		}
 		for _, window := range sesh {
@@ -89,7 +89,7 @@ func main() {
 			NewWindowInSession(seshName, window)
 		}
 		exec.Command(tmux, "select-window", "-t", fmt.Sprintf("%s:^", seshName)).Run()
-		ActivateSession(seshName)
+		TurnIntoTmux(seshName)
 	}
 }
 
@@ -117,7 +117,7 @@ func expandTilde(path string) (string, error) {
 
 func NewWindowInSession(seshName string, window Window) {
 	if seshName == "" {
-		log.Fatalln("missing seshName")
+		panic("missing seshName")
 	}
 	var args = []string{}
 	if HasSession(seshName) {
@@ -131,19 +131,24 @@ func NewWindowInSession(seshName string, window Window) {
 	if window.Name != "" {
 		args = append(args, "-n", window.Name)
 	}
-	args = append(args, window.Program)
+	if window.Program != "" {
+		args = append(args, window.Program)
+	}
 	exec.Command(tmux, args...).Run()
 }
 
-func ActivateSession(name string) {
+func TurnIntoTmux(sessionName string) {
 	_, isInTmux := os.LookupEnv("TMUX")
-	var err error
+	tmuxPath, err := exec.LookPath(tmux)
+	if err != nil {
+		panic(err)
+	}
 	if isInTmux {
-		err = exec.Command(tmux, "switch-client", "-t", name).Run()
+		err = syscall.Exec(tmuxPath, []string{tmuxPath, "switch-client", "-t", sessionName}, os.Environ())
 	} else {
-		err = exec.Command(tmux, "attach", "-t", name).Run()
+		err = syscall.Exec(tmuxPath, []string{tmuxPath, "attach", "-t", sessionName}, os.Environ())
 	}
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 }
