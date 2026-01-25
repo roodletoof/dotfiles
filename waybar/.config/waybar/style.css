@@ -1,11 +1,11 @@
-window#waybar {
+* {
+    font-size: 15px;
+    padding: 0px;
+    margin: 0px;
+    min-height: 0px;
+    min-width: 50px;
+
     background-color: #000000; /* or transparent */
     color: #ffffff;
-}
-#workspaces button {
-    background-color: transparent;
-    color: #ffffff;
-}
-#workspaces button.active {
-    background-color: #444444;
+    margin-left: 20px;
 }
