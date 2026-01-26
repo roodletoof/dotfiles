@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 	"syscall"
 
@@ -65,6 +66,7 @@ func main() {
 	for seshName := range config {
 		seshNames = append(seshNames, seshName)
 	}
+	slices.Sort(seshNames)
 	i, err := fuzzyfinder.Find(
 		seshNames,
 		func(i int) string {
