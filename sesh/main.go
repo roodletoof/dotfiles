@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,14 +10,37 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/goccy/go-yaml"
 	"github.com/ktr0731/go-fuzzyfinder"
-	"gopkg.in/yaml.v3"
 )
 
+var _ yaml.InterfaceUnmarshaler = &Programs{}
+type Programs struct {
+	programs []string
+}
+
+// UnmarshalYAML implements [yaml.InterfaceUnmarshaler].
+func (p *Programs) UnmarshalYAML(f func(any) error) error {
+	var singleStr string
+	err1 := f(&singleStr)
+	if err1 == nil {
+		p.programs = []string{singleStr}
+		return nil
+	}
+	err2 := f(&p.programs)
+	if err2 != nil {
+		return errors.Join(
+			err1,
+			err2,
+		)
+	}
+	return nil
+}
+
 type Window struct {
-	Path string `yaml:"path"`
-	Name string `yaml:"name"`
-	Program string `yaml:"program"`
+	Path    string `yaml:"path"`
+	Name    string `yaml:"name"`
+	Programs Programs `yaml:"program"`
 }
 
 func (w Window) ExpandedPath() string {
@@ -30,7 +54,7 @@ func (w Window) ExpandedPath() string {
 type Config map[string][]Window
 
 const (
-	tmux = "tmux"
+	tmux  = "tmux"
 	mkdir = "mkdir"
 )
 
@@ -74,7 +98,7 @@ func main() {
 		},
 		fuzzyfinder.WithPreviewWindow(
 			func(i, width, height int) string {
-				width = width/2-4
+				width = width/2 - 4
 				if i < 0 {
 					return ""
 				}
@@ -90,8 +114,11 @@ func main() {
 					if window.Path != "" {
 						fmt.Fprintf(&builder, "    path: %s\n", window.Path)
 					}
-					if window.Program != "" {
-						fmt.Fprintf(&builder, "    prog: %s\n", window.Program)
+					if len(window.Programs.programs) != 0 {
+						fmt.Fprintf(&builder, "    program:\n")
+					}
+					for _, prog := range window.Programs.programs {
+						fmt.Fprintf(&builder, "        - %s\n", prog)
 					}
 					fmt.Fprint(&builder, "\n")
 				}
@@ -164,9 +191,9 @@ func NewWindowInSession(seshName string, window Window) {
 	if err != nil {
 		panic(err)
 	}
-	if window.Program != "" {
+	for _, prog := range window.Programs.programs {
 		var carriageReturn = string([]byte{13})
-		cmd = exec.Command(tmux, "send-keys", "-t", fmt.Sprintf("%s:$", seshName), window.Program, carriageReturn)
+		cmd = exec.Command(tmux, "send-keys", "-t", fmt.Sprintf("%s:$", seshName), prog, carriageReturn)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		cmd.Stdin = os.Stdin
