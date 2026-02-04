@@ -45,7 +45,7 @@ vim.cmd [[
     nnoremap ,a <C-a>
     nnoremap ,x <C-x>
     nnoremap ,rl :checktime<CR>
-    nnoremap ,m :make<CR>
+    nnoremap ,m :wa<CR>:make<CR>
 
     nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
 
