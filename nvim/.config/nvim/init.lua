@@ -640,17 +640,17 @@ require'lazy'.setup{ --{{{1
             vim.keymap.set( 'n', ',fd', vim.lsp.buf.definition, { noremap = true, silent = true})
 
             vim.cmd [[
-                noremap ,rn :lua vim.lsp.buf.rename()<CR>
-                noremap ,ft :lua vim.lsp.buf.type_definition()<CR>
-                noremap ,fi :lua vim.lsp.buf.implementation()<CR>
-                noremap ,fr :lua vim.lsp.buf.references()<CR>
-                noremap ,ca :lua vim.lsp.buf.code_action()<CR>
-                noremap ,oe :lua vim.diagnostic.open_float()<CR>
-                noremap ,ea :lua vim.diagnostic.setqflist()<CR>
-                noremap ,ee :lua vim.diagnostic.setqflist{severity='ERROR'}<CR>
-                noremap ,ew :lua vim.diagnostic.setqflist{severity='WARN'}<CR>
-                noremap ,ei :lua vim.diagnostic.setqflist{severity='INFO'}<CR>
-                noremap ,eh :lua vim.diagnostic.setqflist{severity='HINT'}<CR>
+                nnoremap ,rn :lua vim.lsp.buf.rename()<CR>
+                nnoremap ,ft :lua vim.lsp.buf.type_definition()<CR>
+                nnoremap ,fi :lua vim.lsp.buf.implementation()<CR>
+                nnoremap ,fr :lua vim.lsp.buf.references()<CR>
+                nnoremap ,ca :lua vim.lsp.buf.code_action()<CR>
+                nnoremap ,oe :lua vim.diagnostic.open_float()<CR>
+                nnoremap ,ea :lua vim.diagnostic.setqflist()<CR>
+                nnoremap ,ee :lua vim.diagnostic.setqflist{severity='ERROR'}<CR>
+                nnoremap ,ew :lua vim.diagnostic.setqflist{severity='WARN'}<CR>
+                nnoremap ,ei :lua vim.diagnostic.setqflist{severity='INFO'}<CR>
+                nnoremap ,eh :lua vim.diagnostic.setqflist{severity='HINT'}<CR>
             ]]
         end
     },
@@ -812,24 +812,24 @@ require'lazy'.setup{ --{{{1
             }
 
             vim.cmd [[
-                noremap ,fw :lua require'telescope.builtin'.lsp_dynamic_workspace_symbols()<CR>
-                noremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
-                noremap ,ff :lua require'telescope.builtin'.find_files()<CR>
-                noremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
-                noremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
-                noremap ,fs :lua require'telescope.builtin'.grep_string()<CR>
-                noremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
-                noremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
-                noremap ,fm :lua require'telescope.builtin'.marks()<CR>
-                noremap ,fb :lua require'telescope.builtin'.buffers()<CR>
-                noremap ,fc :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cword>")})<CR>
-                noremap ,fC :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cWORD>")})<CR>
+                nnoremap ,fw :lua require'telescope.builtin'.lsp_dynamic_workspace_symbols()<CR>
+                nnoremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
+                nnoremap ,ff :lua require'telescope.builtin'.find_files()<CR>
+                nnoremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
+                nnoremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
+                nnoremap ,fs :lua require'telescope.builtin'.grep_string()<CR>
+                nnoremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
+                nnoremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
+                nnoremap ,fm :lua require'telescope.builtin'.marks()<CR>
+                nnoremap ,fb :lua require'telescope.builtin'.buffers()<CR>
+                nnoremap ,fc :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cword>")})<CR>
+                nnoremap ,fC :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cWORD>")})<CR>
 
-                noremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
-                noremap ,fee :lua require'telescope.builtin'.diagnostics{severity='ERROR'}<CR>
-                noremap ,few :lua require'telescope.builtin'.diagnostics{severity='WARN'}<CR>
-                noremap ,fei :lua require'telescope.builtin'.diagnostics{severity='INFO'}<CR>
-                noremap ,feh :lua require'telescope.builtin'.diagnostics{severity='HINT'}<CR>
+                nnoremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
+                nnoremap ,fee :lua require'telescope.builtin'.diagnostics{severity='ERROR'}<CR>
+                nnoremap ,few :lua require'telescope.builtin'.diagnostics{severity='WARN'}<CR>
+                nnoremap ,fei :lua require'telescope.builtin'.diagnostics{severity='INFO'}<CR>
+                nnoremap ,feh :lua require'telescope.builtin'.diagnostics{severity='HINT'}<CR>
             ]]
 
             require'telescope'.load_extension'ui-select'
