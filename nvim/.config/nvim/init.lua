@@ -574,13 +574,22 @@ require'lazy'.setup{ --{{{1
             },
         },
     },
+    { "seblyng/roslyn.nvim",
+        opts = {
+        },
+    },
     { 'neovim/nvim-lspconfig', --{{{2
         dependencies = {
             'williamboman/mason.nvim',
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
-            require'mason'.setup()
+            require'mason'.setup{
+                registries={
+                    "github:mason-org/mason-registry",
+                    "github:Crashdummyy/mason-registry",
+                }
+            }
             require'mason-lspconfig'.setup()
             vim.lsp.config.zls = {
                 before_init = function(_, _)
