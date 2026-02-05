@@ -574,7 +574,7 @@ require'lazy'.setup{ --{{{1
             },
         },
     },
-    { "seblyng/roslyn.nvim",
+    { "seblyng/roslyn.nvim", --{{{2
         opts = {
         },
     },
