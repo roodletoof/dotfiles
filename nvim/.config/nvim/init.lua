@@ -689,12 +689,14 @@ require'lazy'.setup{ --{{{1
             'theHamsta/nvim-dap-virtual-text',
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
+            'nicholasmata/nvim-dap-cs',
         },
         keys = {',b', ',db', ',B', '<B'},
         config = function()
             require'nvim-dap-virtual-text'.setup{ commented = true, }
             require'dap-go'.setup()
-            require'dap-python'.setup(get_python_venv_path())
+            require'dap-python'.setup('debugpy-adapter')
+            require('dap-cs').setup()
 
             local dap = require'dap'
             dap.adapters.godot = { type = 'server', host = '127.0.0.1', port = 6006, }
