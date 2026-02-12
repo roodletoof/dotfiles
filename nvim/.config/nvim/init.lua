@@ -26,6 +26,7 @@ vim.cmd [[
     set cursorline
     set noswapfile
     set list
+    set ignorecase
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
