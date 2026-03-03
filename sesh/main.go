@@ -91,11 +91,8 @@ func main() {
 		seshNames = append(seshNames, seshName)
 	}
 	slices.Sort(seshNames)
-	i, err := fuzzyfinder.Find(
-		seshNames,
-		func(i int) string {
-			return seshNames[i]
-		},
+
+	options := []fuzzyfinder.Option{
 		fuzzyfinder.WithPreviewWindow(
 			func(i, width, height int) string {
 				width = width/2 - 4
@@ -125,6 +122,19 @@ func main() {
 				return builder.String()
 			},
 		),
+		fuzzyfinder.WithSelectOne(),
+	}
+
+	if len(os.Args) > 1 {
+		options = append(options, fuzzyfinder.WithQuery(os.Args[1]))
+	}
+
+	i, err := fuzzyfinder.Find(
+		seshNames,
+		func(i int) string {
+			return seshNames[i]
+		},
+		options...,
 	)
 	if err != nil {
 		return
