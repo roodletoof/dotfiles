@@ -306,6 +306,7 @@ do
     local function toggle_padding()
         local padding_window = get_padding_window()
         if padding_window == nil then
+            vim.cmd"only"
             local padding = calculate_padding()
             if padding == nil then
                 return
