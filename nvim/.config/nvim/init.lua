@@ -1009,3 +1009,33 @@ do -- split line {{{1
         { silent = true }
     )
 end
+
+do --screenshot paste {{{1
+    local function save_clipboard_image()
+        local is_mac = vim.fn.has("mac")
+        if not is_mac then
+            error("only supported for mac")
+        end
+        local filename = vim.fn.input("image name: ")
+        local path = filename .. ".png"
+        local cmd = "pngpaste " .. vim.fn.shellescape(path)
+        local res = os.execute(cmd)
+        if res == 0 then
+            print("saved image to ".. path)
+        else
+            error("failed to save image")
+        end
+
+        local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+        vim.api.nvim_buf_set_lines(0, row, row, false, {
+            "!["..filename.."]("..path..")"
+        })
+    end
+
+    vim.keymap.set(
+        'n',
+        ',q',
+        save_clipboard_image,
+        {}
+    )
+end
