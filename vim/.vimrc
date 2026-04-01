@@ -45,6 +45,10 @@ set cursorline
 set errorformat^=%f:%l:%c\ -\ %t%*[^:]:\ %m
 set errorformat^=[----]\ %f:%l:\ %m
 set errorformat+=%f:%l\ %m
+
+set errorformat^=%C\ ——▶\ %f:%l:%c
+set errorformat^=%E%t%*[^:]:\ %m
+
 set expandtab
 set exrc
 set guicursor=n-v-c:block-Cursor
