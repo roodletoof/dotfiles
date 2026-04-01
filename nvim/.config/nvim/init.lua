@@ -169,10 +169,6 @@ end
 
 -- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
-    lua = function ()
-    end,
-    go = function()
-    end,
     c = function()
         vim.bo.expandtab = false
     end,
