@@ -27,6 +27,7 @@ vim.cmd [[
     set noswapfile
     set list
     set ignorecase
+    set makeprg=just
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -171,24 +172,13 @@ local file_specific = {
     lua = function ()
     end,
     go = function()
-        vim.bo.makeprg = 'go'
     end,
     c = function()
-        if not has_makefile() then
-            vim.bo.makeprg = 'tcc -run %'
-        end
         vim.bo.expandtab = false
     end,
     cs = function()
-        vim.bo.makeprg = "dotnet"
         vim.bo.errorformat = "%f(%l\\,%c):\\ %t%*[^:]:\\ %m"
         vim.bo.errorformat = vim.bo.errorformat .. ",%\\s%#at\\ %m\\ in\\ %f:line\\ %l"
-    end,
-    python = function()
-        vim.bo.makeprg = 'basedpyright'
-    end,
-    swift = function()
-        vim.bo.makeprg = 'swift'
     end,
     tsv = function()
         vim.bo.tabstop = 32
@@ -196,22 +186,11 @@ local file_specific = {
     end,
     odin = function()
         vim.bo.expandtab = false
-        vim.bo.makeprg = 'odin run .'
     end
 }
 
 vim.api.nvim_create_autocmd('BufEnter', {
     callback = function()
-        do
-            local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
-            if line then
-                local first_two = line:sub(1, 2)
-                if first_two == '#!' then
-                    vim.bo.makeprg = './%'
-                    return
-                end
-            end
-        end
         local conf = file_specific[vim.bo.filetype]
         if conf then conf() end
     end,
