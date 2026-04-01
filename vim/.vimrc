@@ -7,7 +7,6 @@ nnoremap ,ct :!ctags -R .<CR>
 nnoremap ,rc :source $MYVIMRC<CR>
 
 autocmd FileType make setlocal noexpandtab
-autocmd FileType python setlocal makeprg=basedpyright
 autocmd FileType yaml setlocal tabstop=2
 let g:rustfmt_autosave = 0
 nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
@@ -64,6 +63,7 @@ set viewoptions=folds,cursor
 set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 set noswapfile
 set ignorecase
+set makeprg=just
 syntax on
 tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^
@@ -102,13 +102,11 @@ nnoremap 'Y 'Y'"
 nnoremap 'Z 'Z'"
 
 
-au FileType cs setlocal makeprg=dotnet errorformat=\ %#%f(%l\\,%c):\ error\ CS%n:\ %m
 au BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 au BufNewFile,BufRead *.h set filetype=c
 au BufWinEnter *.* silent! loadview 
 au BufWinLeave *.* silent! mkview 
 au FileType * setlocal indentexpr=
-au FileType go setlocal makeprg=go noexpandtab
 au FileType lua setlocal noexpandtab
 au FileType c setlocal noexpandtab
 augroup GoCtags
