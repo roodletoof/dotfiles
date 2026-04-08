@@ -8,6 +8,9 @@ vim.g.python3_host_prog = get_python_venv_path()
 
 -- GENERAL SETTINGS {{{1
 
+vim.o.termguicolors = true
+vim.cmd.colorscheme('catppuccin')
+
 vim.cmd [[
     set autowriteall
     set exrc
@@ -528,15 +531,6 @@ require'lazy'.setup{ --{{{1
         version = false,
         config = function()
             require'mini.align'.setup()
-        end,
-    },
-    { 'sainnhe/everforest', --{{{2
-        lazy = false,
-        priority = 1000,
-        config = function()
-            vim.o.termguicolors = true
-            vim.g.everforest_enable_italic = true
-            vim.cmd.colorscheme('everforest')
         end,
     },
     { 'folke/lazydev.nvim', --{{{2
