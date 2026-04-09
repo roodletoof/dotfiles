@@ -28,3 +28,8 @@ action = "IncreaseFontSize"
 key = "-"
 mods = "Control"
 action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "0"
+mods = "Control"
+action = "ResetFontSize"
