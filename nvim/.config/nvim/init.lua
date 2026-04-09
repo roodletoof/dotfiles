@@ -8,9 +8,6 @@ vim.g.python3_host_prog = get_python_venv_path()
 
 -- GENERAL SETTINGS {{{1
 
-vim.o.termguicolors = true
-vim.cmd.colorscheme('catppuccin')
-
 vim.cmd [[
     set autowriteall
     set exrc
@@ -327,6 +324,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
+	{ "catppuccin/nvim", --{{{2
+		name = "catppuccin",
+		priority = 1000,
+		config = function()
+			vim.o.termguicolors = true
+			vim.cmd.colorscheme('catppuccin')
+		end
+	},
     { 'stevearc/oil.nvim', --{{{2
         ---@module 'oil'
         ---@type oil.SetupOpts
