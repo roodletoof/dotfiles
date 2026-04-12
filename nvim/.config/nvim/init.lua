@@ -26,7 +26,6 @@ vim.cmd [[
     set cursorline
     set noswapfile
     set list
-    set ignorecase
     set makeprg=just
 
     nnoremap ,co :copen<CR>
