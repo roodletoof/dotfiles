@@ -557,6 +557,11 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
+            vim.diagnostic.config{
+                signs=false,
+                underline=false,
+            }
+
             require'mason'.setup{
                 registries={
                     "github:mason-org/mason-registry",
