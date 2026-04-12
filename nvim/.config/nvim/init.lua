@@ -158,19 +158,6 @@ vim.api.nvim_create_autocmd({
     end
 })
 
-local function has_makefile()
-    local dir = io.popen('ls')
-    if not dir then return false end
-    for file in dir:lines() do
-        if file:lower() == 'makefile' then
-            dir:close()
-            return true
-        end
-    end
-    dir:close()
-    return false
-end
-
 -- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
     c = function()
