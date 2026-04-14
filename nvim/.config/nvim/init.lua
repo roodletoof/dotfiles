@@ -27,7 +27,6 @@ vim.cmd [[
     set noswapfile
     set list
     set makeprg=just
-    set statusline=%<%f\ %h%w%m%r\ %=%{%\ &showcmdloc\ ==\ 'statusline'\ ?\ '%-10.S\ '\ :\ ''\ %}%{%\ exists('b:keymap_name')\ ?\ '<'..b:keymap_name..'>\ '\ :\ ''\ %}%{%\ &ruler\ ?\ (\ &rulerformat\ ==\ ''\ ?\ '%-14.(%l,%c%V%)\ %P'\ :\ &rulerformat\ )\ :\ ''\ %}
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -544,10 +543,6 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
-            vim.diagnostic.config{
-                signs=false,
-                underline=false,
-            }
 
             require'mason'.setup{
                 registries={
