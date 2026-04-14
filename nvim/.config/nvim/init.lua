@@ -27,7 +27,6 @@ vim.cmd [[
     set noswapfile
     set list
     set makeprg=just
-    set statusline=%<%f\ %h%w%m%r\ %=%{%\ &showcmdloc\ ==\ 'statusline'\ ?\ '%-10.S\ '\ :\ ''\ %}%{%\ exists('b:keymap_name')\ ?\ '<'..b:keymap_name..'>\ '\ :\ ''\ %}%{%\ &ruler\ ?\ (\ &rulerformat\ ==\ ''\ ?\ '%-14.(%l,%c%V%)\ %P'\ :\ &rulerformat\ )\ :\ ''\ %}
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -212,6 +211,7 @@ do
         end
         return nil
     end
+    local original_statusline = vim.opt_global.statusline
 
     local padding_buffer = _G[ID]
     if padding_buffer == nil then
@@ -258,6 +258,11 @@ do
                     local padding = calculate_padding()
                     if padding == nil then
                         vim.api.nvim_win_close(padding_window, true)
+                        vim.opt_global.statusline = original_statusline
+                        vim.diagnostic.config{
+                            signs=true,
+                            underline=true,
+                        }
                     else
                         vim.api.nvim_win_set_width(padding_window, padding)
                     end
@@ -288,8 +293,20 @@ do
             vim.api.nvim_set_option_value('winfixwidth', true, {win = win})
             vim.api.nvim_set_option_value("fillchars", "eob: ", { win = win })
             vim.cmd"wincmd ="
+            vim.cmd[[
+                set statusline=%<%f\ %h%w%m%r\ %=%{%\ &showcmdloc\ ==\ 'statusline'\ ?\ '%-10.S\ '\ :\ ''\ %}%{%\ exists('b:keymap_name')\ ?\ '<'..b:keymap_name..'>\ '\ :\ ''\ %}%{%\ &ruler\ ?\ (\ &rulerformat\ ==\ ''\ ?\ '%-14.(%l,%c%V%)\ %P'\ :\ &rulerformat\ )\ :\ ''\ %}
+            ]]
+            vim.diagnostic.config{
+                signs=false,
+                underline=false,
+            }
         else
             vim.api.nvim_win_close(padding_window, true)
+            vim.opt_global.statusline = original_statusline
+            vim.diagnostic.config{
+                signs=true,
+                underline=true,
+            }
         end
     end
 
@@ -544,10 +561,6 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
-            vim.diagnostic.config{
-                signs=false,
-                underline=false,
-            }
 
             require'mason'.setup{
                 registries={
