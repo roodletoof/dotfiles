@@ -10,7 +10,7 @@ dynamic_padding = true
 decorations = "Buttonless"
 
 [font]
-normal.family = "Comic Code Ligatures"
+normal.family = "ComicCode Nerd Font Mono"
 size = 12
 
 # Subtle positional tuning
