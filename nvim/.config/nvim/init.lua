@@ -811,6 +811,7 @@ require'lazy'.setup{ --{{{1
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
+            'kyazdani42/nvim-web-devicons',
         },
         config = function()
             local actions = require'telescope.actions'
