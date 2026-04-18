@@ -6,8 +6,23 @@ end
 
 vim.g.python3_host_prog = get_python_venv_path()
 
--- GENERAL SETTINGS {{{1
+-- POPULATE QFLIST ON ERROR {{{1
+do
+    local orig_traceback = debug.traceback
+    debug.traceback = function(...)
+        local trace = orig_traceback(...)
 
+        -- push full trace to quickfix
+        vim.fn.setqflist({}, "a", {
+            title = "Traceback",
+            lines = vim.split(trace, "\n"),
+        })
+
+        return trace
+    end
+end
+
+-- GENERAL SETTINGS {{{1
 vim.cmd [[
     set autowriteall
     set exrc
@@ -623,8 +638,8 @@ require'lazy'.setup{ --{{{1
             ]]
         end
     },
-    { 'nvim-treesitter/nvim-treesitter', --{{{2
-        tag="v0.10.0",
+    { name = 'nvim-treesitter', --{{{2
+        dir = vim.fn.stdpath("config") .. "/vendor/nvim-treesitter",
         config = function()
             require'nvim-treesitter.configs'.setup{
                 modules = {},
@@ -645,7 +660,7 @@ require'lazy'.setup{ --{{{1
     },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
-            'nvim-treesitter/nvim-treesitter',
+            'nvim-treesitter',
             'theHamsta/nvim-dap-virtual-text',
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
