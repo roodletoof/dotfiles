@@ -29,7 +29,7 @@ do
     end
 
     local orig = debug.traceback
-    ---@diagnostic disable-next-line: duplicate-set-field
+    ---@diagnostic disable-next-line: duplicate-set-field, redundant-parameter
     debug.traceback = function(thread, message, level)
         local trace = vim.split(full_trace(), "\n")
         local orig_trace = orig(thread, message, level)
