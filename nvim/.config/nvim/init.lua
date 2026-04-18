@@ -370,14 +370,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
-	{ "catppuccin/nvim", --{{{2
-		name = "catppuccin",
-		priority = 1000,
-		config = function()
-			vim.o.termguicolors = true
-			vim.cmd.colorscheme('catppuccin')
-		end
-	},
     { 'stevearc/oil.nvim', --{{{2
         ---@module 'oil'
         ---@type oil.SetupOpts
@@ -582,6 +574,15 @@ require'lazy'.setup{ --{{{1
         version = false,
         config = function()
             require'mini.align'.setup()
+        end,
+    },
+    { 'sainnhe/everforest', --{{{2
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.o.termguicolors = true
+            vim.g.everforest_enable_italic = true
+            vim.cmd.colorscheme('everforest')
         end,
     },
     { 'folke/lazydev.nvim', --{{{2
