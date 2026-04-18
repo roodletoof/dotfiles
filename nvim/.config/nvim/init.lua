@@ -8,43 +8,45 @@ vim.g.python3_host_prog = get_python_venv_path()
 
 -- POPULATE QFLIST ON ERROR {{{1
 do
-  local function full_trace()
-    local lines = {}
+    local function full_trace()
+        local lines = {}
 
-    local level = 2
-    while true do
-      local info = debug.getinfo(level, "Sln")
-      if not info then break end
+        local level = 2
+        while true do
+            local info = debug.getinfo(level, "Sln")
+            if not info then break end
 
-      local src = info.source or "?"
-      local file = src:gsub("^@", "") -- remove @ prefix
+            local src = info.source or "?"
+            local file = src:gsub("^@", "") -- remove @ prefix
 
-      local line = string.format(
-        "%s:%d: in %s",
-        file,
-        info.currentline or 0,
-        info.name or "?"
-      )
+            local line = string.format(
+                "%s:%d: in %s",
+                file,
+                info.currentline or 0,
+                info.name or "?"
+            )
 
-      table.insert(lines, line)
-      level = level + 1
+            table.insert(lines, line)
+            level = level + 1
+        end
+
+        return table.concat(lines, "\n")
     end
 
-    return table.concat(lines, "\n")
-  end
+    local orig = debug.traceback
 
-  local orig = debug.traceback
+    ---@diagnostic disable-next-line: duplicate-set-field
+    debug.traceback = function(...)
+        local trace = full_trace()
+        local orig_trace = orig(...) -- TODO remove. find message instead
 
-  debug.traceback = function(...)
-    local trace = full_trace()
+        vim.fn.setqflist({}, "a", {
+            title = "Traceback",
+            lines = vim.split(trace, "\n"),
+        })
 
-    vim.fn.setqflist({}, "a", {
-      title = "Traceback",
-      lines = vim.split(trace, "\n"),
-    })
-
-    return trace
-  end
+        return orig_trace
+    end
 end
 
 -- GENERAL SETTINGS {{{1
