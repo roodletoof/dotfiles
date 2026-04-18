@@ -36,13 +36,31 @@ do
     local orig = debug.traceback
 
     ---@diagnostic disable-next-line: duplicate-set-field
-    debug.traceback = function(...)
-        local trace = full_trace()
-        local orig_trace = orig(...) -- TODO remove. find message instead
+    debug.traceback = function(thread, message, level)
+        local trace = vim.split(full_trace(), "\n")
+        local orig_trace = orig(thread, message, level)
+        if type(thread) ~= 'thread' then
+            level = message
+            message = thread
+        end
+        assert(type(message) == 'nil' or type(message) == 'string')
+        local qflist_items = vim.split(message, "\n")
+
+        -- doing this to remove truncated file location at the start of the error message
+        for i, msg in ipairs(qflist_items) do
+            local match = string.match(msg, ".*:%s*(.*)")
+            if match ~= nil then
+                qflist_items[i] = match
+            end
+        end
+
+        for _, loc in ipairs(trace) do
+            table.insert(qflist_items, loc)
+        end
 
         vim.fn.setqflist({}, "a", {
             title = "Traceback",
-            lines = vim.split(trace, "\n"),
+            lines = qflist_items,
         })
 
         return orig_trace
