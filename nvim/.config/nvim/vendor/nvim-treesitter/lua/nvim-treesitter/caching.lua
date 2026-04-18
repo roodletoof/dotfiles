@@ -31,7 +31,6 @@ function M.create_buffer_cache()
         on_detach = function()
           cache.clear_buffer(bufnr)
           loaded_buffers[bufnr] = nil
-          return true
         end,
         on_reload = function() end, -- this is needed to prevent on_detach being called on buffer reload
       })
