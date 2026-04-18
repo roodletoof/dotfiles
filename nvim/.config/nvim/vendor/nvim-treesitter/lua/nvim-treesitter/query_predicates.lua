@@ -133,13 +133,16 @@ end, opts)
 ---@param pred string[]
 ---@return boolean|nil
 query.add_directive("set-lang-from-info-string!", function(match, _, bufnr, pred, metadata)
-  local capture_id = pred[2]
-  local node = match[capture_id]
-  if not node then
-    return
-  end
-  local injection_alias = vim.treesitter.get_node_text(node, bufnr):lower()
-  metadata["injection.language"] = get_parser_from_markdown_info_string(injection_alias)
+    local capture_id = pred[2]
+    local node = match[capture_id]
+    if not node then
+        return
+    end
+    if not node.range then
+        return -- TODO: What is goin on here???
+    end
+    local injection_alias = vim.treesitter.get_node_text(node, bufnr):lower()
+    metadata["injection.language"] = get_parser_from_markdown_info_string(injection_alias)
 end, opts)
 
 -- Just avoid some annoying warnings for this directive
