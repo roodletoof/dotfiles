@@ -72,6 +72,7 @@ tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^
 xnoremap L $
 nnoremap Q @@
+nnoremap ,m :make<CR>
 
 if has('clipboard')
   set clipboard^=unnamed,unnamedplus
