@@ -126,7 +126,8 @@ func main() {
 	}
 
 	if len(os.Args) > 1 {
-		options = append(options, fuzzyfinder.WithQuery(os.Args[1]))
+		query := strings.Join(os.Args[1:], " ")
+		options = append(options, fuzzyfinder.WithQuery(query))
 	}
 
 	i, err := fuzzyfinder.Find(
