@@ -77,6 +77,8 @@ vim.cmd [[
     set noswapfile
     set list
     set makeprg=just
+    command! -nargs=* Just execute 'make' <q-args>
+    cabbrev just Just
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
