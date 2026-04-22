@@ -7,7 +7,7 @@ end
 vim.g.python3_host_prog = get_python_venv_path()
 
 -- GENERAL SETTINGS {{{1
-vim.cmd [[
+vim.cmd [=[
     set autowriteall
     set exrc
     set secure
@@ -83,7 +83,7 @@ vim.cmd [[
     set errorformat^=%C%*\\s——▶%*\\s%f:%l:%c
     set errorformat^=%E%t%*[^:]:\ %m
 
-]]
+]=]
 
 vim.keymap.set('n', ',cf', function()
     local qf = vim.fn.getqflist()
