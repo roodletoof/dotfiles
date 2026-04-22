@@ -83,6 +83,9 @@ vim.cmd [=[
     set errorformat^=%C%*\\s——▶%*\\s%f:%l:%c
     set errorformat^=%E%t%*[^:]:\ %m
 
+    set errorformat=
+    set errorformat+=%f(%l\\,%c):\ %t%*[^:]:\ %m
+    set errorformat+=%f:%l:%c:\ %t%*[^:]:\ %m
 ]=]
 
 vim.keymap.set('n', ',cf', function()
@@ -162,10 +165,6 @@ vim.api.nvim_create_autocmd({
 local file_specific = {
     c = function()
         vim.bo.expandtab = false
-    end,
-    cs = function()
-        vim.bo.errorformat = "%f(%l\\,%c):\\ %t%*[^:]:\\ %m"
-        vim.bo.errorformat = vim.bo.errorformat .. ",%\\s%#at\\ %m\\ in\\ %f:line\\ %l"
     end,
     tsv = function()
         vim.bo.tabstop = 32
