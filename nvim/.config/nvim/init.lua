@@ -81,11 +81,11 @@ vim.cmd [=[
     set errorformat+=%f:%l:%c:\ %t%*[^:]:\ %m
 
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
-    set errorformat^=[----]\ %f:%l:\ %m
-    set errorformat^=%f\(%l:%c\)\ %m
+    set errorformat+=[----]\ %f:%l:\ %m
+    set errorformat+=%f\(%l:%c\)\ %m
 
-    set errorformat^=%C%*\\s——▶%*\\s%f:%l:%c
-    set errorformat^=%E%t%*[^:]:\ %m
+    set errorformat+=%E%t%*[^:]:\ %m
+    set errorformat+=%C%*\\s——▶%*\\s%f:%l:%c
 ]=]
 
 vim.keymap.set('n', ',cf', function()
