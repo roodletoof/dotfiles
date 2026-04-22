@@ -544,6 +544,9 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason-lspconfig.nvim',
         },
         config = function()
+            vim.diagnostic.config{
+                severity_sort=true
+            }
 
             require'mason'.setup{
                 registries={
