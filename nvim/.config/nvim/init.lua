@@ -6,6 +6,57 @@ end
 
 vim.g.python3_host_prog = get_python_venv_path()
 
+-- POPULATE QFLIST ON ERROR {{{1
+do
+    local function full_trace()
+        local lines = {}
+        local level = 2
+        while true do
+            local info = debug.getinfo(level, "Sln")
+            if not info then break end
+            local src = info.source or "?"
+            local file = src:gsub("^@", "") -- remove @ prefix
+            local line = string.format(
+                "%s:%d: in %s",
+                file,
+                info.currentline or 0,
+                info.name or "?"
+            )
+            table.insert(lines, line)
+            level = level + 1
+        end
+        return table.concat(lines, "\n")
+    end
+
+    local orig = debug.traceback
+    ---@diagnostic disable-next-line: duplicate-set-field, redundant-parameter
+    debug.traceback = function(thread, message, level)
+        local trace = vim.split(full_trace(), "\n")
+        local orig_trace = orig(thread, message, level)
+        if type(thread) ~= 'thread' then
+            level = message
+            message = thread
+        end
+        assert(type(message) == 'nil' or type(message) == 'string')
+        local qflist_items = vim.split(message, "\n")
+        -- doing this to remove truncated file location at the start of the error message
+        for i, msg in ipairs(qflist_items) do
+            local match = string.match(msg, ".*:%s*(.*)")
+            if match ~= nil then
+                qflist_items[i] = match
+            end
+        end
+        for _, loc in ipairs(trace) do
+            table.insert(qflist_items, loc)
+        end
+        vim.fn.setqflist({}, "a", {
+            title = "Traceback",
+            lines = qflist_items,
+        })
+        return orig_trace
+    end
+end
+
 -- GENERAL SETTINGS {{{1
 vim.cmd [=[
     set autowriteall
