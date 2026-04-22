@@ -80,6 +80,9 @@ vim.cmd [=[
     set errorformat+=%f(%l\\,%c):\ %t%*[^:]:\ %m
     set errorformat+=%f:%l:%c:\ %t%*[^:]:\ %m
 
+    " VSTest failure stack trace (core case)
+    set errorformat+=%E\ at\ %*[^\ ]\ in\ %f:line\ %l
+
     set wildignore=*.o,*.obj,.git/**,tags,*.pyc
     set errorformat+=[----]\ %f:%l:\ %m
     set errorformat+=%f\(%l:%c\)\ %m
