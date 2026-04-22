@@ -696,14 +696,20 @@ require'lazy'.setup{ --{{{1
     },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
-            'theHamsta/nvim-dap-virtual-text',
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
             'nicholasmata/nvim-dap-cs',
         },
-        keys = {',b', ',db', ',B', '<B'},
+        keys = {
+            ',b',
+            ',db',
+            ',B',
+            '<B',
+            ',dh',
+            ',ds',
+            ',df',
+        },
         config = function()
-            require'nvim-dap-virtual-text'.setup{ commented = true, }
             require'dap-go'.setup()
             require'dap-python'.setup('debugpy-adapter')
             require('dap-cs').setup()
@@ -737,16 +743,47 @@ require'lazy'.setup{ --{{{1
             }
             dap.configurations.cpp = dap.configurations.c
             dap.configurations.rust = dap.configurations.c
+            local widgets = require'dap.ui.widgets'
 
-            vim.cmd [[
-                nnoremap ,b :DapToggleBreakpoint<CR>
-                nnoremap ,B :DapClearBreakpoints<CR>
-                nnoremap <B :DapClearBreakpoints<CR>
-                nnoremap ,db :DapContinue<CR>
-                nnoremap <Down> :DapStepInto<CR>
-                nnoremap <UP> :DapStepOut<CR>
-                nnoremap <Right> :DapStepOver<CR>
-            ]]
+            local inspections = {}
+            local function map_inspection(keys, func)
+                local function wrapper()
+                    if inspections[keys] == nil then
+                        inspections[keys] = func()
+                        return
+                    end
+                    inspections[keys].toggle()
+                end
+                vim.keymap.set('n', keys, wrapper, {noremap=true})
+            end
+            local function refresh_inspections()
+                for _, widget in pairs(inspections) do
+                    if widget.win ~= nil then
+                        widget.refresh()
+                    end
+                end
+            end
+            local function close_inspections()
+                for _, widget in pairs(inspections) do
+                    if widget.win ~= nil then
+                        widget.close()
+                    end
+                end
+            end
+            map_inspection(',dh', widgets.hover)
+            map_inspection(',ds', function () return widgets.centered_float(widgets.scopes) end)
+            map_inspection(',df', function () return widgets.centered_float(widgets.frames) end)
+            vim.keymap.set('n', '<Down>', dap.step_over)
+            vim.keymap.set('n', '<Right>', dap.step_into)
+            vim.keymap.set('n', '<Left>', dap.step_out)
+            vim.keymap.set('n', '<Up>', dap.restart_frame)
+            vim.keymap.set('n', ',b', dap.toggle_breakpoint)
+            vim.keymap.set('n', ',B', dap.clear_breakpoints)
+            vim.keymap.set('n', '<B', dap.clear_breakpoints)
+            vim.keymap.set('n', ',db', dap.continue)
+            vim.keymap.set('n', ',dc', close_inspections)
+            vim.keymap.set('n', ',dr', refresh_inspections)
+
         end
     },
     { 'dcampos/nvim-snippy', --{{{2
