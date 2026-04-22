@@ -127,6 +127,30 @@ query.add_directive("set-lang-from-mimetype!", function(match, _, bufnr, pred, m
     end
 end, opts)
 
+---@param val any
+---@param indentation integer?
+---@return string
+local function pretty_str(val, indentation)
+    indentation = indentation or 0
+    local t = type(val)
+    if t == "string" then
+        return "("..t..")"..'"'..val..'"'
+    end
+    if t == "table" then
+        ---@type string[]
+        local builder = {"{\n"}
+        for key, value in pairs(val) do
+            table.insert(builder, "("..type(key)..")"..pretty_str(key, indentation+1))
+            table.insert(builder, ": ")
+            table.insert(builder, "("..type(value)..")"..pretty_str(value))
+            table.insert(builder, ",\n")
+        end
+        return table.concat(builder, "")
+    end
+
+    return tostring(val)
+end
+
 ---@param match (TSNode|nil)[]
 ---@param _ string
 ---@param bufnr integer
@@ -138,10 +162,7 @@ query.add_directive("set-lang-from-info-string!", function(match, _, bufnr, pred
     if not node then
         return
     end
-    if not node.range then
-        return -- TODO: What is goin on here???
-    end
-    local injection_alias = vim.treesitter.get_node_text(node, bufnr):lower()
+    local injection_alias = vim.treesitter.get_node_text(node, bufnr, {metadata=metadata}):lower()
     metadata["injection.language"] = get_parser_from_markdown_info_string(injection_alias)
 end, opts)
 
