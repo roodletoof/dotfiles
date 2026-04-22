@@ -128,6 +128,7 @@ vim.cmd [=[
     autocmd FileType * setlocal indentexpr=
 
     set errorformat=
+
     set errorformat+=%f(%l\\,%c):\ %t%*[^:]:\ %m
     set errorformat+=%f:%l:%c:\ %t%*[^:]:\ %m
 
@@ -140,6 +141,8 @@ vim.cmd [=[
 
     set errorformat+=%E%t%*[^:]:\ %m
     set errorformat+=%C%*\\s——▶%*\\s%f:%l:%c
+    set errorformat+=%f:%l:\ %m
+
 ]=]
 
 vim.keymap.set('n', ',cf', function()
