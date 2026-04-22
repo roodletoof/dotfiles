@@ -49,6 +49,8 @@ set errorformat+=%f:%l\ %m
 set errorformat^=%C%*\\s——▶%*\\s%f:%l:%c
 set errorformat^=%E%t%*[^:]:\ %m
 
+set errorformat^=\%\\s%#File\ \"%f\"\\,\ line\ %l\\,\ %.%#
+
 set expandtab
 set exrc
 set guicursor=n-v-c:block-Cursor
@@ -75,6 +77,7 @@ xnoremap H ^
 xnoremap L $
 nnoremap Q @@
 nnoremap ,m :make<CR>
+nnoremap - :E<CR>
 
 if has('clipboard')
   set clipboard^=unnamed,unnamedplus
