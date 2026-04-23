@@ -220,10 +220,7 @@ vim.api.nvim_create_autocmd({
     end
 })
 
---- tree-sitter and file specific {{{1
-
-assert(vim.treesitter.language.add('c_sharp'))
-vim.treesitter.language.register('c_sharp', 'cs')
+-- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
     c = function()
         vim.bo.expandtab = false
@@ -234,7 +231,7 @@ local file_specific = {
     end,
     odin = function()
         vim.bo.expandtab = false
-    end,
+    end
 }
 
 vim.api.nvim_create_autocmd('BufEnter', {
