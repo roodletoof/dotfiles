@@ -696,8 +696,30 @@ require'lazy'.setup{ --{{{1
             ]]
         end
     },
+    { name = 'nvim-treesitter', --{{{2
+        dir = vim.fn.stdpath("config") .. "/vendor/nvim-treesitter",
+        config = function()
+            require'nvim-treesitter.configs'.setup{
+                modules = {},
+                ensure_installed = {},
+                ignore_install = {},
+                parser_install_dir = nil,
+                sync_install = false,
+                auto_install = true,
+                indent = {
+                    enable = true,
+                },
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+            }
+        end,
+    },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
+            'nvim-treesitter',
+            'theHamsta/nvim-dap-virtual-text',
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
             'nicholasmata/nvim-dap-cs',
