@@ -89,6 +89,8 @@ vim.cmd [=[
 
     set errorformat+=%E%t%*[^:]:\ %m
     set errorformat+=%C%*\\s——▶%*\\s%f:%l:%c
+
+    set errorformat+=%f:%l:%c\ -\ %t%*[^:]:\ %m
 ]=]
 
 vim.keymap.set('n', ',cf', function()
