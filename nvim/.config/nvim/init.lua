@@ -719,7 +719,6 @@ require'lazy'.setup{ --{{{1
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
             'nvim-treesitter',
-            'theHamsta/nvim-dap-virtual-text',
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
             'nicholasmata/nvim-dap-cs',
