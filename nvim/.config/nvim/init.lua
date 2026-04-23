@@ -130,7 +130,9 @@ vim.cmd [=[
     set errorformat=
 
     set errorformat+=%f(%l\\,%c):\ %t%*[^:]:\ %m
-    set errorformat+=%f:%l:%c:\ %t%*[^:]:\ %m
+    set errorformat+=%f:%l:%c:\ %trror%*[^:]:\ %m
+    set errorformat+=%f:%l:%c:\ %tarning%*[^:]:\ %m
+    set errorformat+=%f:%l:%c:\ %m
 
     " VSTest failure stack trace (core case)
     set errorformat+=%E\ at\ %*[^\ ]\ in\ %f:line\ %l
