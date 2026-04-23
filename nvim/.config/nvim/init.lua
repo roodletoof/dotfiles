@@ -6,6 +6,57 @@ end
 
 vim.g.python3_host_prog = get_python_venv_path()
 
+-- POPULATE QFLIST ON ERROR {{{1
+do
+    local function full_trace()
+        local lines = {}
+        local level = 2
+        while true do
+            local info = debug.getinfo(level, "Sln")
+            if not info then break end
+            local src = info.source or "?"
+            local file = src:gsub("^@", "") -- remove @ prefix
+            local line = string.format(
+                "%s:%d: in %s",
+                file,
+                info.currentline or 0,
+                info.name or "?"
+            )
+            table.insert(lines, line)
+            level = level + 1
+        end
+        return table.concat(lines, "\n")
+    end
+
+    local orig = debug.traceback
+    ---@diagnostic disable-next-line: duplicate-set-field, redundant-parameter
+    debug.traceback = function(thread, message, level)
+        local trace = vim.split(full_trace(), "\n")
+        local orig_trace = orig(thread, message, level)
+        if type(thread) ~= 'thread' then
+            level = message
+            message = thread
+        end
+        assert(type(message) == 'nil' or type(message) == 'string')
+        local qflist_items = vim.split(message, "\n")
+        -- doing this to remove truncated file location at the start of the error message
+        for i, msg in ipairs(qflist_items) do
+            local match = string.match(msg, ".*:%s*(.*)")
+            if match ~= nil then
+                qflist_items[i] = match
+            end
+        end
+        for _, loc in ipairs(trace) do
+            table.insert(qflist_items, loc)
+        end
+        vim.fn.setqflist({}, "a", {
+            title = "Traceback",
+            lines = qflist_items,
+        })
+        return orig_trace
+    end
+end
+
 -- GENERAL SETTINGS {{{1
 vim.cmd [=[
     set autowriteall
@@ -77,6 +128,7 @@ vim.cmd [=[
     autocmd FileType * setlocal indentexpr=
 
     set errorformat=
+
     set errorformat+=%f(%l\\,%c):\ %t%*[^:]:\ %m
     set errorformat+=%f:%l:%c:\ %t%*[^:]:\ %m
 
@@ -91,6 +143,8 @@ vim.cmd [=[
     set errorformat+=%C%*\\s——▶%*\\s%f:%l:%c
 
     set errorformat+=%f:%l:%c\ -\ %t%*[^:]:\ %m
+    set errorformat+=%f:%l:\ %m
+
 ]=]
 
 vim.keymap.set('n', ',cf', function()
@@ -642,37 +696,22 @@ require'lazy'.setup{ --{{{1
             ]]
         end
     },
-    { name = 'nvim-treesitter', --{{{2
-        dir = vim.fn.stdpath("config") .. "/vendor/nvim-treesitter",
-        config = function()
-            require'nvim-treesitter.configs'.setup{
-                modules = {},
-                ensure_installed = {},
-                ignore_install = {},
-                parser_install_dir = nil,
-                sync_install = false,
-                auto_install = true,
-                indent = {
-                    enable = true,
-                },
-                highlight = {
-                    enable = true,
-                    additional_vim_regex_highlighting = false,
-                },
-            }
-        end,
-    },
     { 'mfussenegger/nvim-dap', --{{{2
         dependencies = {
-            'nvim-treesitter',
-            'theHamsta/nvim-dap-virtual-text',
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
             'nicholasmata/nvim-dap-cs',
         },
-        keys = {',b', ',db', ',B', '<B'},
+        keys = {
+            ',b',
+            ',db',
+            ',B',
+            '<B',
+            ',dh',
+            ',ds',
+            ',df',
+        },
         config = function()
-            require'nvim-dap-virtual-text'.setup{ commented = true, }
             require'dap-go'.setup()
             require'dap-python'.setup('debugpy-adapter')
             require('dap-cs').setup()
@@ -706,16 +745,47 @@ require'lazy'.setup{ --{{{1
             }
             dap.configurations.cpp = dap.configurations.c
             dap.configurations.rust = dap.configurations.c
+            local widgets = require'dap.ui.widgets'
 
-            vim.cmd [[
-                nnoremap ,b :DapToggleBreakpoint<CR>
-                nnoremap ,B :DapClearBreakpoints<CR>
-                nnoremap <B :DapClearBreakpoints<CR>
-                nnoremap ,db :DapContinue<CR>
-                nnoremap <Down> :DapStepInto<CR>
-                nnoremap <UP> :DapStepOut<CR>
-                nnoremap <Right> :DapStepOver<CR>
-            ]]
+            local inspections = {}
+            local function map_inspection(keys, func)
+                local function wrapper()
+                    if inspections[keys] == nil then
+                        inspections[keys] = func()
+                        return
+                    end
+                    inspections[keys].toggle()
+                end
+                vim.keymap.set('n', keys, wrapper, {noremap=true})
+            end
+            local function refresh_inspections()
+                for _, widget in pairs(inspections) do
+                    if widget.win ~= nil then
+                        widget.refresh()
+                    end
+                end
+            end
+            local function close_inspections()
+                for _, widget in pairs(inspections) do
+                    if widget.win ~= nil then
+                        widget.close()
+                    end
+                end
+            end
+            map_inspection(',dh', widgets.hover)
+            map_inspection(',ds', function () return widgets.centered_float(widgets.scopes) end)
+            map_inspection(',df', function () return widgets.centered_float(widgets.frames) end)
+            vim.keymap.set('n', '<Down>', dap.step_over)
+            vim.keymap.set('n', '<Right>', dap.step_into)
+            vim.keymap.set('n', '<Left>', dap.step_out)
+            vim.keymap.set('n', '<Up>', dap.restart_frame)
+            vim.keymap.set('n', ',b', dap.toggle_breakpoint)
+            vim.keymap.set('n', ',B', dap.clear_breakpoints)
+            vim.keymap.set('n', '<B', dap.clear_breakpoints)
+            vim.keymap.set('n', ',db', dap.continue)
+            vim.keymap.set('n', ',dc', close_inspections)
+            vim.keymap.set('n', ',dr', refresh_inspections)
+
         end
     },
     { 'dcampos/nvim-snippy', --{{{2
