@@ -745,7 +745,7 @@ require'lazy'.setup{ --{{{1
 
             dap.adapters.lldb = {
                 type = 'executable',
-                command = vim.fn.exepath('lldb-dap'),
+                command = vim.fn.exepath('codelldb'),
                 name = 'lldb'
             }
 
