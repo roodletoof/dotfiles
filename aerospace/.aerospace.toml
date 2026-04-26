@@ -32,10 +32,10 @@ cmd-alt-h = []
 cmd-period = 'layout tiles horizontal vertical'
 cmd-comma = 'layout accordion horizontal vertical'
 
-cmd-h = 'focus left'
-cmd-j = 'focus down'
-cmd-k = 'focus up'
-cmd-l = 'focus right'
+cmd-h = 'focus left --boundaries all-monitors-outer-frame'
+cmd-j = 'focus down --boundaries all-monitors-outer-frame'
+cmd-k = 'focus up --boundaries all-monitors-outer-frame'
+cmd-l = 'focus right --boundaries all-monitors-outer-frame'
 
 cmd-enter = 'exec-and-forget bash $HOME/bin/open-terminal.sh'
 
