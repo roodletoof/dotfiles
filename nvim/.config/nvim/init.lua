@@ -223,6 +223,9 @@ vim.api.nvim_create_autocmd({
     end
 })
 
+-- tree sitter {{{1
+vim.treesitter.language.register('rust', 'rust')
+
 -- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
     c = function()
