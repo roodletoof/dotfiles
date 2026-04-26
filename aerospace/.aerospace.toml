@@ -39,10 +39,10 @@ cmd-l = 'focus right'
 
 cmd-enter = 'exec-and-forget bash $HOME/bin/open-terminal.sh'
 
-cmd-shift-h = 'move left'
-cmd-shift-j = 'move down'
-cmd-shift-k = 'move up'
-cmd-shift-l = 'move right'
+cmd-shift-h = 'move left --boundaries all-monitors-outer-frame'
+cmd-shift-j = 'move down --boundaries all-monitors-outer-frame'
+cmd-shift-k = 'move up --boundaries all-monitors-outer-frame'
+cmd-shift-l = 'move right --boundaries all-monitors-outer-frame'
 
 cmd-ctrl-minus = 'resize smart -50'
 cmd-ctrl-equal = 'resize smart +50'
