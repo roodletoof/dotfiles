@@ -228,7 +228,7 @@ vim.api.nvim_create_autocmd({
 
 -- tree sitter {{{1
 vim.treesitter.language.register('rust', 'rust')
-vim.treesitter.language.register('c-sharp', 'cs')
+vim.treesitter.language.register('c_sharp', 'cs')
 
 -- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
@@ -703,6 +703,7 @@ require'lazy'.setup{ --{{{1
                 nnoremap ,ew :lua vim.diagnostic.setqflist{severity='WARN'}<CR>
                 nnoremap ,ei :lua vim.diagnostic.setqflist{severity='INFO'}<CR>
                 nnoremap ,eh :lua vim.diagnostic.setqflist{severity='HINT'}<CR>
+                nnoremap ,fm :lua vim.lsp.buf.format()<CR>
             ]]
         end
     },
@@ -891,7 +892,6 @@ require'lazy'.setup{ --{{{1
                 nnoremap ,fs :lua require'telescope.builtin'.grep_string()<CR>
                 nnoremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
                 nnoremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
-                nnoremap ,fm :lua require'telescope.builtin'.marks()<CR>
                 nnoremap ,fb :lua require'telescope.builtin'.buffers()<CR>
                 nnoremap ,fc :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cword>")})<CR>
                 nnoremap ,fC :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cWORD>")})<CR>
