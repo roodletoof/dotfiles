@@ -228,6 +228,7 @@ vim.api.nvim_create_autocmd({
 
 -- tree sitter {{{1
 vim.treesitter.language.register('rust', 'rust')
+vim.treesitter.language.register('c-sharp', 'cs')
 
 -- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
