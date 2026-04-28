@@ -226,10 +226,6 @@ vim.api.nvim_create_autocmd({
     end
 })
 
--- tree sitter {{{1
-vim.treesitter.language.register('rust', 'rust')
-vim.treesitter.language.register('c_sharp', 'cs')
-
 -- FILE SPECIFIC AND AUTOCMDS {{{1
 local file_specific = {
     c = function()
@@ -379,6 +375,14 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup{ --{{{1
+    { "romus204/tree-sitter-manager.nvim", --{{{2
+    dependencies = {}, -- tree-sitter CLI must be installed system-wide
+    config = function()
+        require("tree-sitter-manager").setup({
+            auto_install = true
+        })
+    end
+    },
     { 'stevearc/oil.nvim', --{{{2
         ---@module 'oil'
         ---@type oil.SetupOpts
