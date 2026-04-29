@@ -692,6 +692,16 @@ require'lazy'.setup{ --{{{1
                 end,
             })
 
+            local CTAGS_NAME = 'ctags-ls'
+            vim.lsp.config(CTAGS_NAME, {
+                cmd={ CTAGS_NAME },
+                filetypes=nil,
+                root_dir=function(...) ---@diagnostic disable-line: unused-vararg
+                    return vim.fn.getcwd()
+                end,
+            })
+            vim.lsp.enable(CTAGS_NAME)
+
             vim.keymap.set( 'n', ',fd', vim.lsp.buf.definition, { noremap = true, silent = true})
 
             vim.cmd [[
