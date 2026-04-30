@@ -698,6 +698,7 @@ require'lazy'.setup{ --{{{1
                 root_dir=function(_, on_dir)
                     on_dir(vim.fn.getcwd())
                 end,
+                capabilities = vim.lsp.protocol.make_client_capabilities()
             }
             vim.lsp.enable('ctags-ls')
 
