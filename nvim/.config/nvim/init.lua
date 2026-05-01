@@ -831,7 +831,6 @@ require'lazy'.setup{ --{{{1
             'hrsh7th/cmp-path',
             'dcampos/nvim-snippy',
             'dcampos/cmp-snippy',
-            'quangnguyen30192/cmp-nvim-tags',
         },
         config = function()
             local cmp = require'cmp'
@@ -850,7 +849,6 @@ require'lazy'.setup{ --{{{1
                     {
                         { name = 'snippy',   priority = 100000000000000000000 },
                         { name = 'nvim_lsp', priority = 1000000000},
-                        { name = 'tags',     priority = 100 },
                         { name = 'path',     priority = 1},
                     }
                 ),

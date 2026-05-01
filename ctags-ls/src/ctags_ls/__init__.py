@@ -1,10 +1,10 @@
-from dataclasses import dataclass
-from pathlib import Path
-from typing import final
 from pygls.lsp.server import LanguageServer
 from lsprotocol import types
 
+from ctags_ls.tags import Tags
+
 ls = LanguageServer("ctags-ls", "v0.1")
+tags = Tags(ls)
 
 @ls.feature(
     types.TEXT_DOCUMENT_COMPLETION,
@@ -12,9 +12,9 @@ ls = LanguageServer("ctags-ls", "v0.1")
 )
 def completions(params: types.CompletionParams):
     items = [
-        types.CompletionItem(label="foo"),
-        types.CompletionItem(label="bar"),
-        types.CompletionItem(label="baz"),
+        types.CompletionItem(label=symbol, documentation=f'***{tag.type}*** **{tag.location}** {tag.file}')
+        for symbol, tags in tags.symbols.items()
+        for tag in tags
     ]
     document = ls.workspace.get_text_document(params.text_document.uri)
     current_line = document.lines[params.position.line][:params.position.character]
@@ -27,16 +27,3 @@ def completions(params: types.CompletionParams):
 
 def main():
     ls.start_io()
-
-@final
-class Tags:
-    def __init__(self) -> None:
-        self.last_mtime: int = 0
-        self.cache: dict[str, Tag] = {}
-
-@dataclass
-class Tag:
-    symbol: str
-    file: Path
-    search_pattern: str
-    type: types.CompletionItemKind

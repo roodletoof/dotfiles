@@ -1,0 +1,4 @@
+test:
+    uv run pytest
+tag:
+    ctags -R ~/cig/ .
