@@ -70,7 +70,6 @@ set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 set noswapfile
 set makeprg=just
 command! -nargs=* Just execute 'make' <q-args>
-cabbrev just Just
 syntax on
 tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^
