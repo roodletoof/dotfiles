@@ -28,7 +28,7 @@ class Tags:
     def _update_cache(self):
         self._cache = {}
         with self.TAGS_PATH.open('r') as f:
-            lines = (l for l in f.readlines() if not l.startswith('!_'))
+            lines = (l for l in f.readlines() if not l.startswith('!_') and not l.startswith('__anon'))
             for line in lines:
                 symbol, file, location, type, *_ = line.split('\t')
                 location = location.removesuffix(';"')
