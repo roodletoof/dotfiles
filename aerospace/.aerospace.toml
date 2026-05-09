@@ -89,3 +89,8 @@ cmd-shift-l = ['join-with right', 'mode main']
 
 cmd-h = []
 cmd-alt-h = []
+
+[exec]
+    inherit-env-vars = true
+[exec.env-vars]
+    PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${HOME}/go/bin:${PATH}'
