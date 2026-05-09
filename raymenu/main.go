@@ -15,6 +15,12 @@ import (
 	"github.com/ktr0731/go-fuzzyfinder/matching"
 )
 
+const windowWidth = 800
+const fontSize = 20
+const textBoxHeight = fontSize + 6
+
+// TODO: move the raymenu function to its own package
+
 //go:embed gomono-font/Go-Mono.ttf
 var font_tff []byte
 
@@ -51,13 +57,11 @@ const (
     Count_RayMenuResult int = iota
 )
 
-const width = 800
 
 func isPressedRepeat(key int32) bool {
     return rl.IsKeyPressed(key) || rl.IsKeyPressedRepeat(key)
 }
 
-const fontSize = 20
 
 func raymenu(options []string) (choice string, result RayMenuResult) {
     state := initialize()
@@ -154,7 +158,6 @@ func raymenu(options []string) (choice string, result RayMenuResult) {
 }
 
 var yOffset float32 = 0.0
-const textBoxHeight = fontSize + 6
 
 func resetBounds() {
     yOffset = 0.0
@@ -168,7 +171,7 @@ func nextBounds() (bounds rl.Rectangle) {
 
 func initialize() State {
     rl.SetTraceLogLevel(rl.LogError)
-    rl.InitWindow(width, 0, "raymenu")
+    rl.InitWindow(windowWidth, 0, "raymenu")
     rl.SetWindowState(rl.FlagWindowUndecorated)
     rl.SetTargetFPS(
         int32(
@@ -181,7 +184,7 @@ func initialize() State {
     monitorWidth := rl.GetMonitorWidth(monitor)
     monitorHeight := rl.GetMonitorHeight(monitor)
     rl.SetWindowSize(
-        width,
+        windowWidth,
         monitorHeight/2,
     )
     rl.SetWindowPosition(
