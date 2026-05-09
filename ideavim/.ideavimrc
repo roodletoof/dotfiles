@@ -42,6 +42,7 @@ map <leader>oe <Action>(ShowErrorDescription)
 map <leader>rn <Action>(RenameElement)
 map <leader>fm <Action>(ReformatCode)
 map <leader>rf <Action>(Refactorings.QuickListPopupAction)
+map <c-y> <Action>(EditorChooseLookupItem)
 
 nnoremap <c-h> <c-w>h
 nnoremap <c-j> <c-w>j

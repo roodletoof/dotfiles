@@ -606,20 +606,6 @@ require'lazy'.setup{ --{{{1
             },
         },
     },
-    { "seblyng/roslyn.nvim", --{{{2
-        opts = {
-            ---function to pick which .sln file to use when opening a cs file
-            ---@param targets string[]
-            choose_target=function (targets)
-                if targets == nil then return end
-                if #targets == 0 then return end
-                table.sort(targets, function(a, b)
-                    return #a < #b
-                end)
-                return targets[1]
-            end
-        },
-    },
     { 'neovim/nvim-lspconfig', --{{{2
         dependencies = {
             'williamboman/mason.nvim',
