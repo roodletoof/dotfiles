@@ -116,7 +116,6 @@ func raymenu(options []string) (choice string, result RayMenuResult) {
         }
 
         if enter {
-            rl.EndDrawing() // TODO: dont need this?
             rl.CloseWindow()
             if cursor < len(matched) {
                 return options[matched[cursor].Idx], RayMenuResult_Chosen
@@ -137,6 +136,9 @@ func raymenu(options []string) (choice string, result RayMenuResult) {
             )
 
             if i == cursor {
+                // TODO if cursor is not visible then keep some offset or make
+                // 2d camera so you can scroll through all the options if you
+                // want
                 rl.DrawCircle(
                     int32(bounds.X)+int32(bounds.Height)/2,
                     int32(bounds.Y)+int32(bounds.Height)/2,
@@ -175,11 +177,16 @@ func initialize() State {
             ),
         ),
     )
+    monitor := rl.GetCurrentMonitor()
+    monitorWidth := rl.GetMonitorWidth(monitor)
+    monitorHeight := rl.GetMonitorHeight(monitor)
     rl.SetWindowSize(
         width,
-        rl.GetMonitorHeight(
-            rl.GetCurrentMonitor(),
-        ),
+        monitorHeight/2,
+    )
+    rl.SetWindowPosition(
+        monitorWidth/2-rl.GetScreenWidth()/2,
+        monitorHeight/2-rl.GetScreenHeight()/2,
     )
 
     return State{
