@@ -37,6 +37,7 @@ cmd-j = 'focus down --boundaries all-monitors-outer-frame'
 cmd-k = 'focus up --boundaries all-monitors-outer-frame'
 cmd-l = 'focus right --boundaries all-monitors-outer-frame'
 
+cmd-d = 'exec-and-forget bash $HOME/bin/open-applicaiton.sh'
 cmd-enter = 'exec-and-forget bash $HOME/bin/open-terminal.sh'
 
 cmd-shift-h = 'move left --boundaries all-monitors-outer-frame'
