@@ -15,8 +15,8 @@ import (
 	"github.com/ktr0731/go-fuzzyfinder/matching"
 )
 
-//go:embed gomono-font/GoMonoNerdFontMono-Regular.ttf
-var gomonoNerdFont_ttf []byte
+//go:embed gomono-font/Go-Mono.ttf
+var font_tff []byte
 
 type State struct {
     Font rl.Font
@@ -190,6 +190,6 @@ func initialize() State {
     )
 
     return State{
-        Font: rl.LoadFontFromMemory(".ttf", gomonoNerdFont_ttf, fontSize, nil),
+        Font: rl.LoadFontFromMemory(".ttf", font_tff, fontSize, nil),
     }
 }
