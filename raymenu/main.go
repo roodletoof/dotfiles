@@ -57,7 +57,7 @@ func isPressedRepeat(key int32) bool {
     return rl.IsKeyPressed(key) || rl.IsKeyPressedRepeat(key)
 }
 
-const fontSize = 14
+const fontSize = 20
 
 func raymenu(options []string) (choice string, result RayMenuResult) {
     state := initialize()
