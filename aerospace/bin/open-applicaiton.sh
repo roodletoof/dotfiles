@@ -3,5 +3,5 @@ ls /Applications/ /Applications/Utilities/ /System/Applications/ /System/Applica
     sed 's/\.app$//g' | \
     { cat; echo "Finder"; } | \
     sort | \
-    choose -z -a -p "Open App" | \
+    raymenu | \
     xargs -I {} open -n -a "{}.app"
