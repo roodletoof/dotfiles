@@ -32,29 +32,15 @@ func main() {
     if err != nil {
         log.Fatalln(err)
     }
-    lines := strings.Split(string(input), "\n")
-    lines = slices.DeleteFunc(lines, func(l string) bool {
+    choices := strings.Split(string(input), "\n")
+    choices = slices.DeleteFunc(choices, func(l string) bool {
         return l == ""
     })
-    choice, result := raymenu(lines)
-    switch (result) {
-        case RayMenuResult_NoChoice:
-            return
-        case RayMenuResult_Chosen:
-            fmt.Println(choice)
-            return
-        default:
-            log.Fatalln("Unhandled RayMenuResult", result)
+    choice, ok := raymenu(choices)
+    if ok {
+        fmt.Println(choice)
     }
 }
-
-type RayMenuResult int
-
-const (
-    RayMenuResult_NoChoice RayMenuResult = iota
-    RayMenuResult_Chosen
-    Count_RayMenuResult int = iota
-)
 
 
 func isPressedRepeat(key int32) bool {
@@ -62,7 +48,7 @@ func isPressedRepeat(key int32) bool {
 }
 
 
-func raymenu(options []string) (choice string, result RayMenuResult) {
+func raymenu(options []string) (choice string, ok bool) {
     state := initialize(len(options))
     rg.SetFont(state.Font)
     rg.SetStyle(rg.DEFAULT, rg.TEXT_SIZE, fontSize)
@@ -121,9 +107,9 @@ func raymenu(options []string) (choice string, result RayMenuResult) {
         if enter {
             rl.CloseWindow()
             if cursor < len(matched) {
-                return options[matched[cursor].Idx], RayMenuResult_Chosen
+                return options[matched[cursor].Idx], true
             }
-            return "", RayMenuResult_NoChoice
+            return "", false
         }
 
         for i, match := range matched {
@@ -153,7 +139,7 @@ func raymenu(options []string) (choice string, result RayMenuResult) {
         rl.EndDrawing()
     }
 
-    return "", RayMenuResult_NoChoice
+    return "", false
 }
 
 var yOffset float32 = 0.0
