@@ -15,7 +15,6 @@ import (
 	"github.com/ktr0731/go-fuzzyfinder/matching"
 )
 
-const windowWidth = 800
 const fontSize = 20
 const textBoxHeight = fontSize + 6
 
@@ -64,7 +63,7 @@ func isPressedRepeat(key int32) bool {
 
 
 func raymenu(options []string) (choice string, result RayMenuResult) {
-    state := initialize()
+    state := initialize(len(options))
     rg.SetFont(state.Font)
     rg.SetStyle(rg.DEFAULT, rg.TEXT_SIZE, fontSize)
     // TODO kinda dumb with additional initialization here
@@ -169,9 +168,9 @@ func nextBounds() (bounds rl.Rectangle) {
     return
 }
 
-func initialize() State {
+func initialize(nOptions int) State {
     rl.SetTraceLogLevel(rl.LogError)
-    rl.InitWindow(windowWidth, 0, "raymenu")
+    rl.InitWindow(0, 0, "raymenu")
     rl.SetWindowState(rl.FlagWindowUndecorated)
     rl.SetTargetFPS(
         int32(
@@ -184,8 +183,8 @@ func initialize() State {
     monitorWidth := rl.GetMonitorWidth(monitor)
     monitorHeight := rl.GetMonitorHeight(monitor)
     rl.SetWindowSize(
-        windowWidth,
-        monitorHeight/2/textBoxHeight*textBoxHeight,
+        monitorWidth/2,
+        min(monitorHeight/2/textBoxHeight, nOptions+1)*textBoxHeight,
     )
     rl.SetWindowPosition(
         monitorWidth/2-rl.GetScreenWidth()/2,
