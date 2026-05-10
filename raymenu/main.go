@@ -185,7 +185,7 @@ func initialize() State {
     monitorHeight := rl.GetMonitorHeight(monitor)
     rl.SetWindowSize(
         windowWidth,
-        monitorHeight/2,
+        monitorHeight/2/textBoxHeight*textBoxHeight,
     )
     rl.SetWindowPosition(
         monitorWidth/2-rl.GetScreenWidth()/2,
