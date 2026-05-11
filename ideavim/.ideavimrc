@@ -51,6 +51,9 @@ nnoremap <c-l> <c-w>l
 nnoremap L $
 nnoremap H ^
 
+map <right> <Action>(StepInto)
+map <down> <Action>(StepOver)
+map <up> <Action>(StepOut)
 
 map <leader>m <Action>(EditorDecreaseFontSize)
 map <leader>s <Action>(EditorIncreaseFontSize)
