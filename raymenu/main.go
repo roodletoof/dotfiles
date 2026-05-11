@@ -64,6 +64,11 @@ func raymenu(options []string) (choice string, ok bool) {
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)
+
+		if !rl.IsWindowFocused() {
+			return "", false
+		}
+
 		resetBounds()
 		bounds := nextBounds()
 
