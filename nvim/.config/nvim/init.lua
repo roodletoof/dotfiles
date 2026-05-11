@@ -236,6 +236,12 @@ local file_specific = {
     end,
     odin = function()
         vim.bo.expandtab = false
+    end,
+    go = function()
+        vim.bo.expandtab = false
+    end,
+    yaml = function()
+        vim.bo.tabstop = 2
     end
 }
 
