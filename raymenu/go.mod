@@ -1,4 +1,4 @@
-module github.com/roodletoof/raymenu
+module github.com/roodletoof/dotfiles/raymenu
 
 go 1.26.2
 
