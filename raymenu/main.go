@@ -14,7 +14,7 @@ import (
 
 func main() {
 	var args struct {
-		Prompt string `arg:"-p" help:"prompt"`
+		Prompt string `arg:"-p" help:"ghost text to display in the empty input section"`
 	}
 	arg.MustParse(&args)
 
