@@ -16,14 +16,47 @@ const textBoxHeight = fontSize + 6
 //go:embed gomono-font/Go-Mono.ttf
 var font_tff []byte
 
-type State struct {
-	Font rl.Font
+func style() {
+	rg.SetFont(rl.LoadFontFromMemory(".ttf", font_tff, fontSize, nil))
+	rg.SetStyle(rg.DEFAULT, rg.TEXT_SIZE, fontSize)
+	rg.SetStyle(
+		rg.DEFAULT,
+		rg.BASE_COLOR_PRESSED,
+		rg.NewColorPropertyValue(rl.Black),
+	)
+	rg.SetStyle(
+		rg.DEFAULT,
+		rg.BORDER_COLOR_PRESSED,
+		rg.NewColorPropertyValue(rl.White),
+	)
+	rg.SetStyle(
+		rg.DEFAULT,
+		rg.TEXT_COLOR_PRESSED,
+		rg.NewColorPropertyValue(rl.White),
+	)
+
 }
 
-func RaylibPicker(options []string) (choiceIdx int, ok bool) {
-	state := initialize(len(options))
-	rg.SetFont(state.Font)
-	rg.SetStyle(rg.DEFAULT, rg.TEXT_SIZE, fontSize)
+type RaylibPickerOptions struct {
+	Prompt string
+}
+var defaultPickerOptions = RaylibPickerOptions{}
+
+type PickerOption func(*RaylibPickerOptions)
+
+func WithPrompt(prompt string) PickerOption {
+	return func(opts *RaylibPickerOptions) {
+		opts.Prompt = prompt
+	}
+}
+
+func Picker(options []string, pickerOptions ...PickerOption) (choiceIdx int, ok bool) {
+	pickerOpts := defaultPickerOptions
+	for _, opt := range pickerOptions {
+		opt(&pickerOpts)
+	}
+
+	initialize(len(options))
 	// TODO kinda dumb with additional initialization here
 	originalOrder := make([]matching.Matched, len(options))
 	for i := range options {
@@ -54,6 +87,17 @@ func RaylibPicker(options []string) (choiceIdx int, ok bool) {
 		}
 
 		rg.TextBox(bounds, &input, 1024, true)
+		if input == "" {
+			promptBounds := bounds
+			promptBounds.X += promptBounds.Height
+			promptBounds.Width -= promptBounds.Height
+			rg.DrawText(
+				pickerOpts.Prompt,
+				promptBounds,
+				int32(rg.TEXT_ALIGN_LEFT),
+				rl.Gray,
+			)
+		}
 		if prevInput != input {
 			if len(input) > 0 {
 				matched = matching.FindAll(input, options)
@@ -119,7 +163,7 @@ func RaylibPicker(options []string) (choiceIdx int, ok bool) {
 	return 0, false
 }
 
-func initialize(nOptions int) State {
+func initialize(nOptions int) {
 	rl.SetTraceLogLevel(rl.LogError)
 	rl.InitWindow(0, 0, "raymenu")
 	rl.SetWindowState(rl.FlagWindowUndecorated)
@@ -141,26 +185,13 @@ func initialize(nOptions int) State {
 		monitorWidth/2-rl.GetScreenWidth()/2,
 		monitorHeight/2-rl.GetScreenHeight()/2,
 	)
-
-	return State{
-		Font: rl.LoadFontFromMemory(".ttf", font_tff, fontSize, nil),
-	}
+	style()
 }
 
 func isPressedRepeat(key int32) bool {
 	return rl.IsKeyPressed(key) || rl.IsKeyPressedRepeat(key)
 }
 
-
-
-func screenBounds() rl.Rectangle {
-	return rl.Rectangle{
-		X: 0,
-		Y: 0,
-		Width: float32(rl.GetScreenWidth()),
-		Height: float32(rl.GetScreenHeight()),
-	}
-}
 
 var yOffset float32 = 0.0
 

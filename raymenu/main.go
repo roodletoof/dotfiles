@@ -21,7 +21,9 @@ func main() {
 	choices = slices.DeleteFunc(choices, func(l string) bool {
 		return l == ""
 	})
-	choice, ok := picker.RaylibPicker(choices)
+	choice, ok := picker.Picker(
+		choices,
+	)
 	if ok {
 		fmt.Println(choices[choice])
 	}
