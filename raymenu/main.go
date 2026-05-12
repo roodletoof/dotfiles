@@ -9,10 +9,15 @@ import (
 	"strings"
 
 	"github.com/roodletoof/dotfiles/raymenu/picker"
+	"github.com/alexflint/go-arg"
 )
 
-
 func main() {
+	var args struct {
+		Prompt string `arg:"-p" help:"prompt"`
+	}
+	arg.MustParse(&args)
+
 	input, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		log.Fatalln(err)
@@ -23,6 +28,7 @@ func main() {
 	})
 	choice, ok := picker.Picker(
 		choices,
+		picker.WithPrompt(args.Prompt),
 	)
 	if ok {
 		fmt.Println(choices[choice])
