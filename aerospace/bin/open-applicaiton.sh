@@ -3,7 +3,7 @@ ls /Applications/ /Applications/Utilities/ /System/Applications/ /System/Applica
     sed 's/\.app$//g' | \
     { cat; echo "Finder"; } | \
     sort | \
-    raymenu | \
+    raymenu -p "launch application" | \
     while read app; do
         if [ "$app" = "Finder" ]; then
             osascript -e 'tell application "Finder"
