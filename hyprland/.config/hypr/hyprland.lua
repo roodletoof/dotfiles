@@ -15,12 +15,25 @@
 ------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
-hl.monitor({
-    output   = "",
+local monitor_ext = "DP-1"
+local monitor_bi = "eDP-1"
+hl.monitor{
+    output   = monitor_ext,
     mode     = "preferred",
     position = "auto",
-    scale    = "auto",
-})
+    scale    = "1",
+}
+hl.monitor{
+    output   = monitor_bi,
+    mode     = "preferred",
+    position = "auto-left",
+    scale    = "1",
+}
+
+for i = 1, 9 do
+    hl.workspace_rule{workspace=tostring(i), monitor=monitor_ext}
+end
+hl.workspace_rule{workspace="10", monitor=monitor_bi}
 
 
 ---------------------
@@ -189,10 +202,17 @@ hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen{mode='fullscreen', action='toggle'})
 
 -- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + H",  hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + K",    hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + J",  hl.dsp.focus({ direction = "down" }))
+local mapping = {
+    H = 'left',
+    J = 'down',
+    K = 'up',
+    L = 'right',
+}
+
+for key, direction in pairs(mapping) do
+    hl.bind(mainMod .. " + "..key,  hl.dsp.focus{ direction = direction })
+    hl.bind(mainMod.." + SHIFT +"..key, hl.dsp.window.move{ direction = direction })
+end
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
