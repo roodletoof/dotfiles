@@ -9,7 +9,7 @@ set $right l
 set $term alacritty
 
 # Window borders
-new_window pixel
+new_window 1pixel
 
 exec --no-startup-id xset s off -dpms
 exec --no-startup-id picom --backend glx --vsync
