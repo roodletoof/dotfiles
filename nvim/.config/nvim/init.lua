@@ -544,23 +544,6 @@ require'lazy'.setup{ --{{{1
             vim.keymap.set('n', ',ce', ':Copilot disable<CR>', { noremap = true })
         end,
     },
-    { 'rafaelsq/nvim-goc.lua', --{{{2
-        config = function ()
-            local goc = require'nvim-goc'
-            goc.setup{}
-            ---@param name string
-            local cmd = function(name)
-                vim.api.nvim_create_user_command(
-                    'Go'..name,
-                    'lua require"nvim-goc".'..name..'()',
-                    { nargs = 0 }
-                )
-            end
-            cmd('Coverage')
-            cmd('CoverageFunc')
-            cmd('ClearCoverage')
-        end,
-    },
     { 'f-person/git-blame.nvim', --{{{2
         keys = {',g'},
         config = function ()
