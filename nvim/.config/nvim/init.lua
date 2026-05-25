@@ -613,6 +613,13 @@ require'lazy'.setup{ --{{{1
         },
     },
     { "seblyng/roslyn.nvim", --{{{2
+        dependencies = {
+            'williamboman/mason.nvim',
+        },
+        cond = function()
+            mason_registry = require'mason-registry'
+            return mason_registry.is_installed('roslyn')
+        end,
         opts = {
             ---function to pick which .sln file to use when opening a cs file
             ---@param targets string[]
