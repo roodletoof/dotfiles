@@ -20,7 +20,8 @@ exec --no-startup-id feh --bg-max ~/.wallpaper/
 # Key bindings
 bindsym $mod+Return exec $term
 bindsym $mod+q kill
-bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+m exec --no-startup-id just --justfile ~/.config/i3/justfile choose-monitor
 
 # Floating modifier
 floating_modifier $mod
