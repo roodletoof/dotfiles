@@ -7,7 +7,7 @@ set $down j
 set $up k
 set $right l
 set $term alacritty
-set $just just --justfile ~/.config/i3/justfile 
+set $just just --justfile ~/.config/i3/justfile
 
 # Window borders
 new_window 1pixel
@@ -21,7 +21,7 @@ exec --no-startup-id $just reset-wallpaper
 # Key bindings
 bindsym $mod+Return exec $term
 bindsym $mod+q kill
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id $just program-picker
 bindsym $mod+m exec --no-startup-id $just choose-monitor
 
 # Floating modifier
