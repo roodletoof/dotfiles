@@ -77,6 +77,7 @@ vim.cmd [=[
     set noswapfile
     set list
     set makeprg=just
+    set tags+=~/tags
     command! -nargs=* Just execute 'make' <q-args>
 
     nnoremap ,co :copen<CR>
