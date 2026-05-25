@@ -6,4 +6,3 @@ fi
 MONITORS=$(echo "$MONITORS" | sed "/^${CHOSEN_MONITOR}$/d")
 echo "$MONITORS" | xargs -I {} xrandr --output {} --off
 xrandr --output "$CHOSEN_MONITOR" --auto
-feh --bg-max ~/.wallpaper/
