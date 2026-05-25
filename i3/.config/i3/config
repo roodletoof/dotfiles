@@ -13,7 +13,7 @@ set $just just --justfile ~/.config/i3/justfile
 new_window 1pixel
 
 exec --no-startup-id xset s off -dpms
-exec --no-startup-id picom --backend glx --vsync
+exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id $just reset-wallpaper
