@@ -541,7 +541,7 @@ require'lazy'.setup{ --{{{1
             vim.g.copilot_no_tab_map = true
             vim.keymap.set('n', '<c-q>', ':Copilot panel<CR>', { noremap = true })
             vim.keymap.set('n', ',cd', ':Copilot disable<CR>', { noremap = true })
-            vim.keymap.set('n', ',ce', ':Copilot disable<CR>', { noremap = true })
+            vim.keymap.set('n', ',ce', ':Copilot enable<CR>', { noremap = true })
         end,
     },
     { 'f-person/git-blame.nvim', --{{{2
