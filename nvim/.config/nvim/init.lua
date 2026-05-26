@@ -77,6 +77,7 @@ vim.cmd [=[
     set noswapfile
     set list
     set makeprg=just
+    set tags+=~/tags
     command! -nargs=* Just execute 'make' <q-args>
 
     nnoremap ,co :copen<CR>
@@ -544,23 +545,6 @@ require'lazy'.setup{ --{{{1
             vim.keymap.set('n', ',ce', ':Copilot disable<CR>', { noremap = true })
         end,
     },
-    { 'rafaelsq/nvim-goc.lua', --{{{2
-        config = function ()
-            local goc = require'nvim-goc'
-            goc.setup{}
-            ---@param name string
-            local cmd = function(name)
-                vim.api.nvim_create_user_command(
-                    'Go'..name,
-                    'lua require"nvim-goc".'..name..'()',
-                    { nargs = 0 }
-                )
-            end
-            cmd('Coverage')
-            cmd('CoverageFunc')
-            cmd('ClearCoverage')
-        end,
-    },
     { 'f-person/git-blame.nvim', --{{{2
         keys = {',g'},
         config = function ()
@@ -613,6 +597,13 @@ require'lazy'.setup{ --{{{1
         },
     },
     { "seblyng/roslyn.nvim", --{{{2
+        dependencies = {
+            'williamboman/mason.nvim',
+        },
+        cond = function()
+            mason_registry = require'mason-registry'
+            return mason_registry.is_installed('roslyn')
+        end,
         opts = {
             ---function to pick which .sln file to use when opening a cs file
             ---@param targets string[]

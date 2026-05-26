@@ -9,6 +9,7 @@ nnoremap ,rc :source $MYVIMRC<CR>
 autocmd FileType make setlocal noexpandtab
 autocmd FileType yaml setlocal tabstop=2
 let g:rustfmt_autosave = 0
+let g:netrw_banner = 0
 nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
 nnoremap ,cc :cclose<CR>
 nnoremap ,cf :cfirst<CR>
@@ -69,6 +70,7 @@ set viewoptions=folds,cursor
 set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 set noswapfile
 set makeprg=just
+set tags+=~/tags
 syntax on
 tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^

@@ -1,0 +1,11 @@
+choose-monitor:
+    sh choose-monitor.sh
+    just reset-wallpaper
+
+reset-wallpaper:
+    feh --bg-max ~/.wallpaper/
+
+program-picker:
+    dmenu_run -p 'start program'
+
+

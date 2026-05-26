@@ -7,20 +7,22 @@ set $down j
 set $up k
 set $right l
 set $term alacritty
+set $just just --justfile ~/.config/i3/justfile
 
 # Window borders
-new_window pixel
+new_window 1pixel
 
 exec --no-startup-id xset s off -dpms
-exec --no-startup-id picom --backend glx --vsync
+exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
-exec --no-startup-id feh --bg-max ~/.wallpaper/
+exec --no-startup-id $just reset-wallpaper
 
 # Key bindings
 bindsym $mod+Return exec $term
 bindsym $mod+q kill
-bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+d exec --no-startup-id $just program-picker
+bindsym $mod+m exec --no-startup-id $just choose-monitor
 
 # Floating modifier
 floating_modifier $mod

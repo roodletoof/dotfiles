@@ -10,7 +10,7 @@ dynamic_padding = true
 decorations = "Buttonless"
 
 [font]
-normal.family = "GoMono Nerd Font Mono"
+normal.family = "Comic Code"
 size = 12
 
 # Subtle positional tuning
