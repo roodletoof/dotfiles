@@ -697,11 +697,19 @@ require'lazy'.setup{ --{{{1
                 nnoremap ,fr :lua vim.lsp.buf.references()<CR>
                 nnoremap ,ca :lua vim.lsp.buf.code_action()<CR>
                 nnoremap ,oe :lua vim.diagnostic.open_float()<CR>
+
                 nnoremap ,ea :lua vim.diagnostic.setqflist()<CR>
                 nnoremap ,ee :lua vim.diagnostic.setqflist{severity='ERROR'}<CR>
                 nnoremap ,ew :lua vim.diagnostic.setqflist{severity='WARN'}<CR>
                 nnoremap ,ei :lua vim.diagnostic.setqflist{severity='INFO'}<CR>
                 nnoremap ,eh :lua vim.diagnostic.setqflist{severity='HINT'}<CR>
+
+                nnoremap ,eA :lua vim.diagnostic.setloclist()<CR>
+                nnoremap ,eE :lua vim.diagnostic.setloclist{severity='ERROR'}<CR>
+                nnoremap ,eW :lua vim.diagnostic.setloclist{severity='WARN'}<CR>
+                nnoremap ,eI :lua vim.diagnostic.setloclist{severity='INFO'}<CR>
+                nnoremap ,eH :lua vim.diagnostic.setloclist{severity='HINT'}<CR>
+
                 nnoremap ,fm :lua vim.lsp.buf.format()<CR>
             ]]
         end
