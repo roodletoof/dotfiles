@@ -3,7 +3,7 @@ choose-monitor:
     just reset-wallpaper
 
 reset-wallpaper:
-    feh --bg-max ~/.wallpaper/
+    feh --bg-fill ~/.wallpaper/
 
 program-picker:
     dmenu_run -p 'start program'
