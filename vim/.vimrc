@@ -3,7 +3,6 @@ try
 catch /^Vim\%((\a\+)\)\=:E185/
   colorscheme monokai
 endtry
-nnoremap ,ct :!ctags -R .<CR>
 nnoremap ,rc :source $MYVIMRC<CR>
 
 autocmd FileType make setlocal noexpandtab
@@ -43,14 +42,6 @@ nnoremap ,x <C-x>
 set autowriteall
 set autoindent
 set cursorline
-set errorformat^=%f:%l:%c\ -\ %t%*[^:]:\ %m
-set errorformat^=[----]\ %f:%l:\ %m
-set errorformat+=%f:%l\ %m
-
-set errorformat^=%C%*\\s——▶%*\\s%f:%l:%c
-set errorformat^=%E%t%*[^:]:\ %m
-
-set errorformat^=\%\\s%#File\ \"%f\"\\,\ line\ %l\\,\ %.%#
 
 set expandtab
 set exrc
@@ -70,7 +61,6 @@ set viewoptions=folds,cursor
 set wildignore=*.o,*.obj,.git/**,tags,*.pyc
 set noswapfile
 set makeprg=just
-set tags+=~/tags
 syntax on
 tnoremap <c-w>c <c-\><c-n><c-w>c
 xnoremap H ^
@@ -83,34 +73,6 @@ if has('clipboard')
   set clipboard^=unnamed,unnamedplus
 endif
 
-nnoremap 'A 'A'"
-nnoremap 'B 'B'"
-nnoremap 'C 'C'"
-nnoremap 'D 'D'"
-nnoremap 'E 'E'"
-nnoremap 'F 'F'"
-nnoremap 'G 'G'"
-nnoremap 'H 'H'"
-nnoremap 'I 'I'"
-nnoremap 'J 'J'"
-nnoremap 'K 'K'"
-nnoremap 'L 'L'"
-nnoremap 'M 'M'"
-nnoremap 'N 'N'"
-nnoremap 'O 'O'"
-nnoremap 'P 'P'"
-nnoremap 'Q 'Q'"
-nnoremap 'R 'R'"
-nnoremap 'S 'S'"
-nnoremap 'T 'T'"
-nnoremap 'U 'U'"
-nnoremap 'V 'V'"
-nnoremap 'W 'W'"
-nnoremap 'X 'X'"
-nnoremap 'Y 'Y'"
-nnoremap 'Z 'Z'"
-
-
 au BufEnter *__virtual* setlocal buftype=nofile bufhidden=hide noswapfile
 au BufNewFile,BufRead *.h set filetype=c
 au BufWinEnter *.* silent! loadview 
@@ -118,7 +80,3 @@ au BufWinLeave *.* silent! mkview
 au FileType * setlocal indentexpr=
 au FileType lua setlocal noexpandtab
 au FileType c setlocal noexpandtab
-augroup GoCtags
-  autocmd!
-  autocmd FileType go nnoremap <buffer> ,ct :!ctags -R $(go env GOROOT) .<CR>
-augroup END
