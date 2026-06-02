@@ -21,6 +21,7 @@ exec --no-startup-id xset s off -dpms
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id $just reset-wallpaper
+exec --no-startup-id "setxkbmap -layout us,no -option 'grp:alt_space_toggle'"
 
 # Key bindings
 bindsym $mod+Return exec $term
