@@ -1,0 +1,8 @@
+{
+  "skills": {
+    "paths": [
+      ".opencode/skills",
+      ".github/skills"
+    ]
+  }
+}
