@@ -78,7 +78,6 @@ vim.cmd [=[
     set list
     set makeprg=just
     set tags+=~/tags
-    command! -nargs=* Just execute 'make' <q-args>
 
     nnoremap ,co :copen<CR>
     nnoremap ,cc :cclose<CR>
@@ -127,29 +126,6 @@ vim.cmd [=[
 
     " remove annoying and bad indentation
     autocmd FileType * setlocal indentexpr=
-
-    set errorformat=
-
-    set errorformat+=%f(%l\\,%c):\ %t%*[^:]:\ %m
-    set errorformat+=%f:%l:%c:\ %trror%*[^:]:\ %m
-    set errorformat+=%f:%l:%c:\ %tarning%*[^:]:\ %m
-    set errorformat+=%f:%l:%c:\ %m
-
-    " VSTest failure stack trace (core case)
-    set errorformat+=%E\ at\ %*[^\ ]\ in\ %f:line\ %l
-
-    set wildignore=*.o,*.obj,.git/**,tags,*.pyc
-    set errorformat+=[----]\ %f:%l:\ %m
-    set errorformat+=%f\(%l:%c\)\ %m
-
-    set errorformat+=%E%t%*[^:]:\ %m,Z%*\\s——▶%*\\s%f:%l:%c
-
-    set errorformat+=%f:%l:%c\ -\ %t%*[^:]:\ %m
-    set errorformat+=%f:%l:\ %m
-    " rust
-    set errorformat+=%E%tarning:%m,%Z\ -->\ %f:%l:%c
-    set errorformat+=%E%terror:%m,%Z\ -->\ %f:%l:%c
-
 ]=]
 
 vim.keymap.set('n', ',cf', function()
