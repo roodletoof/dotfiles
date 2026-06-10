@@ -342,6 +342,35 @@ do
     vim.keymap.set('n', ',z', toggle_padding)
 end
 
+-- auto select compiler {{{1
+do
+    local compiler_mapping = {
+        dotnet={'*.csproj', '*.sln'},
+        pyright={'requirements.txt', 'pyproject.toml'},
+        go={'go.mod'}
+    }
+
+    ---@type string[]
+    local folders = {vim.fn.getcwd()}
+    for dir in vim.fs.parents(vim.fn.getcwd()) do
+        table.insert(folders, dir)
+    end
+
+    for _, dir in ipairs(folders) do
+        for compiler, patterns in pairs(compiler_mapping) do
+            for _, pattern in ipairs(patterns) do
+                local result = vim.fn.globpath(dir, pattern, false, false, false)
+                if result ~= '' then
+                    vim.cmd('compiler! '..compiler)
+                    goto exit
+                end
+            end
+        end
+    end
+    ::exit::
+end
+
+
 -- LAZY.NVIM BOOTSTRAP {{{1
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
