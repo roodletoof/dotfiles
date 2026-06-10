@@ -349,7 +349,8 @@ do
         pyright={'requirements.txt', 'pyproject.toml'},
         go={'go.mod'},
         gcc={'*.c'},
-        ['g++']={'*.cpp'}
+        ['g++']={'*.cpp'},
+        cargo={'Cargo.toml'},
     }
 
     ---@type string[]
