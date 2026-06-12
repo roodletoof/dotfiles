@@ -381,8 +381,6 @@ do
     end
     if look_for_file('justfile') then
         vim.go.makeprg = 'just'
-    else
-        vim.go.makeprg = 'make'
     end
 end
 
