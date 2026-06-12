@@ -142,7 +142,7 @@ vim.keymap.set('n', ',cl', function()
     local qf = vim.fn.getqflist()
     for i = #qf, 1, -1 do
         local item = qf[i]
-        
+
         if item.valid == 1 then
             vim.cmd('cc '..i)
             return
@@ -618,7 +618,7 @@ require'lazy'.setup{ --{{{1
             'williamboman/mason.nvim',
         },
         cond = function()
-            mason_registry = require'mason-registry'
+            local mason_registry = require'mason-registry'
             return mason_registry.is_installed('roslyn')
         end,
         opts = {
