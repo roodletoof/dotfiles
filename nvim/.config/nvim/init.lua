@@ -76,7 +76,6 @@ vim.cmd [=[
     set cursorline
     set noswapfile
     set list
-    set makeprg=just
     set tags+=~/tags
 
     nnoremap ,co :copen<CR>
@@ -344,6 +343,8 @@ end
 
 -- auto select compiler {{{1
 do
+    -- TODO: vendor the compiler plugins so I can use e.g. basedpyright instead of pyright and add matching for failing tests in c using criterion.
+    -- did a similar thing for the vim config.
     local compiler_mapping = {
         dotnet={'*.csproj', '*.sln'},
         pyright={'requirements.txt', 'pyproject.toml'},
@@ -353,24 +354,36 @@ do
         cargo={'Cargo.toml'},
     }
 
-    ---@type string[]
-    local folders = {vim.fn.getcwd()}
-    for dir in vim.fs.parents(vim.fn.getcwd()) do
-        table.insert(folders, dir)
+    ---@param pattern string
+    ---@return boolean
+    local function look_for_file(pattern)
+        ---@type string[]
+        local folders = {vim.fn.getcwd()}
+        for dir in vim.fs.parents(vim.fn.getcwd()) do
+            table.insert(folders, dir)
+        end
+
+        for _, dir in ipairs(folders) do
+            local result = vim.fn.globpath(dir, pattern, false, false, false)
+            if result ~= '' then
+                return true
+            end
+        end
+        return false
     end
 
-    for _, dir in ipairs(folders) do
-        for compiler, patterns in pairs(compiler_mapping) do
-            for _, pattern in ipairs(patterns) do
-                local result = vim.fn.globpath(dir, pattern, false, false, false)
-                if result ~= '' then
-                    vim.cmd('compiler! '..compiler)
-                    goto exit
-                end
+    for compiler, patterns in pairs(compiler_mapping) do
+        for _, pattern in ipairs(patterns) do
+            if look_for_file(pattern) then
+                vim.cmd('compiler! '..compiler)
             end
         end
     end
-    ::exit::
+    if look_for_file('justfile') then
+        vim.go.makeprg = 'just'
+    else
+        vim.go.makeprg = 'make'
+    end
 end
 
 
