@@ -354,27 +354,33 @@ do
         cargo={'Cargo.toml'},
     }
 
-    ---@param pattern string
+    local function file_exists(dir, glob_pattern)
+        return vim.fn.globpath(dir, glob_pattern, false, false, false) ~= ''
+    end
+
+    ---@param glob_pattern string
     ---@return boolean
-    local function look_for_file(pattern)
+    local function look_for_file(glob_pattern)
         ---@type string[]
         local folders = {vim.fn.getcwd()}
         for dir in vim.fs.parents(vim.fn.getcwd()) do
             table.insert(folders, dir)
+            if file_exists(dir, '.git') then
+                break
+            end
         end
 
         for _, dir in ipairs(folders) do
-            local result = vim.fn.globpath(dir, pattern, false, false, false)
-            if result ~= '' then
+            if file_exists(dir, glob_pattern) then
                 return true
             end
         end
         return false
     end
 
-    for compiler, patterns in pairs(compiler_mapping) do
-        for _, pattern in ipairs(patterns) do
-            if look_for_file(pattern) then
+    for compiler, glob_patterns in pairs(compiler_mapping) do
+        for _, glob_pattern in ipairs(glob_patterns) do
+            if look_for_file(glob_pattern) then
                 vim.cmd('compiler! '..compiler)
             end
         end
