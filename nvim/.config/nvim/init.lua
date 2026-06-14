@@ -363,10 +363,12 @@ do
     local function look_for_file(glob_pattern)
         ---@type string[]
         local folders = {vim.fn.getcwd()}
-        for dir in vim.fs.parents(vim.fn.getcwd()) do
-            table.insert(folders, dir)
-            if file_exists(dir, '.git') then
-                break
+        if not file_exists(folders[1], '.git') then
+            for dir in vim.fs.parents(vim.fn.getcwd()) do
+                table.insert(folders, dir)
+                if file_exists(dir, '.git') then
+                    break
+                end
             end
         end
 
