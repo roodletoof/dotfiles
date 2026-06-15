@@ -345,7 +345,7 @@ end
 do
     local compiler_mapping = {
         dotnet={'*.csproj', '*.sln'},
-        pyright={'requirements.txt', 'pyproject.toml'},
+        basedpyright={'requirements.txt', 'pyproject.toml'},
         go={'go.mod'},
         gcc={'*.c'},
         ['g++']={'*.cpp'},
