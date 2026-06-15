@@ -355,7 +355,7 @@ do
     ---@param dir string?
     ---@param glob_pattern string
     ---@return boolean
-    local function file_exists(dir, glob_pattern)
+    local function file_or_folder_exists(dir, glob_pattern)
         if dir == nil then return false end
         return vim.fn.globpath(dir, glob_pattern, false, false, false) ~= ''
     end
@@ -373,7 +373,7 @@ do
         ---@return integer?
         ---@return string?
         local function iter(_, i)
-            if file_exists(folders[i], '.git') then
+            if file_or_folder_exists(folders[i], '.git') then
                 return nil
             end
             i = i + 1
@@ -395,7 +395,7 @@ do
     ---@return boolean
     local function look_for_file(glob_pattern)
         for _, dir in all_folders_till_root() do
-            if file_exists(dir, glob_pattern) then
+            if file_or_folder_exists(dir, glob_pattern) then
                 return true
             end
         end
