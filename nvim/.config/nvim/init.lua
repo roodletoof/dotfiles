@@ -364,26 +364,33 @@ do
             table.insert(folders, dir)
         end
 
+        ---@param _ any
+        ---@param i integer
+        ---@return integer?
+        ---@return string?
+        local function iter(_, i)
+            i = i + 1
+            local f = folders[i]
+            if f == nil then
+                return nil
+            end
+            if file_exists(f, '.git') then
+                i = -1
+            end
+            return i, f
+        end
+
         ---return iterator starting from cwd and going upwards until the project
         ---root is found by looking for the .git folder.
-        ---@return fun(): string?
         all_folders_till_root = function()
-            local curr = 0
-            return function()
-                curr = curr + 1
-                local f = folders[curr]
-                if file_exists(f, '.git') then
-                    curr = -1
-                end
-                return f
-            end
+            return iter, nil, 0
         end
     end
 
     ---@param glob_pattern string
     ---@return boolean
     local function look_for_file(glob_pattern)
-        for dir in all_folders_till_root() do
+        for _, dir in all_folders_till_root() do
             if file_exists(dir, glob_pattern) then
                 return true
             end
