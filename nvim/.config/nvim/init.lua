@@ -352,7 +352,11 @@ do
         cargo={'Cargo.toml'},
     }
 
+    ---@param dir string?
+    ---@param glob_pattern string
+    ---@return boolean
     local function file_exists(dir, glob_pattern)
+        if dir == nil then return false end
         return vim.fn.globpath(dir, glob_pattern, false, false, false) ~= ''
     end
 
@@ -369,14 +373,11 @@ do
         ---@return integer?
         ---@return string?
         local function iter(_, i)
-            i = i + 1
-            local f = folders[i]
-            if f == nil then
+            if file_exists(folders[i], '.git') then
                 return nil
             end
-            if file_exists(f, '.git') then
-                i = -1
-            end
+            i = i + 1
+            local f = folders[i]
             return i, f
         end
 
