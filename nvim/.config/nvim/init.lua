@@ -358,23 +358,27 @@ do
         return vim.fn.globpath(dir, glob_pattern, false, false, false) ~= ''
     end
 
-    ---return iterator starting from cwd and going upwards until the project
-    ---root is found by looking for the .git folder.
-    ---@return fun(): string?
-    local function all_folders_till_root()
+    local all_folders_till_root = nil
+    do
         local cwd = vim.fn.getcwd()
-        local folders = {cwd}
+        local folders = {cwd} -- array of all folders from cwd to root
         for dir in vim.fs.parents(cwd) do
             table.insert(folders, dir)
         end
-        local curr = 0
-        return function()
-            curr = curr + 1
-            local f = folders[curr]
-            if file_exists(f, '.git') then
-                curr = -1
+
+        ---return iterator starting from cwd and going upwards until the project
+        ---root is found by looking for the .git folder.
+        ---@return fun(): string?
+        all_folders_till_root = function()
+            local curr = 0
+            return function()
+                curr = curr + 1
+                local f = folders[curr]
+                if file_exists(f, '.git') then
+                    curr = -1
+                end
+                return f
             end
-            return f
         end
     end
 
