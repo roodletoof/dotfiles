@@ -378,6 +378,9 @@ do
             end
             i = i + 1
             local f = folders[i]
+            if f == nil then
+                return nil
+            end
             return i, f
         end
 
