@@ -343,8 +343,6 @@ end
 
 -- auto select compiler {{{1
 do
-    -- TODO: vendor the compiler plugins so I can use e.g. basedpyright instead of pyright and add matching for failing tests in c using criterion.
-    -- did a similar thing for the vim config.
     local compiler_mapping = {
         dotnet={'*.csproj', '*.sln'},
         pyright={'requirements.txt', 'pyproject.toml'},
@@ -385,7 +383,6 @@ do
     ---@param glob_pattern string
     ---@return boolean
     local function look_for_file(glob_pattern)
-
         for dir in all_folders_till_root() do
             if file_exists(dir, glob_pattern) then
                 return true
