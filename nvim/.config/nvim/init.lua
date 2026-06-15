@@ -402,16 +402,23 @@ do
         return false
     end
 
-    for compiler, glob_patterns in pairs(compiler_mapping) do
-        for _, glob_pattern in ipairs(glob_patterns) do
-            if look_for_file(glob_pattern) then
-                vim.cmd('compiler! '..compiler)
+    local function auto_select_compiler()
+        for compiler, glob_patterns in pairs(compiler_mapping) do
+            for _, glob_pattern in ipairs(glob_patterns) do
+                if look_for_file(glob_pattern) then
+                    vim.cmd('compiler! '..compiler)
+                end
             end
         end
+        if look_for_file('justfile') then
+            vim.go.makeprg = 'just'
+        end
     end
-    if look_for_file('justfile') then
-        vim.go.makeprg = 'just'
-    end
+
+    auto_select_compiler()
+    vim.api.nvim_create_autocmd('DirChanged', {
+        callback = auto_select_compiler,
+    })
 end
 
 
