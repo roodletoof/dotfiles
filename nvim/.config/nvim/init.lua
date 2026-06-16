@@ -206,6 +206,9 @@ local file_specific = {
     c = function()
         vim.bo.expandtab = false
     end,
+    make = function()
+        vim.bo.expandtab = false
+    end,
     tsv = function()
         vim.bo.tabstop = 32
         vim.bo.expandtab = false
