@@ -890,7 +890,6 @@ require'lazy'.setup{ --{{{1
                     {
                         { name = 'snippy',   priority = 100000000000000000000 },
                         { name = 'nvim_lsp', priority = 1000000000},
-                        { name = 'tags',     priority = 100 },
                         { name = 'path',     priority = 1},
                     }
                 ),
