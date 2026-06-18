@@ -764,7 +764,7 @@ require'lazy'.setup{ --{{{1
         dependencies = {
             'leoluz/nvim-dap-go',
             'mfussenegger/nvim-dap-python',
-            'nicholasmata/nvim-dap-cs',
+            'nicholasmata/nvim-dap-cs', -- TODO: make these disabled if the correct debuggers are not installed by default!
         },
         keys = {
             ',b',
