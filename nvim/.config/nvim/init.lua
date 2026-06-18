@@ -871,7 +871,6 @@ require'lazy'.setup{ --{{{1
             'hrsh7th/cmp-path',
             'dcampos/nvim-snippy',
             'dcampos/cmp-snippy',
-            'quangnguyen30192/cmp-nvim-tags',
         },
         config = function()
             local cmp = require'cmp'
