@@ -623,12 +623,13 @@ require'lazy'.setup{ --{{{1
             require'mini.align'.setup()
         end,
     },
-    { 'miikanissi/modus-themes.nvim', --{{{2
+    { 'sainnhe/everforest', --{{{2
         lazy = false,
         priority = 1000,
         config = function()
             vim.o.termguicolors = true
-            vim.cmd.colorscheme('modus_vivendi')
+            vim.g.everforest_enable_italic = true
+            vim.cmd.colorscheme('everforest')
         end,
     },
     { 'folke/lazydev.nvim', --{{{2
