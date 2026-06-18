@@ -943,7 +943,8 @@ require'lazy'.setup{ --{{{1
                 vim.keymap.set( 'n', key, func, { silent = false, remap = false, })
             end
             local builtin = require'telescope.builtin'
-            map(',fc', builtin.git_commits)
+            map(',fcc', builtin.git_commits)
+            map(',fcb', builtin.git_bcommits)
             map(',fb', builtin.git_branches)
 
             map(',fw', builtin.lsp_dynamic_workspace_symbols)
