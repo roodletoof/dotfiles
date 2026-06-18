@@ -935,25 +935,30 @@ require'lazy'.setup{ --{{{1
                 extensions = { ['ui-select'] = { require'telescope.themes'.get_dropdown{}, }, },
             }
 
-            vim.cmd [[
-                nnoremap ,fw :lua require'telescope.builtin'.lsp_dynamic_workspace_symbols()<CR>
-                nnoremap ,fa :lua require'telescope.builtin'.find_files({hidden=true, no_ignore=true, no_ignore_parent=true})<CR>
-                nnoremap ,ff :lua require'telescope.builtin'.find_files()<CR>
-                nnoremap ,fo :lua require'telescope.builtin'.oldfiles()<CR>
-                nnoremap ,fg :lua require'telescope.builtin'.live_grep()<CR>
-                nnoremap ,fs :lua require'telescope.builtin'.grep_string()<CR>
-                nnoremap ,fz :lua require'telescope.builtin'.current_buffer_fuzzy_find()<CR>
-                nnoremap ,fh :lua require'telescope.builtin'.help_tags()<CR>
-                nnoremap ,fb :lua require'telescope.builtin'.buffers()<CR>
-                nnoremap ,fc :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cword>")})<CR>
-                nnoremap ,fC :lua require'telescope.builtin'.tags({default_text=vim.fn.expand("<cWORD>")})<CR>
+            local function map(key, func, ...)
+                local args = {...}
+                if #args ~= 0 then
+                    local original_func = func
+                    func = function() original_func(unpack(args)) end
+                end
+                vim.keymap.set( 'n', key, func, { silent = false, remap = false, })
+            end
+            local builtin = require'telescope.builtin'
+            map(',fw', builtin.lsp_dynamic_workspace_symbols)
+            map(',fa', builtin.find_files, {hidden=true, no_ignore=true, no_ignore_parent=true})
+            map(',ff', builtin.find_files)
+            map(',fo', builtin.oldfiles)
+            map(',fg', builtin.live_grep)
+            map(',fs', builtin.grep_string)
+            map(',fz', builtin.current_buffer_fuzzy_find)
+            map(',fh', builtin.help_tags)
+            map(',fb', builtin.buffers)
 
-                nnoremap ,fea :lua require'telescope.builtin'.diagnostics()<CR>
-                nnoremap ,fee :lua require'telescope.builtin'.diagnostics{severity='ERROR'}<CR>
-                nnoremap ,few :lua require'telescope.builtin'.diagnostics{severity='WARN'}<CR>
-                nnoremap ,fei :lua require'telescope.builtin'.diagnostics{severity='INFO'}<CR>
-                nnoremap ,feh :lua require'telescope.builtin'.diagnostics{severity='HINT'}<CR>
-            ]]
+            map(',fea', builtin.diagnostics)
+            map(',fee', builtin.diagnostics, {severity='ERROR'})
+            map(',few', builtin.diagnostics, {severity='WARN'})
+            map(',fei', builtin.diagnostics, {severity='INFO'})
+            map(',feh', builtin.diagnostics, {severity='HINT'})
 
             require'telescope'.load_extension'ui-select'
         end,
