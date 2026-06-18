@@ -944,6 +944,8 @@ require'lazy'.setup{ --{{{1
             end
             local builtin = require'telescope.builtin'
             map(',fc', builtin.git_commits)
+            map(',fb', builtin.git_branches)
+
             map(',fw', builtin.lsp_dynamic_workspace_symbols)
             map(',fa', builtin.find_files, {hidden=true, no_ignore=true, no_ignore_parent=true})
             map(',ff', builtin.find_files)
@@ -952,7 +954,6 @@ require'lazy'.setup{ --{{{1
             map(',fs', builtin.grep_string)
             map(',fz', builtin.current_buffer_fuzzy_find)
             map(',fh', builtin.help_tags)
-            map(',fb', builtin.buffers)
 
             map(',fea', builtin.diagnostics)
             map(',fee', builtin.diagnostics, {severity='ERROR'})
