@@ -944,6 +944,7 @@ require'lazy'.setup{ --{{{1
                 vim.keymap.set( 'n', key, func, { silent = false, remap = false, })
             end
             local builtin = require'telescope.builtin'
+            map(',fc', builtin.git_commits)
             map(',fw', builtin.lsp_dynamic_workspace_symbols)
             map(',fa', builtin.find_files, {hidden=true, no_ignore=true, no_ignore_parent=true})
             map(',ff', builtin.find_files)
