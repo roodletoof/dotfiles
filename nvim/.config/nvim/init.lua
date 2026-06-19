@@ -961,7 +961,37 @@ require'lazy'.setup{ --{{{1
             map(',fei', builtin.diagnostics, {severity='INFO'})
             map(',feh', builtin.diagnostics, {severity='HINT'})
 
+            map(',fq', function()
+                local errors = 'errors'
+                local warnings = 'warnings'
+                local info = 'info'
+                local hints = 'hints'
+                vim.ui.select(
+                    {'errors', 'warnings', 'info', 'hints'},
+                    { prompt="filter qflist based on type", },
+                    function (type)
+                        local kept = {}
+                        local mapping = {
+                            e=errors, E=errors,
+                            w=warnings, W=warnings,
+                            i=info, I=info,
+                            h=hints, H=hints,
+                        }
+                        for _, item in ipairs(vim.fn.getqflist()) do
+                            if mapping[item.type] == nil then
+                                error('unknown type '..item.type..' '..item.text)
+                            end
+                            if mapping[item.type] == type then
+                                table.insert(kept, item)
+                            end
+                        end
+                        vim.fn.setqflist(kept)
+                    end
+                )
+            end)
+
             require'telescope'.load_extension'ui-select'
+
         end,
     },
 }
