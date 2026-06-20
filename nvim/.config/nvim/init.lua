@@ -98,6 +98,8 @@ vim.cmd [=[
     nnoremap ,rl :checktime<CR>
     nnoremap ,m :wa<CR>:make<CR>
 
+    inoremap <c-k> <c-x>
+
     nnoremap ,cD :call setqflist(filter(getqflist(), 'v:val != getqflist()[getqflist({"idx": 0}).idx - 1]'))<CR>
 
     nnoremap ,t <c-w>v<c-w>l:terminal<CR>a
@@ -850,50 +852,6 @@ require'lazy'.setup{ --{{{1
             vim.keymap.set('n', ',dr', refresh_inspections)
 
         end
-    },
-    { 'dcampos/nvim-snippy', --{{{2
-        config = function()
-            require'snippy'.setup{ enable_auto = true, }
-            vim.cmd [[
-                imap <expr> <c-l> '<Plug>(snippy-next)'
-                imap <expr> <c-k> '<Plug>(snippy-previous)'
-                smap <expr> <c-l> '<Plug>(snippy-next)'
-                smap <expr> <c-k> '<Plug>(snippy-previous)'
-                nmap g; <Plug>(snippy-cut-text)
-                xmap g; <Plug>(snippy-cut-text)
-            ]]
-        end
-    },
-    { 'hrsh7th/nvim-cmp', --{{{2
-        dependencies = {
-            'hrsh7th/cmp-nvim-lsp',
-            'hrsh7th/cmp-path',
-            'dcampos/nvim-snippy',
-            'dcampos/cmp-snippy',
-        },
-        config = function()
-            local cmp = require'cmp'
-            cmp.setup{
-                snippet = {
-                    expand = function(args)
-                        require'snippy'.expand_snippet(args.body)
-                    end,
-                },
-                mapping = {
-                    ['<C-y>'] = cmp.mapping.confirm{ select = true },
-                    ['<C-n>'] = cmp.mapping.select_next_item(),
-                    ['<C-p>'] = cmp.mapping.select_prev_item(),
-                },
-                sources = cmp.config.sources(
-                    {
-                        { name = 'snippy',   priority = 100000000000000000000 },
-                        { name = 'nvim_lsp', priority = 1000000000},
-                        { name = 'path',     priority = 1},
-                    }
-                ),
-                preselect = cmp.PreselectMode.None,
-            }
-        end,
     },
     { 'nvim-telescope/telescope.nvim', --{{{2
         tag = '0.1.8',
