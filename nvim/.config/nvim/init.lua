@@ -897,7 +897,7 @@ require'lazy'.setup{ --{{{1
         end,
     },
     { 'nvim-telescope/telescope.nvim', --{{{2
-        tag = '0.1.8',
+        tag = 'v0.2.2',
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-telescope/telescope-ui-select.nvim',
